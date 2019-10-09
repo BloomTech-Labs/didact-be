@@ -20,8 +20,9 @@ exports.seed = function(knex, Promise)
                 " you’ll see a structured treasure trove of practical techniques that walk you through" +
                 " what you need to do to get on track. If you’ve ever wanted to become better at anything," +
                 " this course will help serve as your guide.",
+                creator_id: 1,
                 instructors: "Dr. Barbara Oakley, Dr. Terrence Sejnowski",
-                rating: "4.8 stars",
+                foreign_rating: "4.8 stars",
             },
         ]
     )
