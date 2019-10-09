@@ -1,4 +1,3 @@
-module.exports =
-{
-    jwtSecret = process.env.JWT_SECRET || "shh, it's a secret"
+module.exports = {
+    jwtSecret: process.env.JWT_SECRET || 'this is a very super super secret plz dont touch'
 }
