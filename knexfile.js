@@ -5,8 +5,35 @@ module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-      filename: './dev.sqlite3'
-    }
+      filename: './database/didact.db3'
+    },
+    useNullAsDefault: true,
+    pool:
+    {
+      afterCreate: (conn, done) =>
+      {
+        conn.run('PRAGMA foreign_keys = ON', done)
+      },
+    },
+    migrations: {directory: './database/migrations'},
+    seeds: {directory: './database/seeds'},
+  },
+
+  testing: {
+    client: 'sqlite3',
+    connection: {
+      filename: ':memory:'
+    },
+    useNullAsDefault: true,
+    pool:
+    {
+      afterCreate: (conn, done) =>
+      {
+        conn.run('PRAGMA foreign_keys = ON', done)
+      },
+    },
+    migrations: {directory: './database/migrations'},
+    seeds: {directory: './database/seeds'},
   },
 
   staging: {
@@ -26,19 +53,12 @@ module.exports = {
   },
 
   production: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     pool: {
-      min: 2,
-      max: 10
     },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
+    migrations: {directory: './database/migrations'},
+    seeds: {directory: './database/seeds'},
   }
 
 };
