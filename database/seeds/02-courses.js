@@ -21,7 +21,7 @@ exports.seed = function(knex, Promise)
                 " what you need to do to get on track. If you’ve ever wanted to become better at anything," +
                 " this course will help serve as your guide.",
                 creator_id: 1,
-                instructors: "Dr. Barbara Oakley, Dr. Terrence Sejnowski",
+                foreign_instructors: "Dr. Barbara Oakley, Dr. Terrence Sejnowski",
                 foreign_rating: "4.8 stars",
             },
         ]

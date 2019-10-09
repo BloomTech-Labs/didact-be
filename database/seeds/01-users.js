@@ -9,7 +9,7 @@ exports.seed = function(knex, Promise)
             {
                 email: "bob@bobmail.com",
                 first_name: "bob",
-                first_name: "bobson",
+                last_name: "bobson",
                 password: bcryptjs.hashSync("password", hashCount)
             },
             {
