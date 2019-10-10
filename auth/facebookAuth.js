@@ -1,28 +1,42 @@
 const passport = require('passport');
-const express = require('express');
 const FacebookAuth = require('passport-facebook');
-const app = express();
+const router = require('express').Router()
 
 
 //Retrived from https://developers.facebook.com/apps/2395844084004101/settings/basic/
 const FACEBOOK_APP_ID = '2395844084004101';
 const FACEBOOK_APP_SECRET = '53800821ec15471c0ecd621831f2bd25';
 
-const facebookOptions = {
+passport.use(new FacebookAuth({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: 'https://www.google.com' //test
-}
+    callbackURL: "http://localhost:5000/api/auth/facebook/callback"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    console.log("Authed")
+    cb(null, profile)
+  }
+));
 
-const facebookCallback = function(accessToken, refreshToken, profile, cb){
+passport.serializeUser(function(user, cb) {
+    cb(null, user);
+  });
+  
+passport.deserializeUser(function(user, cb) {
+    cb(null, user);
+  });
 
-}
-passport.use(new FacebookAuth(facebookOptions, facebookCallback))
+router.use(passport.initialize());
+router.use(passport.session());
 
-app.route('/register/facebook')
-    .get(passport.authenticate('facebook'))
+router.get('/', passport.authenticate('facebook', { callbackURL: 'http://localhost:5000/api/auth/facebook/callback'}))
 
-app.route('/register/facebook/callback')
-    .get(function(req, res) {
-        console.log("Callback successful.")
-    })
+router.get('/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login'}),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    console.log(req.user)
+    res.redirect('/');
+  });
+
+  module.exports = router;
