@@ -3,6 +3,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 
 const authRouter = require('../auth/authRouter')
+const coursesRouter = require('../courses/coursesRouter')
 
 const server = express()
 
@@ -13,11 +14,8 @@ server.use(helmet())
 server.use(express.json())
 
 server.use('/api/auth', authRouter)
+server.use('/api/courses', restricted , coursesRouter)
 server.use('/api/docs', express.static('./docs'))
-
-server.get('/test', restricted, (req, res) => {
-    res.json({ message: 'User Allowed!'})
-})
 
 server.get('/', (req, res) =>
 {
