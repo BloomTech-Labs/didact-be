@@ -14,7 +14,7 @@ server.use(helmet())
 server.use(express.json())
 
 server.use('/api/auth', authRouter)
-server.use('/api/courses', restricted , coursesRouter)
+server.use('/api/courses', restricted, coursesRouter)
 server.use('/api/docs', express.static('./docs'))
 
 server.get('/', (req, res) =>
