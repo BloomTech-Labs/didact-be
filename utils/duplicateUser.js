@@ -9,8 +9,8 @@ module.exports = (req, res, next) =>
                 if (response.id) res.status(409).json({ message: 'A user with that email already exists' })
                 else next()
             })
-        // .catch(err =>
-        //     {
-        //         next()
-        //     })
+        .catch(err =>
+            {
+                next()
+            })
 }
