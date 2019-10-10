@@ -133,7 +133,7 @@ router.post('/login', validateUserLogin, (req, res) => {
         })
         .catch(error => {
             console.log(error)
-            res.status(500).json({ message: `Couldn't connect to login service`})
+            res.status(500).json({ message: `Couldn't connect to login service` })
         })
 })
 
