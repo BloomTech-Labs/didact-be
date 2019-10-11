@@ -8,6 +8,9 @@ exports.up = function(knex) {
         tbl.string('first_name', 255).notNullable()
         tbl.string('last_name', 255).notNullable()
         tbl.string('password', 255)
+        tbl.string('facebookID')
+        tbl.string('googleID')
+        tbl.string('slackID')
     })
     .createTable('courses', tbl =>
     {

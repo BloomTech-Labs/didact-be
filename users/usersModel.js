@@ -23,3 +23,19 @@ function findById(id) {
         .where({ id })
         .first();
 }
+
+async function FBfindOrCreate(facebookID, first_name, last_name, email)
+{
+    let user = await db('users')
+                .where({ facebookID })
+    if (user.length === 0)
+    {
+        let newUser = await db('users')
+            .insert({email, first_name, last_name, facebookID}, 'id')
+        return db('users').where({id: newUser.id}).first()
+    }
+    else
+    {
+        return user[0]
+    }
+}
