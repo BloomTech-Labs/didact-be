@@ -64,11 +64,24 @@ const Users = require('../users/usersModel')
 router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
     let user = req.body
     const hash = bcrypt.hashSync(user.password, hashCount)
+    let originalPass = user.password
     user.password = hash
-
     Users.add(user)
         .then(response => {
-            res.status(201).json({ message: 'User Created', email: user.email})
+            // Maybe can be removed, just use user.email
+            Users.findBy({ email: user.email })
+                .then(user => {
+                    if (user && bcrypt.compareSync(originalPass, user.password)) {
+                        const token = generateToken(user)
+                        res.status(201).json({ token, id: user.id, email: user.email});
+                    } else {
+                        res.status(401).json({ message: 'Invalid Credentials' });
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                    res.status(500).json({ message: `Couldn't connect to login service` })
+                })
         })
         .catch(error => {
             console.log(error)
