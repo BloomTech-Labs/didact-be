@@ -27,7 +27,7 @@ passport.deserializeUser(function(user, cb) {
 router.use(passport.initialize());
 router.use(passport.session());
 
-router.get('/', passport.authenticate('facebook', { callbackURL: `${secrets.passportUrl}/api/auth/facebook/callback`}))
+router.get('/', passport.authenticate('facebook', { scope: ['email'], callbackURL: `${secrets.passportUrl}/api/auth/facebook/callback`}))
 
 router.get('/callback',
   passport.authenticate('facebook', { failureRedirect: '/login'}),
