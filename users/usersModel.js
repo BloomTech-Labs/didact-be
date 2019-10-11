@@ -33,6 +33,7 @@ function findAll() {
 
 async function FBfindOrCreate(userObj)
 {
+    console.log(userObj)
     let user = await db('users')
                 .where({ facebookID: userObj.facebookID })
     if (user.length === 0)
