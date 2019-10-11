@@ -23,14 +23,14 @@ passport.use(new FacebookAuth({
     Users.FBfindOrCreate({facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email})
       .then(response => {
         console.log(response)
-        res.json(response)
+        cb(null, response)
       })
       .catch(err => {
         console.log(err)
-        res.json(err)
+        cb(null, err)
       })
 
-    cb(null, profile._json)
+    // cb(null, profile._json)
   }
 ));
 
