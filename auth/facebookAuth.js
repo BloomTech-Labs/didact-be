@@ -13,7 +13,7 @@ passport.use(new FacebookAuth({
     profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'picture']
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(profile)
+    console.log('Profile from FACEBOOK', profile)
     // Users.FBfindOrCreate({facebookId: profile.id, first_name: profile.first_name, last_name, email})
   }
 ));
@@ -36,7 +36,7 @@ router.get('/callback',
   function(req, res) {
     // Successful authentication, redirect home.
     // res.json(req.user)
-    console.log('Redirect Home')
+    res.json({ message: 'Callback init'})
   });
 
   module.exports = router;
