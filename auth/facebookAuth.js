@@ -13,7 +13,7 @@ passport.use(new FacebookAuth({
     profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'picture']
   },
   function(accessToken, refreshToken, profile, cb) {
-    res.json(profile)
+    console.log(profile)
     // Users.FBfindOrCreate({facebookId: profile.id, first_name: profile.first_name, last_name, email})
   }
 ));
