@@ -34,13 +34,14 @@ function findAll() {
 async function FBfindOrCreate(userObj)
 {
     let user = await db('users')
-                .where({ facebookID: userObj })
+                .where({ facebookID: userObj.facebookID })
     if (user.length === 0)
     {
+        console.log(newUser)
         let newUser = await db('users')
             .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID}, 'id')
         console.log(newUser)
-        return db('users').where({ id: newUser }).first()
+        return db('users').where({ id: newUser[0] }).first()
     }
     else
     {
