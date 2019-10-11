@@ -21,7 +21,7 @@ passport.use(new FacebookAuth({
     console.log('PROFILE PHOTO', profile._json.picture)
     // Users.FBfindOrCreate({facebookId: profile.id, first_name: profile.first_name, last_name, email})
 
-    cb(null, profile)
+    cb(null, profile._json)
   }
 ));
 
