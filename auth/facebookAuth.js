@@ -4,6 +4,8 @@ const router = require('express').Router()
 
 const secrets = require('../config/secret')
 
+const Users = require('../users/usersModel')
+
 passport.use(new FacebookAuth({
     clientID: secrets.facebookId,
     clientSecret: secrets.facebookSecret,
@@ -11,8 +13,8 @@ passport.use(new FacebookAuth({
     profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'picture']
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log("Authed")
-    cb(null, profile)
+    res.json(profile)
+    // Users.FBfindOrCreate({facebookId: profile.id, first_name: profile.first_name, last_name, email})
   }
 ));
 
@@ -33,7 +35,8 @@ router.get('/callback',
   passport.authenticate('facebook', { failureRedirect: '/login'}),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.json(req.user)
+    // res.json(req.user)
+    console.log('Redirect Home')
   });
 
   module.exports = router;
