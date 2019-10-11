@@ -4,6 +4,8 @@ module.exports = {
     add,
     findBy,
     findById,
+    findAll,
+    FBfindOrCreate
 };
 
 function findBy(filter) {
@@ -22,6 +24,11 @@ function findById(id) {
         .select('id', 'email', 'first_name', 'last_name')
         .where({ id })
         .first();
+}
+
+function findAll() {
+    return db('users')
+        .select('*')
 }
 
 async function FBfindOrCreate(facebookID, first_name, last_name, email)
