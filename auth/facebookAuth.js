@@ -34,7 +34,7 @@ router.get('/callback',
   function(req, res) {
     // Successful authentication, redirect home.
     console.log(req.user)
-    res.redirect('/');
+    res.json(req.user)
   });
 
   module.exports = router;
