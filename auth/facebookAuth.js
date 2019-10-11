@@ -8,7 +8,7 @@ passport.use(new FacebookAuth({
     clientID: secrets.facebookId,
     clientSecret: secrets.facebookSecret,
     callbackURL: `${secrets.passportUrl}/api/auth/facebook/callback`,
-    profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'photo']
+    profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'picture']
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log("Authed")
