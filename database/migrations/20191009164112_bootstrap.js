@@ -14,7 +14,7 @@ exports.up = function(knex) {
         tbl.increments()
         tbl.string('name', 255).notNullable()
         tbl.string('link', 1000)
-        tbl.string('description', 1000)
+        tbl.string('description', 5000)
         tbl.string('category', 125)
         tbl
         .integer('creator_id')
