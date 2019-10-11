@@ -39,7 +39,8 @@ async function FBfindOrCreate(userObj)
     {
         let newUser = await db('users')
             .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID}, 'id')
-        return db('users').where({id: newUser.id}).first()
+        console.log(newUser)
+        return db('users').where({ id: newUser }).first()
     }
     else
     {
