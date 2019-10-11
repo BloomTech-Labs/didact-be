@@ -31,14 +31,14 @@ function findAll() {
         .select('*')
 }
 
-async function FBfindOrCreate(facebookID, first_name, last_name, email)
+async function FBfindOrCreate(userObj)
 {
     let user = await db('users')
-                .where({ facebookID })
+                .where({ facebookID: userObj })
     if (user.length === 0)
     {
         let newUser = await db('users')
-            .insert({email, first_name, last_name, facebookID}, 'id')
+            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID}, 'id')
         return db('users').where({id: newUser.id}).first()
     }
     else
