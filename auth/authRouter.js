@@ -150,6 +150,17 @@ router.post('/login', validateUserLogin, (req, res) => {
         })
 })
 
+router.get('/users', (req, res) => {
+    Users.findAll()
+        .then(users => {
+            res.json(users)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({ message: `Couldn't get all users`})
+        })
+})
+
 function generateToken(user) {
     const payload = {
         email: user.email
