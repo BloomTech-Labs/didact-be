@@ -48,3 +48,21 @@ async function FBfindOrCreate(userObj)
         return user[0]
     }
 }
+
+async function GGLfindOrCreate(userObj)
+{
+    console.log(userObj)
+    let user = await db('users')
+                .where({ googleID: userObj.googleID })
+    if (user.length === 0)
+    {
+        let newUser = await db('users')
+            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, googleID: userObj.googleID}, 'id')
+        console.log(newUser)
+        return db('users').where({ id: newUser[0] }).first()
+    }
+    else
+    {
+        return user[0]
+    }
+}

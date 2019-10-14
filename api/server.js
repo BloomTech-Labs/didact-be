@@ -4,6 +4,7 @@ const cors = require('cors')
 
 const authRouter = require('../auth/authRouter')
 const facebookAuth = require('../auth/facebookAuth')
+const googleAuth = require('../auth/googleAuth')
 const coursesRouter = require('../courses/coursesRouter')
 
 
@@ -17,6 +18,7 @@ server.use(express.json())
 
 server.use('/api/auth', authRouter)
 server.use('/api/auth/facebook', facebookAuth)
+server.use('/api/auth/google', googleAuth)
 server.use('/api/courses', restricted, coursesRouter)
 server.use('/api/docs', express.static('./docs'))
 
