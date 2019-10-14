@@ -15,10 +15,10 @@ passport.use(new FacebookAuth({
   profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'picture']
 },
   function (accessToken, refreshToken, profile, cb) {
-    console.log({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email })
+    console.log(profile)
+    // console.log({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email })
     Users.FBfindOrCreate({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email })
       .then(response => {
-        console.log(response)
         cb(null, profile._json)
       })
       .catch(err => {
@@ -47,8 +47,8 @@ router.get('/callback',
     // Successful authentication, redirect home.
     const token = generateToken(req.user)
     // console.log({ token, id: req.user.id, email: req.user.email})
-    // res.status(200).json({ token, id: req.user.id, email: req.user.email});
-    res.redirect(`https://staging-didact-fe.netlify.com/dashboard`)
+    res.status(200).json({ token, id: req.user.id, email: req.user.email});
+    // res.redirect(`https://staging-didact-fe.netlify.com/dashboard`)
     // res.json(req.user)
   });
 
