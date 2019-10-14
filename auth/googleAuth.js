@@ -1,14 +1,14 @@
 const passport = require('passport');
 const router = require('express').Router()
 const secrets = require('../config/secret')
+const jwt = require('jsonwebtoken')
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(new GoogleStrategy({
     clientID: secrets.googleId,
     clientSecret: secrets.googleSecret,
-    callbackURL: `${secrets.passportUrl}/api/auth/google/callback`,
-    profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'picture']
+    callbackURL: `${secrets.passportUrl}/api/auth/google/callback`
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
