@@ -27,16 +27,16 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n  \"email\": \"doctest@example.com\",\n  \"password\": \"blahblahblah\",\n  \"first_name\": \"Doc\",\n  \"last_name\": \"Test\"\n}",
+          "content": "{\n  \"email\": \"doctest@example.com\",\n  \"password\": \"blahblahblah\"\n}",
           "type": "json"
         }
       ]
     },
     "success": {
       "fields": {
-        "201": [
+        "200": [
           {
-            "group": "201",
+            "group": "200",
             "type": "Object",
             "optional": false,
             "field": "user",
@@ -47,7 +47,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 OK\n{\n  \"message\": \"User Created\",\n  \"email\": \"doctest@example.com\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"User Created\",\n  \"email\": \"doctest@example.com\"\n}",
           "type": "json"
         }
       ]
@@ -152,7 +152,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 OK\n{\n  \"token\": \"fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf\",\n  \"id\": 3,\n  \"email\": \"doctest@example.com\"\n}",
+          "content": "HTTP/1.1 201 Created\n{\n  \"token\": \"fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf\",\n  \"id\": 3,\n  \"email\": \"doctest@example.com\"\n}",
           "type": "json"
         }
       ]
@@ -238,6 +238,128 @@ define({ "api": [
     "name": ""
   },
   {
+    "type": "delete",
+    "url": "/api/courses/:id",
+    "title": "delete Course",
+    "name": "DeleteCourse",
+    "group": "Courses",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Success",
+            "description": "<p>A message that the course was deleted</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n {\n    \"message\": \"course deleted\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The user is not authorized to delete this course</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to delete course for</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Delete-Course-Error",
+            "description": "<p>Could not delete course</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "403-Error-Response:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n \"message\": \"User is not permitted to change this course\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-User-Not-Found:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to delete course for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Course-Delete-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not delete course\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouter.js",
+    "groupTitle": "Courses"
+  },
+  {
     "type": "put",
     "url": "/api/courses/:id",
     "title": "Edit Course",
@@ -275,17 +397,17 @@ define({ "api": [
         "200": [
           {
             "group": "200",
-            "type": "object",
+            "type": "Object",
             "optional": false,
-            "field": "Course",
-            "description": "<p>An object of the course that the user edited</p>"
+            "field": "Success",
+            "description": "<p>A message that the course was updated</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n {\n    \"id\": 2\n }",
+          "content": "HTTP/1.1 200 OK\n {\n    \"message\": \"course updated\"\n }",
           "type": "json"
         }
       ]
@@ -363,7 +485,7 @@ define({ "api": [
           "type": "json"
         },
         {
-          "title": "500-Course-Add-Error:",
+          "title": "500-Course-Edit-Error:",
           "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not edit course\"\n}",
           "type": "json"
         }
@@ -516,6 +638,26 @@ define({ "api": [
         }
       ]
     },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "url",
+            "description": "<p>The link of the course you want to find (optional)</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Course-Post-Example:",
+          "content": "{\n\t\"url\": \"https://www.coursera.org/learn/learning-how-to-learn\"\n}",
+          "type": "json"
+        }
+      ]
+    },
     "success": {
       "fields": {
         "200": [
@@ -524,14 +666,14 @@ define({ "api": [
             "type": "Array",
             "optional": false,
             "field": "Courses",
-            "description": "<p>An array of the courses on the website</p>"
+            "description": "<p>An array of the courses on the website, optionally filtered by url sent in body</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n [\n     {\n         \"id\": 1,\n         \"name\": \"Learning How to Learn: Powerful mental tools to help you master tough subjects\",\n         \"link\": \"https://www.coursera.org/learn/learning-how-to-learn\",\n         \"description\": \"This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\\n\\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.\",\n         \"category\": null,\n         \"creator_id\": 1,\n         \"foreign_rating\": \"4.8 stars\",\n         \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski\"\n       }\n ]\n}",
+          "content": "HTTP/1.1 200 OK\n\n [\n     {\n         \"id\": 1,\n         \"name\": \"Learning How to Learn: Powerful mental tools to help you master tough subjects\",\n         \"link\": \"https://www.coursera.org/learn/learning-how-to-learn\",\n         \"description\": \"This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\\n\\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.\",\n         \"category\": null,\n         \"creator_id\": 1,\n         \"foreign_rating\": \"4.8 stars\",\n         \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski\"\n       }\n ]",
           "type": "json"
         }
       ]
@@ -608,6 +750,40 @@ define({ "api": [
         {
           "title": "Header-Example:",
           "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>The name of the course you want to create</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>The description of the course you want to create</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "link",
+            "description": "<p>The link of the course you want to create</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Course-Post-Example:",
+          "content": "{ \n\t \"name\": \"Learn How to Write Docs\",\n\t \"description\": \"In this course, you will learn the tedium of writing docs.\",\n\t \"link\": \"http://apidocjs.com/\",\n}",
           "type": "json"
         }
       ]

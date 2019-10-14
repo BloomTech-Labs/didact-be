@@ -6,7 +6,7 @@ module.exports = {
     findById,
     add,
     updateCourseById,
-    deleteCourseById
+    deleteCourseById,
 }
 
 function find() {

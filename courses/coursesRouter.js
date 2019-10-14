@@ -17,11 +17,18 @@ const Users = require('../users/usersModel')
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiSuccess (200) {Array} Courses An array of the courses on the website
+ * @apiParam {String} url The link of the course you want to find (optional)
+ * 
+ * @apiParamExample {json} Course-Post-Example:
+ * {
+ * 	"url": "https://www.coursera.org/learn/learning-how-to-learn"
+ * }
+ * 
+ * @apiSuccess (200) {Array} Courses An array of the courses on the website, optionally filtered by url sent in body
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
- * {
+ * 
  *  [
  *      {
  *          "id": 1,
@@ -34,7 +41,7 @@ const Users = require('../users/usersModel')
  *          "foreign_instructors": "Dr. Barbara Oakley, Dr. Terrence Sejnowski"
  *        }
  *  ]
- * }
+ * 
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
  * 
@@ -66,6 +73,7 @@ const Users = require('../users/usersModel')
 router.get('/', (req, res) => {
     Courses.find()
         .then(response => {
+            if(req.body.url) response = response.filter(el => el.link === req.body.url)
             res.status(200).json(response)
         })
         .catch(error => {
@@ -161,6 +169,18 @@ router.get('/:id', (req, res) => {
  * {
  *  "Content-Type": "application/json",
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {String} name The name of the course you want to create
+ * @apiParam {String} description The description of the course you want to create
+ * @apiParam {String} link The link of the course you want to create
+
+ * 
+ * @apiParamExample {json} Course-Post-Example:
+ * { 
+ * 	 "name": "Learn How to Write Docs",
+ * 	 "description": "In this course, you will learn the tedium of writing docs.",
+ * 	 "link": "http://apidocjs.com/",
  * }
  * 
  * @apiSuccess (201) {object} Course An object of the course that the user posted

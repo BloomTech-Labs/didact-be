@@ -29,7 +29,7 @@ const Users = require('../users/usersModel')
  * @apiSuccess (201) {Object} user An object with the user id, email and token
  * 
  * @apiSuccessExample Success-Response:
- * HTTP/1.1 201 OK
+ * HTTP/1.1 201 Created
  * {
  *   "token": "fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf",
  *   "id": 3,
@@ -102,15 +102,13 @@ router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
  * @apiParamExample {json} Request-Example:
  *  {
  *    "email": "doctest@example.com",
- *    "password": "blahblahblah",
- *    "first_name": "Doc",
- *    "last_name": "Test"
+ *    "password": "blahblahblah"
  *  }
  * 
- * @apiSuccess (201) {Object} user An object with the user id and username and token
+ * @apiSuccess (200) {Object} user An object with the user id and username and token
  * 
  * @apiSuccessExample Success-Response:
- * HTTP/1.1 201 OK
+ * HTTP/1.1 200 OK
  * {
  *   "message": "User Created",
  *   "email": "doctest@example.com"
