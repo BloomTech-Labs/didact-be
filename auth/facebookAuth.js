@@ -48,7 +48,7 @@ router.get('/callback',
     const token = generateToken(req.user)
     // console.log({ token, id: req.user.id, email: req.user.email})
     // res.status(200).json({ token, id: req.user.id, email: req.user.email});
-    res.redirect(`localhost:3000/dashboard/token?jwt=${token}`)
+    res.redirect(`localhost:3000/dashboard`)
     // res.json(req.user)
   });
 
