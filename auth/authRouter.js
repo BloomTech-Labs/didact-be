@@ -152,6 +152,22 @@ router.post('/login', validateUserLogin, (req, res) => {
         })
 })
 
+router.post('/', (req, res) => {
+    let token = req.body.token
+
+    if (token) {
+        jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
+            if (err) res.status(401).json({ message: 'Token does not exist' })
+            else 
+            {
+                res.json({email: decodedToken.email})
+            }
+        })
+    } else {
+        res.status(401).json({ message: 'No token provided' });
+    }
+})
+
 router.get('/users', (req, res) => {
     Users.findAll()
         .then(users => {
