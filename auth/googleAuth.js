@@ -11,9 +11,11 @@ passport.use(new GoogleStrategy({
     callbackURL: `${secrets.passportUrl}/api/auth/google/callback`
   },
   function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
+    // User.findOrCreate({ googleId: profile.id }, function (err, user) {
+    //   return cb(err, user);
+    // });
+    console.log(profile)
+    cb(null, profile)
   }
 ));
 
@@ -28,7 +30,7 @@ passport.deserializeUser(function(user, cb) {
 router.use(passport.initialize());
 router.use(passport.session());
 
-router.get('/', passport.authenticate('google', { scope: ['email'], callbackURL: `${secrets.passportUrl}/api/auth/google/callback`}))
+router.get('/', passport.authenticate('google', {callbackURL: `${secrets.passportUrl}/api/auth/google/callback`}))
 
 router.get('/callback',
   passport.authenticate('google', { failureRedirect: '/login'}),
