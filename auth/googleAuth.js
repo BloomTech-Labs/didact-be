@@ -30,7 +30,7 @@ passport.deserializeUser(function(user, cb) {
 router.use(passport.initialize());
 router.use(passport.session());
 
-router.get('/', passport.authenticate('google', {callbackURL: `${secrets.passportUrl}/api/auth/google/callback`}))
+router.get('/', passport.authenticate('google', { scope: ['profile', 'email']}))
 
 router.get('/callback',
   passport.authenticate('google', { failureRedirect: '/login'}),
