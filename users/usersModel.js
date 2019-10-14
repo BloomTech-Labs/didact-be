@@ -5,7 +5,8 @@ module.exports = {
     findBy,
     findById,
     findAll,
-    FBfindOrCreate
+    FBfindOrCreate,
+    GGLfindOrCreate
 };
 
 function findBy(filter) {
