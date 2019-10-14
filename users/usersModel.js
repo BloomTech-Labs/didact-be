@@ -10,7 +10,7 @@ module.exports = {
 
 function findBy(filter) {
     return db('users')
-        .select('id', 'email', 'first_name', 'last_name')
+        // .select('id', 'email', 'first_name', 'last_name')
         .where(filter)
         .first();
 }

@@ -260,12 +260,12 @@ router.post('/', validateCourse, (req, res) => {
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiSuccess (200) {object} Course An object of the course that the user edited
+ * @apiSuccess (200) {Object} Success A message that the course was updated
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *     "id": 2
+ *     "message": "course updated"
  *  }
  * 
  * @apiError (400) {Object} Missing-Course-Data The course data is absent
@@ -321,28 +321,32 @@ router.post('/', validateCourse, (req, res) => {
 
 router.put('/:id', (req, res) => {
     if(!req.body.changes) res.status(400).json({ message: 'Missing course changes' })
-    const changes = req.body.changes
-    let email = req.user.email
-    Users.findBy({ email })
+    else
+    {
+        const changes = req.body.changes
+        let email = req.user.email
+        Users.findBy({ email })
         .then(user =>
             {
                 if(user)
                 {
-                    Courses.updateByCourseId(user.id, changes)
+                    Courses.updateByCourseId(user.id, req.params.id, changes)
                         .then(response => {
-                            res.status(201).json({id: response[0]})
+                            if(response.code === 404) res.status(404).json({message: response.message})
+                            else if(response.code === 403) res.status(403).json({message: response.message})
+                            else res.status(200).json({ message: 'course updated' })
                         })
                         .catch(error => {
-                            res.status(500).json({ message: 'Could not add course' })
+                            res.status(500).json({ message: 'Could not edit course' })
                         })
                 }
-                else res.status(500).json({ message: 'Could not find user to add course for' })
+                else res.status(500).json({ message: 'Could not find user to edit course for' })
             })
         .catch(err =>
             {
-                res.status(500).json({ message: 'Could not find user to add course for' })
+                res.status(500).json({ message: 'Could not find user to edit course for' })
             })
-
+    }
 })
 
 function validateCourse(req, res, next)
