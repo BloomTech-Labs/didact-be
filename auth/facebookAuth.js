@@ -51,7 +51,11 @@ router.get('/callback',
   passport.authenticate('facebook', { failureRedirect: '/login'}),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.json(req.user)
+    res.redirect(url.format({
+      pathname: "localhost:3000/dashboard",
+      query: req.user
+    }))
+    // res.json(req.user)
   });
 
   module.exports = router;
