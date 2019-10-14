@@ -311,7 +311,7 @@ router.post('/', validateCourse, (req, res) => {
  * 
  * @apiError (500) {Object} Edit-Course-Error Could not edit course
  * 
- * @apiErrorExample 500-Course-Add-Error:
+ * @apiErrorExample 500-Course-Edit-Error:
  * HTTP/1.1 500 Internal Server Error
  * {
  *  "message": "Could not edit course"
@@ -330,7 +330,7 @@ router.put('/:id', (req, res) => {
             {
                 if(user)
                 {
-                    Courses.updateByCourseId(user.id, req.params.id, changes)
+                    Courses.updateCourseById(user.id, req.params.id, changes)
                         .then(response => {
                             if(response.code === 404) res.status(404).json({message: response.message})
                             else if(response.code === 403) res.status(403).json({message: response.message})
@@ -347,6 +347,96 @@ router.put('/:id', (req, res) => {
                 res.status(500).json({ message: 'Could not find user to edit course for' })
             })
     }
+})
+
+/**
+ * @api {delete} /api/courses/:id delete Course
+ * @apiName DeleteCourse
+ * @apiGroup Courses
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Success A message that the course was deleted
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *     "message": "course deleted"
+ *  }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (403) {Object} bad-request-error The user is not authorized to delete this course
+ * 
+ * @apiErrorExample 403-Error-Response:
+ * HTTP/1.1 403 Forbidden
+ * {
+ *  "message": "User is not permitted to change this course"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to delete course for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to delete course for"
+ * }
+ * 
+ * @apiError (500) {Object} Delete-Course-Error Could not delete course
+ * 
+ * @apiErrorExample 500-Course-Delete-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not delete course"
+ * }
+ * 
+ */
+
+router.delete('/:id', (req, res) => {
+
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+        {
+            if(user)
+            {
+                Courses.deleteCourseById(user.id, req.params.id)
+                    .then(response => {
+                        if(response.code === 404) res.status(404).json({message: response.message})
+                        else if(response.code === 403) res.status(403).json({message: response.message})
+                        else res.status(200).json({ message: 'course deleted' })
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: 'Could not delete course' })
+                    })
+            }
+            else res.status(500).json({ message: 'Could not find user to delete course for' })
+        })
+    .catch(err =>
+        {
+            res.status(500).json({ message: 'Could not find user to delete course for' })
+        })
 })
 
 function validateCourse(req, res, next)
