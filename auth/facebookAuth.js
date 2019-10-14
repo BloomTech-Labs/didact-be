@@ -2,6 +2,7 @@ const passport = require('passport');
 const FacebookAuth = require('passport-facebook');
 const router = require('express').Router()
 const jwt = require('jsonwebtoken')
+const url = require('url');
 
 const secrets = require('../config/secret')
 
