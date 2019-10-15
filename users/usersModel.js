@@ -29,7 +29,7 @@ function findById(id) {
 
 function findAll() {
     return db('users')
-        .select('*')
+        .select('id', 'email', 'first_name', 'last_name')
 }
 
 async function FBfindOrCreate(userObj)
