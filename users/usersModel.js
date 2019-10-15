@@ -32,38 +32,62 @@ function findAll() {
         .select('*')
 }
 
-async function FBfindOrCreate(userObj)
-{
+async function FBfindOrCreate(userObj) {
+    
     console.log(userObj)
     let user = await db('users')
-                .where({ facebookID: userObj.facebookID })
-    if (user.length === 0)
-    {
+        .where({ email: userObj.email })
+    if (user.length > 0) {
+        if (!user.facebookID) {
+            let newUser = await db('users')
+                .update({ facebookID: userObj.facebookID }, 'id')
+            console.log(newUser)
+            return db('users').where({ id: newUser[0] }).first()
+        }
+        else {
+            return user[0]
+        }
+    }
+
+    user = await db('users')
+        .where({ facebookID: userObj.facebookID })
+    if (user.length === 0) {
         let newUser = await db('users')
-            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID}, 'id')
+            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID }, 'id')
         console.log(newUser)
         return db('users').where({ id: newUser[0] }).first()
     }
-    else
-    {
+    else {
         return user[0]
     }
 }
 
-async function GGLfindOrCreate(userObj)
-{
+async function GGLfindOrCreate(userObj) {
+
     console.log(userObj)
     let user = await db('users')
-                .where({ googleID: userObj.googleID })
-    if (user.length === 0)
-    {
+        .where({ email: userObj.email })
+    if (user.length > 0) {
+        if (!user.googleID) {
+            let newUser = await db('users')
+                .update({ googleID: userObj.googleID }, 'id')
+            console.log(newUser)
+            return db('users').where({ id: newUser[0] }).first()
+        }
+        else {
+            return user[0]
+        }
+    }
+
+    user = await db('users')
+        .where({ googleID: userObj.googleID })
+    if (user.length === 0) {
         let newUser = await db('users')
-            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, googleID: userObj.googleID}, 'id')
+            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, googleID: userObj.googleID }, 'id')
         console.log(newUser)
         return db('users').where({ id: newUser[0] }).first()
     }
-    else
-    {
+    else {
         return user[0]
     }
 }
