@@ -29,11 +29,11 @@ function findById(id) {
 
 function findAll() {
     return db('users')
-        .select('id', 'email', 'first_name', 'last_name')
+        .select('*')
 }
 
 async function FBfindOrCreate(userObj) {
-    
+
     console.log(userObj)
     let user = await db('users')
         .where({ email: userObj.email })
