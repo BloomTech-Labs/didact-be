@@ -24,6 +24,13 @@ const Users = require('../users/usersModel')
  * 	"url": "https://www.coursera.org/learn/learning-how-to-learn"
  * }
  * 
+ * @apiParam {String} tag An tag to filter the courses you want to find (optional)
+ * 
+ * @apiParamExample {json} Get-Course-Example:
+ * {
+ * 	"tag": "Something else"
+ * }
+ * 
  * @apiSuccess (200) {Array} Courses An array of the courses on the website, optionally filtered by url sent in body
  * 
  * @apiSuccessExample Success-Response:
@@ -70,11 +77,36 @@ const Users = require('../users/usersModel')
  * 
  */
 
+async function filterByTag(aCourses, tag)
+{
+    let retArr = []
+    for(let i=0; i<aCourses.length; i++)
+    {
+        let tags = await Courses.getTagsForCourse(aCourses[i].id)
+        tags = tags.map(el => el.toLowerCase())
+        if(tags.includes(tag.toLowerCase()))  await retArr.push(aCourses[i])
+    }
+    return retArr
+}
+
 router.get('/', (req, res) => {
     Courses.find()
         .then(response => {
-            if(req.body.url) response = response.filter(el => el.link === req.body.url)
-            res.status(200).json(response)
+            if(req.body.url) 
+            {
+                response = response.filter(el => el.link === req.body.url)
+                res.status(200).json(response)
+            }
+            else if(req.body.tag) 
+            {
+                filterByTag(response, req.body.tag)
+                    .then(results =>
+                        {
+                            res.status(200).json(results)
+                        })
+                    .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
+            }
+            else res.status(200).json(response)
         })
         .catch(error => {
             res.status(500).json({ message: 'Error connecting with server' })
@@ -321,6 +353,14 @@ router.post('/', validateCourse, (req, res) => {
  *  "message": "User is not permitted to change this course"
  * }
  * 
+ * @apiError (404) {Object} not-found-error The course with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No course found with that ID"
+ * }
+ * 
  * @apiError (500) {Object} Find-User-Error Could not find user to edit course for
  * 
  * @apiErrorExample 500-User-Not-Found:
@@ -415,6 +455,14 @@ router.put('/:id', (req, res) => {
  *  "message": "User is not permitted to change this course"
  * }
  * 
+ * @apiError (404) {Object} not-found-error The course with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No course found with that ID"
+ * }
+ * 
  * @apiError (500) {Object} Find-User-Error Could not find user to delete course for
  * 
  * @apiErrorExample 500-User-Not-Found:
@@ -465,5 +513,120 @@ function validateCourse(req, res, next)
     else if(!req.body.name) res.status(400).json({ message: "Course name is required"})
     else next()
 }
+
+/**
+ * @api {post} /api/courses/:id/tags Post Tags To Course
+ * @apiName PostTagsToCourse
+ * @apiGroup Courses
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Array} tags The names of the tags you want to create/add for the course
+ * 
+ * @apiParamExample {json} Tags Post Example:
+ * { 
+        tags: ['Learning', 'self teaching', 'something else']
+ * }
+ * 
+ * @apiSuccess (201) {string} Message A message that the tags were added
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ *  {
+ *     message: 'tags added to course'
+ *  }
+ * 
+ * @apiError (400) {Object} Missing-Tags-Data The tags data is absent
+ * 
+ * @apiErrorExample 400 Tags Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Missing tags data"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (403) {Object} bad-request-error The user is not authorized to add tags to this course
+ * 
+ * @apiErrorExample 403-Error-Response:
+ * HTTP/1.1 403 Forbidden
+ * {
+ *  "message": "User is not permitted to change this course"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error The course with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No course found with that ID"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to add course for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to add course for"
+ * }
+ * 
+ * @apiError (500) {Object} Add-Course-Error Could not add course
+ * 
+ * @apiErrorExample 500-Tag-Add-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Internal error: could not add tags to course"
+ * }
+ * 
+ */
+
+router.post('/:id/tags', (req, res) => {
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user =>
+            {
+                if(user)
+                {
+                    Courses.addCourseTags(user.id, courseId, req.body.tags)
+                        .then(response => 
+                            {
+                                if(response.code === 201) res.status(201).json({ message: response.message })
+                                else res.status(response.code).json({ message: response.message })
+                            })
+                        .catch(error => {
+                            console.log(error)
+                            res.status(500).json({ message: 'Internal error: Could not add tags to course' })
+                        })
+                }
+                else res.status(500).json({ message: 'Could not find user to add course for' })
+            })
+        .catch(err =>
+            {
+                res.status(500).json({ message: 'Could not find user to add course for' })
+            })
+
+})
 
 module.exports = router

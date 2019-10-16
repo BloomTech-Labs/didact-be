@@ -7,6 +7,8 @@ module.exports = {
     add,
     updateCourseById,
     deleteCourseById,
+    addCourseTags,
+    getTagsForCourse
 }
 
 function find() {
@@ -19,6 +21,7 @@ async function findById(id)
     let course = await db('courses').where({id}).first()
     
     if(!course) return {message: 'No course found with that ID', code: 404}
+    course.tags = await getTagsForCourse(id)
     return {course, code: 200}
 }
 
@@ -48,4 +51,46 @@ async function deleteCourseById(userId, courseId)
     if(course.creator_id !== userId) return {message: 'User is not permitted to change this course', code: 403}
     let delReturn = await db('courses').where({id: courseId}).del()
     return {code: 200}
+}
+
+async function addCourseTags(userId, courseId, aTags)
+{
+    let courseObj = await findById(courseId)
+    let course = courseObj.course
+
+    if(!course) return {message: 'No course found with that ID', code: 404}
+    if(course.creator_id !== userId) return {message: 'User is not permitted to add tags to this course', code: 403}
+    
+    for(let i = 0; i < aTags.length; i++)
+    {
+        let tagId = await checkForTag(aTags[i])
+        if(tagId === -1) 
+        {
+            tagId = await db('tags').insert({name: aTags[i]}, 'id')
+            console.log('tagId from add', tagId[0])
+            await db('tags_courses').insert({tag_id: tagId[0], course_id: courseId})
+        }
+        else await db('tags_courses').insert({tag_id: tagId, course_id: courseId})
+    }
+    
+    return { message: 'tags added to course', code: 201 }
+}
+
+async function checkForTag(tagName)
+{
+    let tag = await db('tags').where({ name: tagName })
+    if(tag.length === 0) return (-1)
+    console.log('tag.id', tag[0].id)
+    return tag[0].id
+}
+
+async function getTagsForCourse(courseId) {
+    let tagList = await db('courses as c')
+        .join('tags_courses as ct', 'ct.course_id', '=', 'c.id')
+        .join('tags as t', 'ct.tag_id', '=', 't.id')
+        .select('t.name')
+        .where({ 'c.id': courseId })
+
+    nameList = tagList.map(el => el.name)
+    return nameList
 }
