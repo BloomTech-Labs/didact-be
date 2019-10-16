@@ -19,14 +19,14 @@ const Users = require('../users/usersModel')
  * 
  * @apiParam {String} url The link of the course you want to find (optional)
  * 
- * @apiParamExample {json} Get-Course-Example:
+ * @apiParamExample {json} Get Course By URL
  * {
  * 	"url": "https://www.coursera.org/learn/learning-how-to-learn"
  * }
  * 
  * @apiParam {String} tag An tag to filter the courses you want to find (optional)
  * 
- * @apiParamExample {json} Get-Course-Example:
+ * @apiParamExample {json} Get Courses By Tag
  * {
  * 	"tag": "Something else"
  * }

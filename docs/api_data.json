@@ -675,13 +675,25 @@
             "optional": false,
             "field": "url",
             "description": "<p>The link of the course you want to find (optional)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tag",
+            "description": "<p>An tag to filter the courses you want to find (optional)</p>"
           }
         ]
       },
       "examples": [
         {
-          "title": "Get-Course-Example:",
+          "title": "Get Course By URL",
           "content": "{\n\t\"url\": \"https://www.coursera.org/learn/learning-how-to-learn\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Get Courses By Tag",
+          "content": "{\n\t\"tag\": \"Something else\"\n}",
           "type": "json"
         }
       ]
