@@ -11,7 +11,9 @@ module.exports = {
     getTagsForCourse,
     findCourseSectionsByCourseId,
     findSectionDetailsByCourseSectionsId,
-    addCourseSection
+    addCourseSection,
+    updateCourseSection,
+    deleteCourseSection
 }
 
 function find() {
@@ -107,6 +109,18 @@ async function findCourseSectionsByCourseId(id) {
 function addCourseSection(section) {
     return db('course_sections')
         .insert(section, 'id')
+}
+
+function updateCourseSection(sectionId, changes) {
+    return db('course_sections')
+        .where({id: sectionId})
+        .update(changes)
+}
+
+function deleteCourseSection(sectionId) {
+    return db('course_sections')
+        .where({id: sectionId})
+        .del()
 }
 
 
