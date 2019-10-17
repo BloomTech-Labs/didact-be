@@ -310,6 +310,15 @@ define({ "api": [
             "description": "<p>The user is not authorized to delete this course</p>"
           }
         ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "not-found-error",
+            "description": "<p>The course with id sent was not found in database</p>"
+          }
+        ],
         "500": [
           {
             "group": "500",
@@ -341,6 +350,11 @@ define({ "api": [
         {
           "title": "403-Error-Response:",
           "content": "HTTP/1.1 403 Forbidden\n{\n \"message\": \"User is not permitted to change this course\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"No course found with that ID\"\n}",
           "type": "json"
         },
         {
@@ -441,6 +455,15 @@ define({ "api": [
             "description": "<p>The user is not authorized to edit this course</p>"
           }
         ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "not-found-error",
+            "description": "<p>The course with id sent was not found in database</p>"
+          }
+        ],
         "500": [
           {
             "group": "500",
@@ -477,6 +500,11 @@ define({ "api": [
         {
           "title": "403-Error-Response:",
           "content": "HTTP/1.1 403 Forbidden\n{\n \"message\": \"User is not permitted to change this course\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"No course found with that ID\"\n}",
           "type": "json"
         },
         {
@@ -647,13 +675,25 @@ define({ "api": [
             "optional": false,
             "field": "url",
             "description": "<p>The link of the course you want to find (optional)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tag",
+            "description": "<p>An tag to filter the courses you want to find (optional)</p>"
           }
         ]
       },
       "examples": [
         {
-          "title": "Course-Post-Example:",
+          "title": "Get Course By URL",
           "content": "{\n\t\"url\": \"https://www.coursera.org/learn/learning-how-to-learn\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Get Courses By Tag",
+          "content": "{\n\t\"tag\": \"Something else\"\n}",
           "type": "json"
         }
       ]
@@ -881,6 +921,176 @@ define({ "api": [
         {
           "title": "500-Course-Add-Error:",
           "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not add course\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouter.js",
+    "groupTitle": "Courses"
+  },
+  {
+    "type": "post",
+    "url": "/api/courses/:id/tags",
+    "title": "Post Tags To Course",
+    "name": "PostTagsToCourse",
+    "group": "Courses",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>The names of the tags you want to create/add for the course</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Tags Post Example:",
+          "content": "{ \n        tags: ['Learning', 'self teaching', 'something else']\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "201": [
+          {
+            "group": "201",
+            "type": "string",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>A message that the tags were added</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 201 Created\n {\n    message: 'tags added to course'\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "Missing-Tags-Data",
+            "description": "<p>The tags data is absent</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The user is not authorized to add tags to this course</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "not-found-error",
+            "description": "<p>The course with id sent was not found in database</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to add course for</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Add-Course-Error",
+            "description": "<p>Could not add course</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400 Tags Missing:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"Missing tags data\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "403-Error-Response:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n \"message\": \"User is not permitted to change this course\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"No course found with that ID\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-User-Not-Found:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to add course for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Tag-Add-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Internal error: could not add tags to course\"\n}",
           "type": "json"
         }
       ]
