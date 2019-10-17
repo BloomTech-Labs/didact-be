@@ -8,7 +8,9 @@ module.exports = {
     updateCourseById,
     deleteCourseById,
     addCourseTags,
-    getTagsForCourse
+    getTagsForCourse,
+    findCourseDetailsByCourseId,
+    findSectionDetailsByCourseDetailsId
 }
 
 function find() {
@@ -94,3 +96,18 @@ async function getTagsForCourse(courseId) {
     nameList = tagList.map(el => el.name)
     return nameList
 }
+
+async function findCourseDetailsByCourseId(id) {
+    let details = await db('course_details as cd')
+        .where({'cd.course_id': id})
+    return details
+}
+
+async function findSectionDetailsByCourseDetailsId(id) {
+    let section = await db('section_details as sd')
+        .where({'sd.course_details_id': id})
+    return section
+}
+
+
+

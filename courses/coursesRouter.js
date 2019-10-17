@@ -193,7 +193,7 @@ router.get('/:id', (req, res) => {
  * @api {post} /api/courses Post Course
  * @apiName PostCourse
  * @apiGroup Courses
- * 
+ *  
  * @apiHeader {string} Content-Type the type of content being sent
  * @apiHeader {string} token User's token for authorization
  * 
@@ -627,6 +627,22 @@ router.post('/:id/tags', (req, res) => {
                 res.status(500).json({ message: 'Could not find user to add course for' })
             })
 
+})
+
+router.get('/:id/details', (req, res) => {
+    const courseId = req.params.id
+    Courses.findCourseDetailsByCourseId(courseId)
+        .then(details => {
+            res.status(200).json({details})
+        })
+})
+
+router.get('/:id/details/:d_id', (req, res) => {
+    const courseDetailsId = req.params.d_id
+    Courses.findSectionDetailsByCourseDetailsId(courseDetailsId)
+        .then(sectionDetails => {
+            res.status(200).json({sectionDetails})
+        })
 })
 
 module.exports = router
