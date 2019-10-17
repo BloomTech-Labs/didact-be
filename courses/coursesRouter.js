@@ -629,19 +629,30 @@ router.post('/:id/tags', (req, res) => {
 
 })
 
-router.get('/:id/details', (req, res) => {
+router.get('/:id/sections', (req, res) => {
     const courseId = req.params.id
-    Courses.findCourseDetailsByCourseId(courseId)
-        .then(details => {
-            res.status(200).json({details})
+    Courses.findCourseSectionsByCourseId(courseId)
+        .then(sections => {
+            res.status(200).json({sections})
         })
 })
 
-router.get('/:id/details/:d_id', (req, res) => {
-    const courseDetailsId = req.params.d_id
-    Courses.findSectionDetailsByCourseDetailsId(courseDetailsId)
-        .then(sectionDetails => {
-            res.status(200).json({sectionDetails})
+router.post('/:id/sections', (req, res) => {
+    const courseId = req.params.id
+    if(!req.body.section) res.status(400).json({message: 'Could not find a section in body'})
+    else {
+        let section = req.body.section
+        section.course_id = courseId
+        Courses.addCourseSection(section)
+            .then(id => res.status(201).json({message: `Section has been added with an id of ${id}`}))
+    }
+})
+
+router.get('/:id/sections/:d_id', (req, res) => {
+    const courseSectionsId = req.params.d_id
+    Courses.findSectionDetailsByCourseSectionsId(courseSectionsId)
+        .then(courseSection => {
+            res.status(200).json({courseSection})
         })
 })
 

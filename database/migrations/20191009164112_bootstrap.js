@@ -29,9 +29,9 @@ exports.up = function(knex) {
         tbl.string('foreign_rating')
         tbl.string('foreign_instructors')
     })
-    .createTable('course_details', tbl => {
+    .createTable('course_sections', tbl => {
         tbl.increments()
-        tbl.string('section', 1500)
+        tbl.string('name', 1500)
         tbl.integer('course_id')
         .unsigned()
         .references('id')
@@ -45,10 +45,10 @@ exports.up = function(knex) {
     .createTable('section_details', tbl => {
         tbl.increments()
         tbl.string('name', 1500)
-        tbl.integer('course_details_id')
+        tbl.integer('course_sections_id')
         .unsigned()
         .references('id')
-        .inTable('course_details')
+        .inTable('course_sections')
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
         tbl.string('description', 10000)
@@ -162,7 +162,7 @@ exports.down = function(knex) {
         .dropTableIfExists('tags_paths')
         .dropTableIfExists('tags_courses')
         .dropTableIfExists('section_details')
-        .dropTableIfExists('course_details')
+        .dropTableIfExists('course_sections')
         .dropTableIfExists('tags')
         .dropTableIfExists('paths')
         .dropTableIfExists('courses')
