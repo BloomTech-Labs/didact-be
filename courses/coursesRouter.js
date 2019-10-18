@@ -295,7 +295,7 @@ router.post('/', validateCourse, (req, res) => {
             {
                 res.status(500).json({ message: 'Could not find user to add course for' })
             })
-
+    
 })
 
 /**
@@ -750,14 +750,30 @@ router.get('/:id/sections', (req, res) => {
 
 router.post('/:id/sections', (req, res) => {
     const courseId = req.params.id
-    if(!req.body.section) res.status(400).json({message: 'Could not find a section in body'})
-    else {
-        let section = req.body.section
-        section.course_id = courseId
-        Courses.addCourseSection(section)
-            .then(id => res.status(201).json({message: `Section has been added with an id of ${id}`}))
-            .catch(err => res.status(500).json(err))
-    }
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user =>
+            {
+                if(user)
+                {
+                    if(!req.body.section) res.status(400).json({message: 'Could not find section in body'})
+                    else {
+                        let section = req.body.section
+                        section.course_id = courseId
+                        Courses.addCourseSection(user.id, courseId, section)
+                            .then(response => {
+                                if(response.code === 201) {
+                                    res.status(201).json({message: `Section has been added with an id of ${response.message}`})
+                                } else {
+                                    res.status(403).json({message: response.message})
+                                }
+                            })
+                            .catch(err => res.status(500).json(err))
+                    }
+                }
+                else res.status(500).json({ message: 'Could not find user to add course for' })
+            })
+        .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
 })
 
 /**
@@ -777,7 +793,7 @@ router.post('/:id/sections', (req, res) => {
  * @apiSuccess (200) {Object} Updated message
  * 
  * @apiSuccessExample Success-Response:
- * HTTP/1.1 201 Created
+ * HTTP/1.1 200 Updated
  * {
  *     "message": "Section has been updated"
  * }
@@ -820,17 +836,30 @@ router.post('/:id/sections', (req, res) => {
 
 router.put('/:id/sections/:section_id', (req, res) => {
     const sectionId = req.params.section_id
-    if(!req.body.changes) res.status(400).json({message: 'Could not find changes in body'})
-    else {
-        Courses.updateCourseSection(sectionId, req.body.changes)
-            .then(updateRes => {
-                updateRes === 0 ? res.status(404).json({message: `Section not found with id of ${sectionId}`}) 
-                : res.status(200).json({message: `Section has been updated`})
-            })
-            .catch(err => res.status(500).json(err))
-    }
-})
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+        {
+            if(user)
+            {
+                if(!req.body.changes) res.status(400).json({message: 'Could not find section in body'})
+                else {
+                    Courses.updateCourseSection(user.id, courseId, sectionId, req.body.changes)
+                        .then(updateRes => {
+                            updateRes === 0 ? res.status(404).json({message: `Section not found with id of ${sectionId}`}) 
+                            : updateRes.code === 200 ? res.status(200).json({message: `Section has been updated`})
+                            : res.status(403).json({message: updateRes.message})
+                        })
+                        .catch(err => res.status(500).json(err))
+                }
+            }
+            else res.status(500).json({ message: 'Could not find user to add course for' })
+        })
+    .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
 
+})
+ 
 /**
  * @api {delete} /api/courses/:id/sections Delete Course Sections
  * @apiName DeleteCourseSections
@@ -848,7 +877,7 @@ router.put('/:id/sections/:section_id', (req, res) => {
  * @apiSuccess (200) {Object} Updated message
  * 
  * @apiSuccessExample Success-Response:
- * HTTP/1.1 201 Created
+ * HTTP/1.1 200
  * {
  *     "message": "Section has been deleted"
  * }
@@ -883,25 +912,346 @@ router.put('/:id/sections/:section_id', (req, res) => {
 
 router.delete('/:id/sections/:section_id', (req, res) => {
     const sectionId = req.params.section_id
-        Courses.deleteCourseSection(sectionId)
-            .then(deleteRes => {
-                deleteRes === 0 ? res.status(404).json({message: `Section not found with id of ${sectionId}`}) 
-                : res.status(200).json({message: `Section has been deleted`})
-            })
-            .catch(err => res.status(500).json(err))
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+        {
+            if(user)
+            {
+                Courses.deleteCourseSection(user.id, courseId, sectionId)
+                    .then(deleteRes => {
+                        deleteRes === 0 ? res.status(404).json({message: `Section not found with id of ${sectionId}`}) 
+                        : deleteRes.code === 200 ? res.status(200).json({message: `Section has been deleted`})
+                        : res.status(403).json({message: deleteRes.message})
+                    })
+                    .catch(err => res.status(500).json(err))
+            }
+            else res.status(500).json({ message: 'Could not find user to add course for' })
+        })
+    .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
+
 })
 
+/**
+ * @api {get} /api/courses/:id/sections/:s_id Get Section Details
+ * @apiName GetSectionDetails
+ * @apiGroup Details
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Array} Sections an array of the course sections
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *     
+ *   {
+ *       "courseSection": [
+ *           {
+ *               "id": 59,
+ *               "name": "How to Become a Better Learner",
+ *               "course_sections_id": 4,
+ *               "description": "",
+ *               "link": "https://www.coursera.org/learn/learning-how-to-learn/lecture/f839b/how-to-become-a-better-learner",
+ *               "type": "video",
+ *               "order": 1
+ *           },
+ *           {
+ *               "id": 60,
+ *               "name": "Introduction to Renaissance Learning and Unlocking Your Potential",
+ *               "course_sections_id": 4,
+ *               "description": "",
+ *               "link": "https://www.coursera.org/learn/learning-how-to-learn/lecture/SIck3/introduction-to-renaissance-learning-and-unlocking-your-potential",
+ *               "type": "video",
+ *               "order": 2
+ *           }
+ *       ]
+ *  }
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error could not find a detail with the passed in id
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "could not find a detail with an id of 4"
+ * }
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not find detail to get course for
+ * 
+ */
 
 
-
-
-router.get('/:id/sections/:d_id', (req, res) => {
-    const courseSectionsId = req.params.d_id
+router.get('/:id/sections/:s_id', (req, res) => {
+    const courseSectionsId = req.params.s_id
     Courses.findSectionDetailsByCourseSectionsId(courseSectionsId)
         .then(courseSection => {
             res.status(200).json({courseSection})
-        })
+        }) 
         .catch(err => res.status(500).json(err))
 })
 
+
+/**
+ * @api {post} /api/courses/:id/sections/:s_id Post Section Details
+ * @apiName PostSectionDetails
+ * @apiGroup Details
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (201) {Object} Created message with id returned
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ * {
+ *     "message": "Detail has been added with an id of 7"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not post Detail to section
+ * 
+ */
+
+
+router.post('/:id/sections/:s_id', (req, res) => {
+    const courseSectionsId = req.params.s_id
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user =>
+            {
+                if(user)
+                {
+                    if(!req.body.details) res.status(400).json({message: 'Could not find details in body'})
+                    else {
+                        const details = req.body.details
+                        details.course_sections_id = courseSectionsId
+                        Courses.addSectionDetails(user.id, courseId, details)
+                            .then(response => {
+                                if(response.code === 200) {
+                                    res.status(201).json({message: `Section Detail has been added with an id of ${response.message}`})
+                                } else {
+                                    res.status(403).json({message: response.message})
+                                }
+                            })
+                            .catch(err => res.status(500).json(err))
+                    }
+                }
+                else res.status(500).json({ message: 'Could not find user to add course for' })
+            })
+        .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
+})  
+
+
+/**
+ * @api {put} /api/courses/:id/sections/:section_id/details/:detail_id Put Section Details
+ * @apiName PutSectionDetails
+ * @apiGroup Details
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Updated message
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 Updated
+ * {
+ *     "message": "Detail has been updated"
+ * }
+ * 
+ * @apiError (400) {Object} Missing-Section-Changes The section changes are absent
+ * 
+ * @apiErrorExample 400-Section-Changes-Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Could not find changes in body"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error could not find a Detail with the passed in id
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "Detail 5 not found in Section 3"
+ * } 
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not update detail from section
+ * 
+ */
+
+
+router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
+    const courseId = req.params.id
+    const sectionId = req.params.section_id
+    const detailId = req.params.detail_id
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user =>
+            {
+                console.log(user)
+                if(user)
+                {
+                    if(!req.body.changes) res.status(400).json({message: 'Could not find changes in body'})
+                    else {
+                        Courses.updateSectionDetails(user.id, courseId, sectionId, detailId, req.body.changes)
+                            .then(updateRes => {
+                                updateRes.message === 0 ? res.status(404).json({message: `Detail ${detailId} not found in Section ${sectionId}`}) 
+                                : updateRes.code === 200 ? res.status(200).json({message: `Section Detail has been updated`})
+                                : res.status(403).json({message: updateRes.message})
+                            })
+                            .catch(err => res.status(500).json(err))
+                    }
+                }
+                else res.status(500).json({ message: 'Could not find user to update course for' })
+            })
+        .catch(err => res.status(500).json({ message: 'Could not find user to update course for' }))
+    
+})
+
+/**
+ * @api {delete} /api/courses/:id/sections/:section_id/details/:detail_id Delete Course Section Details
+ * @apiName DeleteCourseSectionDetails
+ * @apiGroup Details
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Updated message
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 
+ * {
+ *     "message": "Detail has been deleted"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error could not find a detail with the passed in id
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "Detail 2 not found in Section 4"
+ * } 
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not delete detail from section
+ * 
+ */
+
+
+router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
+    const detailId = req.params.detail_id
+    const sectionId = req.params.section_id
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user =>
+            {
+                console.log(user)
+                if(user)
+                {
+                    Courses.deleteSectionDetails(user.id, courseId, sectionId, detailId)
+                        .then(deleteRes => {
+                            deleteRes.message === 0 ? res.status(404).json({message: `Detail ${detailId} not found in Section ${sectionId}`}) 
+                            : deleteRes.code === 200 ? res.status(200).json({message: `Detail has been deleted`}) 
+                            : res.status(403).json({message: deleteRes.message})
+                        })
+                        .catch(err => res.status(500).json(err))
+                }
+                else res.status(500).json({ message: 'Could not find user to delete course for' })
+            })
+        .catch(err => res.status(500).json({ message: 'Could not find user to delete course for' }))  
+})
+
+ 
 module.exports = router
+
+  
