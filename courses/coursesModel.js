@@ -13,12 +13,13 @@ module.exports = {
     findSectionDetailsByCourseSectionsId,
     addCourseSection,
     updateCourseSection,
-    deleteCourseSection
+    deleteCourseSection,
+    addSectionDetails
 }
 
 function find() {
     return db('courses')
-}
+} 
 
 async function findById(id)
 {
@@ -129,6 +130,12 @@ async function findSectionDetailsByCourseSectionsId(id) {
         .where({'sd.course_sections_id': id})
     return section
 }
+
+function addSectionDetails(details) {
+    return db('section_details')
+        .insert(details, 'id')
+}
+
 
 
 

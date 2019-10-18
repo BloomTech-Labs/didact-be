@@ -295,7 +295,7 @@ router.post('/', validateCourse, (req, res) => {
             {
                 res.status(500).json({ message: 'Could not find user to add course for' })
             })
-
+    
 })
 
 /**
@@ -757,7 +757,7 @@ router.post('/:id/sections', (req, res) => {
         Courses.addCourseSection(section)
             .then(id => res.status(201).json({message: `Section has been added with an id of ${id}`}))
             .catch(err => res.status(500).json(err))
-    }
+    } 
 })
 
 /**
@@ -830,7 +830,7 @@ router.put('/:id/sections/:section_id', (req, res) => {
             .catch(err => res.status(500).json(err))
     }
 })
-
+ 
 /**
  * @api {delete} /api/courses/:id/sections Delete Course Sections
  * @apiName DeleteCourseSections
@@ -893,15 +893,33 @@ router.delete('/:id/sections/:section_id', (req, res) => {
 
 
 
-
-
-router.get('/:id/sections/:d_id', (req, res) => {
-    const courseSectionsId = req.params.d_id
+router.get('/:id/sections/:s_id', (req, res) => {
+    const courseSectionsId = req.params.s_id
     Courses.findSectionDetailsByCourseSectionsId(courseSectionsId)
         .then(courseSection => {
             res.status(200).json({courseSection})
-        })
+        }) 
         .catch(err => res.status(500).json(err))
 })
 
+router.post('/:id/sections/:s_id', (req, res) => {
+    const courseSectionsId = req.params.s_id
+    if(!req.body.details) res.status(400).json({message: 'Could not find details in body'})
+    else {
+        const details = req.body.details
+        details.course_sections_id = courseSectionsId
+        Courses.addSectionDetails(details)
+            .then(id => res.status(201).json({message: `Section Detail has been added with an id of ${id}`}))
+    }
+
+})  
+
 module.exports = router
+
+// if(!req.body.section) res.status(400).json({message: 'Could not find a section in body'})
+//     else {
+//         let section = req.body.section
+//         section.course_id = courseId
+//         Courses.addCourseSection(section)
+//             .then(id => res.status(201).json({message: `Section has been added with an id of ${id}`}))
+//             .catch(err => res.status(500).json(err))  
