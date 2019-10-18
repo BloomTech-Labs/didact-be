@@ -14,7 +14,9 @@ module.exports = {
     addCourseSection,
     updateCourseSection,
     deleteCourseSection,
-    addSectionDetails
+    addSectionDetails,
+    updateSectionDetails,
+    deleteSectionDetails
 }
 
 function find() {
@@ -112,13 +114,13 @@ function addCourseSection(section) {
         .insert(section, 'id')
 }
 
-function updateCourseSection(sectionId, changes) {
+async function updateCourseSection(sectionId, changes) {
     return db('course_sections')
         .where({id: sectionId})
         .update(changes)
 }
 
-function deleteCourseSection(sectionId) {
+async function deleteCourseSection(sectionId) {
     return db('course_sections')
         .where({id: sectionId})
         .del()
@@ -136,6 +138,16 @@ function addSectionDetails(details) {
         .insert(details, 'id')
 }
 
+async function updateSectionDetails(sectionId, detailId, changes) {
+    return db('section_details')
+            .where({id: detailId, course_sections_id: sectionId})
+            .update(changes)
+}
 
+async function deleteSectionDetails(sectionId, detailId) {
+    return db('section_details')
+        .where({id: detailId, course_sections_id: sectionId})
+        .del()
+}
 
 

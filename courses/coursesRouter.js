@@ -911,8 +911,34 @@ router.post('/:id/sections/:s_id', (req, res) => {
         Courses.addSectionDetails(details)
             .then(id => res.status(201).json({message: `Section Detail has been added with an id of ${id}`}))
     }
-
 })  
+
+router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
+    const detailId = req.params.detail_id
+    const sectionId = req.params.section_id
+    if(!req.body.changes) res.status(400).json({message: 'Could not find changes in body'})
+    else {
+        Courses.updateSectionDetails(sectionId, detailId, req.body.changes)
+            .then(updateRes => {
+                updateRes === 0 ? res.status(404).json({message: `Detail ${detailId} not found in Section ${sectionId}`}) 
+                : res.status(200).json({message: `Section Detail has been updated`})
+            })
+            .catch(err => res.status(500).json(err))
+    }
+})
+
+router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
+    const detailId = req.params.detail_id
+    const sectionId = req.params.section_id
+        Courses.deleteSectionDetails(sectionId, detailId)
+            .then(deleteRes => {
+                deleteRes === 0 ? res.status(404).json({message: `Detail ${detailId} not found in Section ${sectionId}`}) 
+                : res.status(200).json({message: `Detail has been deleted`})
+            })
+            .catch(err => res.status(500).json(err))
+})
+
+ 
 
 module.exports = router
 
