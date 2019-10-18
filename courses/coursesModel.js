@@ -113,22 +113,32 @@ async function addCourseSection(userId, courseId, section) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
     if(!course) return {message: 'No course found with that ID', code: 404}
-    if(course.creator_id !== userId) return {message: 'User is not permitted to add tags to this course', code: 403}
+    if(course.creator_id !== userId) return {message: 'User is not permitted to add sections to this course', code: 403}
     let addreturn = await db('course_sections')
         .insert(section, 'id')
-    return {code: 200, message: addreturn}
+    return {code: 201, message: addreturn}
 }
 
-async function updateCourseSection(sectionId, changes) {
-    return db('course_sections')
+async function updateCourseSection(userId, courseId, sectionId, changes) {
+    let courseObj = await findById(courseId)
+    let course = courseObj.course
+    if(!course) return {message: 'No course found with that ID', code: 404}
+    if(course.creator_id !== userId) return {message: 'User is not permitted to update sections to this course', code: 403}
+    let updatereturn = await db('course_sections')
         .where({id: sectionId})
         .update(changes)
+    return {code: 200, message: updatereturn}
 }
 
-async function deleteCourseSection(sectionId) {
-    return db('course_sections')
+async function deleteCourseSection(userId, courseId, sectionId) {
+    let courseObj = await findById(courseId)
+    let course = courseObj.course
+    if(!course) return {message: 'No course found with that ID', code: 404}
+    if(course.creator_id !== userId) return {message: 'User is not permitted to update sections to this course', code: 403}
+    await db('course_sections')
         .where({id: sectionId})
         .del()
+    return {code: 200, message: 'delete successful'}
 }
 
 
