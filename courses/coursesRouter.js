@@ -629,12 +629,124 @@ router.post('/:id/tags', (req, res) => {
 
 })
 
+
+/**
+ * @api {get} /api/courses/:id/sections Get Course Sections
+ * @apiName GetCourseSections
+ * @apiGroup Sections
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Array} Sections an array of the course sections
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *     "sections": [
+ *         {
+ *             "id": 1,
+ *             "name": "What is Learning number 24?",
+ *             "course_id": 1,
+ *             "description": "Although living brains are very complex, this module uses metaphor and analogy to help simplify matters. You will discover several fundamentally different modes of thinking, and how you can use these modes to improve your learning. You will also be introduced to a tool for tackling procrastination, be given some practical information about memory, and discover surprisingly useful insights about learning and sleep. <br><br>(Please note that this module should only take about an hour--the extra time quoted relates to purely optional activities.)",
+ *             "link": "https://www.coursera.org/learn/learning-how-to-learn/home/week/2",
+ *             "order": 2
+ *         }
+ *     ]
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error could not find a course with the passed in id
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "could not find a course with an id of 4"
+ * }
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not find section to get course for
+ * 
+ */
+
+
 router.get('/:id/sections', (req, res) => {
     const courseId = req.params.id
-    Courses.findCourseSectionsByCourseId(courseId)
-        .then(sections => res.status(200).json({sections}))
+    Courses.findById(courseId)
+        .then(response => {
+            console.log(response.course)
+            if(response.code === 200) {
+                Courses.findCourseSectionsByCourseId(courseId)
+                .then(sections => res.status(200).json({sections}))
+                .catch(err => res.status(500).json(err))
+            } else {
+                res.status(404).json({message: `could not find a course with an id of ${courseId}`})
+            }
+        })
         .catch(err => res.status(500).json(err))
 })
+
+/**
+ * @api {post} /api/courses/:id/sections Post Course Sections
+ * @apiName PostCourseSections
+ * @apiGroup Sections
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (201) {Object} Created message with id returned
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ * {
+ *     "message": "Section has been added with an id of 7"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not find section to get course for
+ * 
+ */
 
 router.post('/:id/sections', (req, res) => {
     const courseId = req.params.id
@@ -647,6 +759,64 @@ router.post('/:id/sections', (req, res) => {
             .catch(err => res.status(500).json(err))
     }
 })
+
+/**
+ * @api {put} /api/courses/:id/sections Put Course Sections
+ * @apiName PutCourseSections
+ * @apiGroup Sections
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Updated message
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ * {
+ *     "message": "Section has been updated"
+ * }
+ * 
+ * @apiError (400) {Object} Missing-Section-Changes The section changes are absent
+ * 
+ * @apiErrorExample 400-Section-Changes-Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Could not find changes in body"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error could not find a section with the passed in id
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "Section not found with id of 4"
+ * } 
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not find section to get course for
+ * 
+ */
 
 router.put('/:id/sections/:section_id', (req, res) => {
     const sectionId = req.params.section_id
@@ -661,6 +831,56 @@ router.put('/:id/sections/:section_id', (req, res) => {
     }
 })
 
+/**
+ * @api {delete} /api/courses/:id/sections Delete Course Sections
+ * @apiName DeleteCourseSections
+ * @apiGroup Sections
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Updated message
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ * {
+ *     "message": "Section has been deleted"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error could not find a section with the passed in id
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "Section not found with id of 4"
+ * } 
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not find section to get course for
+ * 
+ */
+
 router.delete('/:id/sections/:section_id', (req, res) => {
     const sectionId = req.params.section_id
         Courses.deleteCourseSection(sectionId)
@@ -670,6 +890,9 @@ router.delete('/:id/sections/:section_id', (req, res) => {
             })
             .catch(err => res.status(500).json(err))
 })
+
+
+
 
 
 router.get('/:id/sections/:d_id', (req, res) => {
