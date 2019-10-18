@@ -8,7 +8,12 @@ module.exports = {
     updateCourseById,
     deleteCourseById,
     addCourseTags,
-    getTagsForCourse
+    getTagsForCourse,
+    findCourseSectionsByCourseId,
+    findSectionDetailsByCourseSectionsId,
+    addCourseSection,
+    updateCourseSection,
+    deleteCourseSection
 }
 
 function find() {
@@ -81,7 +86,7 @@ async function checkForTag(tagName)
     let tag = await db('tags').where({ name: tagName })
     if(tag.length === 0) return (-1)
     console.log('tag.id', tag[0].id)
-    return tag[0].id
+    return tag[0].id 
 }
 
 async function getTagsForCourse(courseId) {
@@ -94,3 +99,36 @@ async function getTagsForCourse(courseId) {
     nameList = tagList.map(el => el.name)
     return nameList
 }
+
+async function findCourseSectionsByCourseId(id) {
+    let details = await db('course_sections as cs')
+        .where({'cs.course_id': id})
+    return details 
+}
+
+function addCourseSection(section) {
+    return db('course_sections')
+        .insert(section, 'id')
+}
+
+function updateCourseSection(sectionId, changes) {
+    return db('course_sections')
+        .where({id: sectionId})
+        .update(changes)
+}
+
+function deleteCourseSection(sectionId) {
+    return db('course_sections')
+        .where({id: sectionId})
+        .del()
+}
+
+
+async function findSectionDetailsByCourseSectionsId(id) {
+    let section = await db('section_details as sd')
+        .where({'sd.course_sections_id': id})
+    return section
+}
+
+
+
