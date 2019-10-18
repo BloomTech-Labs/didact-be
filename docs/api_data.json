@@ -1101,6 +1101,426 @@
   },
   {
     "type": "delete",
+    "url": "/api/courses/:id/sections/:section_id/details/:detail_id",
+    "title": "Delete Course Section Details",
+    "name": "DeleteCourseSectionDetails",
+    "group": "Details",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 \n{\n    \"message\": \"Detail has been deleted\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "not-found-error",
+            "description": "<p>could not find a detail with the passed in id</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-Section-Error",
+            "description": "<p>Could not delete detail from section</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"Detail 2 not found in Section 4\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouter.js",
+    "groupTitle": "Details"
+  },
+  {
+    "type": "get",
+    "url": "/api/courses/:id/sections/:s_id",
+    "title": "Get Section Details",
+    "name": "GetSectionDetails",
+    "group": "Details",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Array",
+            "optional": false,
+            "field": "Sections",
+            "description": "<p>an array of the course sections</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n    \n  {\n      \"courseSection\": [\n          {\n              \"id\": 59,\n              \"name\": \"How to Become a Better Learner\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/f839b/how-to-become-a-better-learner\",\n              \"type\": \"video\",\n              \"order\": 1\n          },\n          {\n              \"id\": 60,\n              \"name\": \"Introduction to Renaissance Learning and Unlocking Your Potential\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/SIck3/introduction-to-renaissance-learning-and-unlocking-your-potential\",\n              \"type\": \"video\",\n              \"order\": 2\n          }\n      ]\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "not-found-error",
+            "description": "<p>could not find a detail with the passed in id</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-Section-Error",
+            "description": "<p>Could not find detail to get course for</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"could not find a detail with an id of 4\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouter.js",
+    "groupTitle": "Details"
+  },
+  {
+    "type": "post",
+    "url": "/api/courses/:id/sections/:s_id",
+    "title": "Post Section Details",
+    "name": "PostSectionDetails",
+    "group": "Details",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "201": [
+          {
+            "group": "201",
+            "type": "Object",
+            "optional": false,
+            "field": "Created",
+            "description": "<p>message with id returned</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 201 Created\n{\n    \"message\": \"Detail has been added with an id of 7\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-Section-Error",
+            "description": "<p>Could not post Detail to section</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouter.js",
+    "groupTitle": "Details"
+  },
+  {
+    "type": "put",
+    "url": "/api/courses/:id/sections/:section_id/details/:detail_id",
+    "title": "Put Section Details",
+    "name": "PutSectionDetails",
+    "group": "Details",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Detail has been updated\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "Missing-Section-Changes",
+            "description": "<p>The section changes are absent</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "not-found-error",
+            "description": "<p>could not find a Detail with the passed in id</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-Section-Error",
+            "description": "<p>Could not update detail from section</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Section-Changes-Missing:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"Could not find changes in body\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"Detail 5 not found in Section 3\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouter.js",
+    "groupTitle": "Details"
+  },
+  {
+    "type": "delete",
     "url": "/api/courses/:id/sections",
     "title": "Delete Course Sections",
     "name": "DeleteCourseSections",
@@ -1147,7 +1567,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 Created\n{\n    \"message\": \"Section has been deleted\"\n}",
+          "content": "HTTP/1.1 200\n{\n    \"message\": \"Section has been deleted\"\n}",
           "type": "json"
         }
       ]
@@ -1448,7 +1868,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 Created\n{\n    \"message\": \"Section has been updated\"\n}",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Section has been updated\"\n}",
           "type": "json"
         }
       ]
