@@ -698,12 +698,20 @@ router.get('/:id/sections', (req, res) => {
             if(response.code === 200) {
                 Courses.findCourseSectionsByCourseId(courseId)
                 .then(sections => res.status(200).json({sections}))
-                .catch(err => res.status(500).json(err))
+                .catch(err => 
+                    {
+                        console.log('500 err from get sections', err)
+                        res.status(500).json(err)
+                    })
             } else {
                 res.status(404).json({message: `could not find a course with an id of ${courseId}`})
             }
         })
-        .catch(err => res.status(500).json(err))
+        .catch(err => 
+            {
+                console.log(err)
+                res.status(500).json(err)
+            })
 })
 
 /**
