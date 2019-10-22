@@ -1259,7 +1259,4 @@ router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
         .catch(err => res.status(500).json({ message: 'Could not find user to delete course for' }))  
 })
 
- 
 module.exports = router
-
-  
