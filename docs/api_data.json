@@ -1521,9 +1521,9 @@
   },
   {
     "type": "delete",
-    "url": "/api/courses/:id/sections",
-    "title": "Delete Course Sections",
-    "name": "DeleteCourseSections",
+    "url": "/api/courses/:id/sections/:section_id",
+    "title": "Delete Course Section",
+    "name": "DeleteCourseSection",
     "group": "Sections",
     "header": {
       "fields": {
@@ -1732,8 +1732,8 @@
   {
     "type": "post",
     "url": "/api/courses/:id/sections",
-    "title": "Post Course Sections",
-    "name": "PostCourseSections",
+    "title": "Post Course Section",
+    "name": "PostCourseSection",
     "group": "Sections",
     "header": {
       "fields": {
@@ -1822,9 +1822,9 @@
   },
   {
     "type": "put",
-    "url": "/api/courses/:id/sections",
-    "title": "Put Course Sections",
-    "name": "PutCourseSections",
+    "url": "/api/courses/:id/sections/:section_id",
+    "title": "Put Course Section",
+    "name": "PutCourseSection",
     "group": "Sections",
     "header": {
       "fields": {

@@ -715,8 +715,8 @@ router.get('/:id/sections', (req, res) => {
 })
 
 /**
- * @api {post} /api/courses/:id/sections Post Course Sections
- * @apiName PostCourseSections
+ * @api {post} /api/courses/:id/sections Post Course Section
+ * @apiName PostCourseSection
  * @apiGroup Sections
  * 
  * @apiHeader {string} Content-Type the type of content being sent
@@ -785,8 +785,8 @@ router.post('/:id/sections', (req, res) => {
 })
 
 /**
- * @api {put} /api/courses/:id/sections Put Course Sections
- * @apiName PutCourseSections
+ * @api {put} /api/courses/:id/sections/:section_id Put Course Section
+ * @apiName PutCourseSection
  * @apiGroup Sections
  * 
  * @apiHeader {string} Content-Type the type of content being sent
@@ -869,8 +869,8 @@ router.put('/:id/sections/:section_id', (req, res) => {
 })
  
 /**
- * @api {delete} /api/courses/:id/sections Delete Course Sections
- * @apiName DeleteCourseSections
+ * @api {delete} /api/courses/:id/sections/:section_id Delete Course Section
+ * @apiName DeleteCourseSection
  * @apiGroup Sections
  * 
  * @apiHeader {string} Content-Type the type of content being sent
