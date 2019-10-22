@@ -515,8 +515,8 @@ function validateCourse(req, res, next)
 }
 
 /**
- * @api {post} /api/courses/:id/tags Post Tags To Course
- * @apiName PostTagsToCourse
+ * @api {post} /api/courses/:id/tags Post Tag To Course
+ * @apiName PostTagToCourse
  * @apiGroup Courses
  * 
  * @apiHeader {string} Content-Type the type of content being sent
@@ -528,27 +528,27 @@ function validateCourse(req, res, next)
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Array} tags The names of the tags you want to create/add for the course
+ * @apiParam {Object} tag The name of the tag you want to create/add for the course
  * 
- * @apiParamExample {json} Tags Post Example:
+ * @apiParamExample {json} Tag Post Example:
  * { 
-        tags: ['Learning', 'self teaching', 'something else']
+        tag: 'Learning'
  * }
  * 
- * @apiSuccess (201) {string} Message A message that the tags were added
+ * @apiSuccess (201) {string} Message A message that the tag were added
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 201 Created
  *  {
- *     message: 'tags added to course'
+ *     message: 'tag added to course'
  *  }
  * 
- * @apiError (400) {Object} Missing-Tags-Data The tags data is absent
+ * @apiError (400) {Object} Missing-Tag-Data The tag data is absent
  * 
- * @apiErrorExample 400 Tags Missing:
+ * @apiErrorExample 400 Tag Missing:
  * HTTP/1.1 400 Bad Request
  * {
- *  "message": "Missing tags data"
+ *  "message": "Missing tag data"
  * }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
@@ -567,7 +567,7 @@ function validateCourse(req, res, next)
  *  "message": "Invalid Credentials"
  * }
  * 
- * @apiError (403) {Object} bad-request-error The user is not authorized to add tags to this course
+ * @apiError (403) {Object} bad-request-error The user is not authorized to add tag to this course
  * 
  * @apiErrorExample 403-Error-Response:
  * HTTP/1.1 403 Forbidden
@@ -596,7 +596,7 @@ function validateCourse(req, res, next)
  * @apiErrorExample 500-Tag-Add-Error:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Internal error: could not add tags to course"
+ *  "message": "Internal error: could not add tag to course"
  * }
  * 
  */
@@ -609,7 +609,7 @@ router.post('/:id/tags', (req, res) => {
             {
                 if(user)
                 {
-                    Courses.addCourseTags(user.id, courseId, req.body.tags)
+                    Courses.addCourseTag(user.id, courseId, req.body.tag)
                         .then(response => 
                             {
                                 if(response.code === 201) res.status(201).json({ message: response.message })

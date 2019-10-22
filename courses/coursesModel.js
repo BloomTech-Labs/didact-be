@@ -7,7 +7,7 @@ module.exports = {
     add,
     updateCourseById,
     deleteCourseById,
-    addCourseTags,
+    addCourseTag,
     getTagsForCourse,
     findCourseSectionsByCourseId,
     findSectionDetailsByCourseSectionsId,
@@ -61,7 +61,7 @@ async function deleteCourseById(userId, courseId)
     return {code: 200}
 }
 
-async function addCourseTags(userId, courseId, aTags)
+async function addCourseTag(userId, courseId, tag)
 {
     let courseObj = await findById(courseId)
     let course = courseObj.course
@@ -69,17 +69,25 @@ async function addCourseTags(userId, courseId, aTags)
     if(!course) return {message: 'No course found with that ID', code: 404}
     if(course.creator_id !== userId) return {message: 'User is not permitted to add tags to this course', code: 403}
     
-    for(let i = 0; i < aTags.length; i++)
+    // for(let i = 0; i < aTags.length; i++)
+    // {
+    //     let tagId = await checkForTag(aTags[i])
+    //     if(tagId === -1) 
+    //     {
+    //         tagId = await db('tags').insert({name: aTags[i]}, 'id')
+    //         console.log('tagId from add', tagId[0])
+    //         await db('tags_courses').insert({tag_id: tagId[0], course_id: courseId})
+    //     }
+    //     else await db('tags_courses').insert({tag_id: tagId, course_id: courseId})
+    // }
+    let tagId = await checkForTag(tag)
+    if(tagId === -1) 
     {
-        let tagId = await checkForTag(aTags[i])
-        if(tagId === -1) 
-        {
-            tagId = await db('tags').insert({name: aTags[i]}, 'id')
-            console.log('tagId from add', tagId[0])
-            await db('tags_courses').insert({tag_id: tagId[0], course_id: courseId})
-        }
-        else await db('tags_courses').insert({tag_id: tagId, course_id: courseId})
+        tagId = await db('tags').insert({name: tag}, 'id')
+        console.log('tagId from add', tagId[0])
+        await db('tags_courses').insert({tag_id: tagId[0], course_id: courseId})
     }
+    else await db('tags_courses').insert({tag_id: tagId, course_id: courseId})
     
     return { message: 'tags added to course', code: 201 }
 }
