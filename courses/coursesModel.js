@@ -8,6 +8,7 @@ module.exports = {
     updateCourseById,
     deleteCourseById,
     addCourseTag,
+    deleteCourseTag,
     getTagsForCourse,
     findCourseSectionsByCourseId,
     findSectionDetailsByCourseSectionsId,
@@ -69,17 +70,6 @@ async function addCourseTag(userId, courseId, tag)
     if(!course) return {message: 'No course found with that ID', code: 404}
     if(course.creator_id !== userId) return {message: 'User is not permitted to add tags to this course', code: 403}
     
-    // for(let i = 0; i < aTags.length; i++)
-    // {
-    //     let tagId = await checkForTag(aTags[i])
-    //     if(tagId === -1) 
-    //     {
-    //         tagId = await db('tags').insert({name: aTags[i]}, 'id')
-    //         console.log('tagId from add', tagId[0])
-    //         await db('tags_courses').insert({tag_id: tagId[0], course_id: courseId})
-    //     }
-    //     else await db('tags_courses').insert({tag_id: tagId, course_id: courseId})
-    // }
     let tagId = await checkForTag(tag)
     if(tagId === -1) 
     {
@@ -89,7 +79,26 @@ async function addCourseTag(userId, courseId, tag)
     }
     else await db('tags_courses').insert({tag_id: tagId, course_id: courseId})
     
-    return { message: 'tags added to course', code: 201 }
+    return { message: 'tag added to course', code: 201 }
+}
+
+async function deleteCourseTag(userId, courseId, tag)
+{
+    let courseObj = await findById(courseId)
+    let course = courseObj.course
+
+    if(!course) return {message: 'No course found with that ID', code: 404}
+    if(course.creator_id !== userId) return {message: 'User is not permitted to remove tags from this course', code: 403}
+
+    let tagId = await checkForTag(tag)
+
+    if(tagId === -1) 
+    {
+        return {message: 'Tag not found', code: 404}
+    }
+    else await db('tags_courses').where({tag_id: tagId, course_id: courseId}).del()
+    
+    return { message: 'tag removed from course', code: 200 }
 }
 
 async function checkForTag(tagName)
@@ -149,7 +158,6 @@ async function deleteCourseSection(userId, courseId, sectionId) {
     return {code: 200, message: 'delete successful'}
 }
 
-
 async function findSectionDetailsByCourseSectionsId(id) {
     let section = await db('section_details as sd')
         .where({'sd.course_sections_id': id})
@@ -168,7 +176,6 @@ async function addSectionDetails(userId, courseId, details) {
     }
         
 }
-
 
 async function updateSectionDetails(userId, courseId, sectionId, detailId, changes) {
     let courseObj = await findById(courseId)

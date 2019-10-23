@@ -410,7 +410,7 @@ router.put('/:id', (req, res) => {
 })
 
 /**
- * @api {delete} /api/courses/:id delete Course
+ * @api {delete} /api/courses/:id Delete Course
  * @apiName DeleteCourse
  * @apiGroup Courses
  * 
@@ -535,7 +535,7 @@ function validateCourse(req, res, next)
         tag: 'Learning'
  * }
  * 
- * @apiSuccess (201) {string} Message A message that the tag were added
+ * @apiSuccess (201) {string} Message A message that the tag was added
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 201 Created
@@ -572,7 +572,7 @@ function validateCourse(req, res, next)
  * @apiErrorExample 403-Error-Response:
  * HTTP/1.1 403 Forbidden
  * {
- *  "message": "User is not permitted to change this course"
+ *  "message": "User is not permitted to add tags to this course"
  * }
  * 
  * @apiError (404) {Object} not-found-error The course with id sent was not found in database
@@ -583,15 +583,15 @@ function validateCourse(req, res, next)
  *  "message": "No course found with that ID"
  * }
  * 
- * @apiError (500) {Object} Find-User-Error Could not find user to add course for
+ * @apiError (500) {Object} Find-User-Error Could not find user to add tag for
  * 
  * @apiErrorExample 500-User-Not-Found:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Could not find user to add course for"
+ *  "message": "Could not find user to add tag for"
  * }
  * 
- * @apiError (500) {Object} Add-Course-Error Could not add course
+ * @apiError (500) {Object} Add-Tag-Error Could not add tag
  * 
  * @apiErrorExample 500-Tag-Add-Error:
  * HTTP/1.1 500 Internal Server Error
@@ -627,6 +627,136 @@ router.post('/:id/tags', (req, res) => {
                 res.status(500).json({ message: 'Could not find user to add course for' })
             })
 
+})
+
+/**
+ * @api {delete} /api/courses/:id/tags Delete Tag From Course
+ * @apiName DeleteTagFromCourse
+ * @apiGroup Courses
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Object} tag The name of the tag you want to delete from the course
+ * 
+ * @apiParamExample {json} Tag Delete Example:
+ * { 
+        tag: 'Learning'
+ * }
+ * 
+ * @apiSuccess (200) {string} Message A message that the tag was removed
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *     message: 'tag removed from course'
+ *  }
+ * 
+ * @apiError (400) {Object} Missing-Tag-Data The tag data is absent
+ * 
+ * @apiErrorExample 400 Tag Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Missing tag data"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (403) {Object} bad-request-error The user is not authorized to remove tag from this course
+ * 
+ * @apiErrorExample 403-Error-Response:
+ * HTTP/1.1 403 Forbidden
+ * {
+ *  "message": "User is not permitted to remove tags from this course"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error The course with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No course found with that ID"
+ * }
+ * 
+ * @apiError (404) {Object} tag-not-found-error The tag with the name sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "Tag not found"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to remove tag for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to remove tag for"
+ * }
+ * 
+ * @apiError (500) {Object} Add-Course-Error Could not remove tag
+ * 
+ * @apiErrorExample 500-Tag-Remove-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Internal error: could not remove from course"
+ * }
+ * 
+ */
+
+router.delete('/:id/tags', (req, res) => {
+    if(!req.body.tag)
+    {
+        res.status(400).json({ message: "Missing tag data" })
+    }
+    else
+    {
+        const courseId = req.params.id
+        let email = req.user.email
+        Users.findBy({ email })
+            .then(user =>
+                {
+                    if(user)
+                    {
+                        Courses.deleteCourseTag(user.id, courseId, req.body.tag)
+                        .then(response => 
+                            {
+                                if(response.code === 200) res.status(200).json({ message: response.message })
+                                else res.status(response.code).json({ message: response.message })
+                            })
+                        .catch(error => 
+                            {
+                                console.log(error)
+                                res.status(500).json({ message: 'Internal error: Could not remove tags from course' })
+                            })
+                    }
+                    else res.status(500).json({ message: 'Could not find user to remove tag for' })
+                })
+            .catch(err =>
+                {
+                    res.status(500).json({ message: 'Could not find user to remove tag for' })
+                })
+    }
 })
 
 
@@ -733,7 +863,8 @@ router.get('/:id/sections', (req, res) => {
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 201 Created
  * {
- *     "message": "Section has been added with an id of 7"
+ *     "message": "Section has been added",
+ *     "id": 7
  * }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
@@ -771,7 +902,7 @@ router.post('/:id/sections', (req, res) => {
                         Courses.addCourseSection(user.id, courseId, section)
                             .then(response => {
                                 if(response.code === 201) {
-                                    res.status(201).json({message: `Section has been added with an id of ${response.message}`})
+                                    res.status(201).json({ message: `Section has been added`, id: response.message })
                                 } else {
                                     res.status(403).json({message: response.message})
                                 }
@@ -867,7 +998,7 @@ router.put('/:id/sections/:section_id', (req, res) => {
     .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
 
 })
- 
+
 /**
  * @api {delete} /api/courses/:id/sections/:section_id Delete Course Section
  * @apiName DeleteCourseSection
@@ -1083,7 +1214,7 @@ router.post('/:id/sections/:s_id', (req, res) => {
                         Courses.addSectionDetails(user.id, courseId, details)
                             .then(response => {
                                 if(response.code === 200) {
-                                    res.status(201).json({message: `Section Detail has been added with an id of ${response.message}`})
+                                    res.status(201).json({message: `Section Detail has been added`, id: response.message})
                                 } else {
                                     res.status(403).json({message: response.message})
                                 }
