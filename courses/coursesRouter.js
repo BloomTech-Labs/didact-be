@@ -410,7 +410,7 @@ router.put('/:id', (req, res) => {
 })
 
 /**
- * @api {delete} /api/courses/:id delete Course
+ * @api {delete} /api/courses/:id Delete Course
  * @apiName DeleteCourse
  * @apiGroup Courses
  * 
@@ -738,7 +738,7 @@ router.delete('/:id/tags', (req, res) => {
                 {
                     if(user)
                     {
-                        Courses.addCourseTag(user.id, courseId, req.body.tag)
+                        Courses.deleteCourseTag(user.id, courseId, req.body.tag)
                         .then(response => 
                             {
                                 if(response.code === 200) res.status(200).json({ message: response.message })

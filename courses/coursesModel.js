@@ -82,7 +82,7 @@ async function addCourseTag(userId, courseId, tag)
     return { message: 'tag added to course', code: 201 }
 }
 
-async function deleteCourseTag(userId, courseId)
+async function deleteCourseTag(userId, courseId, tag)
 {
     let courseObj = await findById(courseId)
     let course = courseObj.course
