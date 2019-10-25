@@ -1,4 +1,6 @@
 const router = require('express').Router()
+const axios = require('axios')
+const {linkPresent, checkDbForLink, checkForUdemyLink} = require('../utils/checkCourseLink')
 
 const Courses = require('./coursesModel')
 const Users = require('../users/usersModel')
@@ -1365,7 +1367,6 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
  * 
  */
 
-
 router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
     const detailId = req.params.detail_id
     const sectionId = req.params.section_id
@@ -1389,5 +1390,7 @@ router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
             })
         .catch(err => res.status(500).json({ message: 'Could not find user to delete course for' }))  
 })
+
+
 
 module.exports = router

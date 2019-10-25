@@ -158,7 +158,16 @@ router.post('/', (req, res) => {
             if (err) res.status(401).json({ message: 'Token does not exist' })
             else 
             {
-                res.json({email: decodedToken.email})
+                Users.findBy({email: decodedToken.email})
+                .then(user =>
+                    {
+                        if(user) res.status(200).json({email: decodedToken.email, id: user.id})
+                        else res.status(404).json({ message: 'No such user found' })
+                    })
+                .catch(err =>
+                    {
+                        res.status(500).json({ message: 'Internal server error, could not retrieve user' })
+                    })
             }
         })
     } else {
