@@ -7,6 +7,7 @@ const facebookAuth = require('../auth/facebookAuth')
 const googleAuth = require('../auth/googleAuth')
 const coursesRouter = require('../courses/coursesRouter')
 const tagsRouter = require('../tags/tagsRouter')
+const udemyCoursesRouter = require('../courses/udemyCoursesRouter')
 
 const server = express()
 
@@ -22,6 +23,7 @@ server.use('/api/auth/google', googleAuth)
 server.use('/api/courses', restricted, coursesRouter)
 server.use('/api/tags', restricted, tagsRouter)
 server.use('/api/docs', express.static('./docs'))
+server.use('/api/udemy', restricted, udemyCoursesRouter)
 
 server.get('/', (req, res) =>
 {
