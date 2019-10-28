@@ -47,7 +47,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"User Created\",\n  \"email\": \"doctest@example.com\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"User Created\",\n  \"token\": \"fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf\",\n  \"email\": \"doctest@example.com\"\n}",
           "type": "json"
         }
       ]
@@ -1700,6 +1700,122 @@
     "version": "0.0.0",
     "filename": "./courses/coursesRouter.js",
     "groupTitle": "Details"
+  },
+  {
+    "type": "get",
+    "url": "/api/learning-paths",
+    "title": "Get Learning Paths",
+    "name": "GetLearningPaths",
+    "group": "Learning_Paths",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tag",
+            "description": "<p>An tag to filter the Learning Paths you want to find (optional)</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Get Learning Paths By Tag",
+          "content": "{\n\t\"tag\": \"Something else\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Array",
+            "optional": false,
+            "field": "Learning",
+            "description": "<p>Paths An array of the Learning Paths on the website, optionally filtered by url sent in body</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n[\n  {\n    \"id\": 1,\n    \"name\": \"Onboarding Learning Path\",\n    \"description\": \"This learning path will get you on the road to success.\",\n    \"category\": \"Learning\"\n  }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not retrieve learning paths</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Error connecting with server\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathsRouter.js",
+    "groupTitle": "Learning_Paths"
   },
   {
     "type": "delete",
