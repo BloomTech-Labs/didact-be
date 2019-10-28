@@ -162,4 +162,113 @@ router.get('/:id', (req, res) => {
         })
 })
 
+/**
+ * @api {post} /api/courses Post Learning Path
+ * @apiName PostLearningPath
+ * @apiGroup Learning Paths
+ *  
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {String} name The name of the Learning Path you want to create
+ * @apiParam {String} description The description of the Learning Path you want to create
+ * @apiParam {String} link The link of the Learning Path you want to create
+
+ * 
+ * @apiParamExample {json} Learning Path-Post-Example:
+ * { 
+ * 	 "name": "Learn How to Write Docs",
+ * 	 "description": "In this Learning Path, you will learn the tedium of writing docs.",
+ * 	 "link": "http://apidocjs.com/",
+ * }
+ * 
+ * @apiSuccess (201) {object} Learning Path An object of the Learning Path that the user posted
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ *  {
+ *     "id": 2
+ *  }
+ * 
+ * @apiError (400) {Object} Missing-Learning Path-Data The Learning Path data is absent
+ * 
+ * @apiErrorExample 400-Learning Path-Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Missing Learning Path data"
+ * }
+ * 
+ * @apiError (400) {Object} Missing-Learning Path-Name The Learning Path name is absent
+ * 
+ * @apiErrorExample 400-Name-Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Learning Path name is required"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to add Learning Path for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to add Learning Path for"
+ * }
+ * 
+ * @apiError (500) {Object} Add-Learning Path-Error Could not add Learning Path
+ * 
+ * @apiErrorExample 500-Learning Path-Add-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not add Learning Path"
+ * }
+ * 
+ */
+
+// router.post('/', validateCourse, (req, res) => {
+//     const course = req.body
+//     let email = req.user.email
+//     Users.findBy({ email })
+//         .then(user =>
+//             {
+//                 if(user)
+//                 {
+//                     Courses.add(user.id, course)
+//                         .then(response => {
+//                             res.status(201).json({id: response[0]})
+//                         })
+//                         .catch(error => {
+//                             res.status(500).json({ message: 'Could not add course' })
+//                         })
+//                 }
+//                 else res.status(500).json({ message: 'Could not find user to add course for' })
+//             })
+//         .catch(err =>
+//             {
+//                 res.status(500).json({ message: 'Could not find user to add course for' })
+//             })
+    
+// })
+
 module.exports = router
