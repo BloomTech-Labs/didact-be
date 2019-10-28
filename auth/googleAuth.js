@@ -42,7 +42,7 @@ router.get('/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     function (req, res) {
         const token = generateToken(req.user)
-        res.redirect(`http://localhost:3000/auth?token=${token}`)
+        res.redirect(`https://didactlms.com/auth?token=${token}`)
     });
 
 function generateToken(user) {

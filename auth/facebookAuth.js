@@ -48,7 +48,7 @@ router.get('/callback',
     const token = generateToken(req.user)
     // console.log({ token, id: req.user.id, email: req.user.email})
     // res.status(200).json({ token, id: req.user.id, email: req.user.email});
-    res.redirect(`http://localhost:3000/auth?token=${token}`)
+    res.redirect(`https://didactlms.com/auth?token=${token}`)
     // res.json(req.user)
   });
 
