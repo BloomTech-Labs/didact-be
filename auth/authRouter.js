@@ -111,6 +111,7 @@ router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
  * HTTP/1.1 200 OK
  * {
  *   "message": "User Created",
+ *   "token": "fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf",
  *   "email": "doctest@example.com"
  * }
  * 
