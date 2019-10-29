@@ -178,17 +178,17 @@ router.get('/:id', (req, res) => {
  * 
  * @apiParam {String} name The name of the Learning Path you want to create
  * @apiParam {String} description The description of the Learning Path you want to create
- * @apiParam {String} link The link of the Learning Path you want to create
+ * @apiParam {String} category The category of the Learning Path you want to create
 
  * 
  * @apiParamExample {json} Learning Path-Post-Example:
  * { 
  * 	 "name": "Learn How to Write Docs",
  * 	 "description": "In this Learning Path, you will learn the tedium of writing docs.",
- * 	 "link": "http://apidocjs.com/",
+ * 	 "category": "Learning",
  * }
  * 
- * @apiSuccess (201) {object} Learning Path An object of the Learning Path that the user posted
+ * @apiSuccess (201) {integer} Id An id of the Learning Path that the user posted
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 201 Created
@@ -196,7 +196,7 @@ router.get('/:id', (req, res) => {
  *     "id": 2
  *  }
  * 
- * @apiError (400) {Object} Missing-Learning Path-Data The Learning Path data is absent
+ * @apiError (400) {Object} Missing-Learning-Path-Data The Learning Path data is absent
  * 
  * @apiErrorExample 400-Learning Path-Missing:
  * HTTP/1.1 400 Bad Request
@@ -204,7 +204,7 @@ router.get('/:id', (req, res) => {
  *  "message": "Missing Learning Path data"
  * }
  * 
- * @apiError (400) {Object} Missing-Learning Path-Name The Learning Path name is absent
+ * @apiError (400) {Object} Missing-Learning-Path-Name The Learning Path name is absent
  * 
  * @apiErrorExample 400-Name-Missing:
  * HTTP/1.1 400 Bad Request
@@ -238,7 +238,7 @@ router.get('/:id', (req, res) => {
  * 
  * @apiError (500) {Object} Add-Learning Path-Error Could not add Learning Path
  * 
- * @apiErrorExample 500-Learning Path-Add-Error:
+ * @apiErrorExample 500-Learning-Path-Add-Error:
  * HTTP/1.1 500 Internal Server Error
  * {
  *  "message": "Could not add Learning Path"
@@ -246,29 +246,28 @@ router.get('/:id', (req, res) => {
  * 
  */
 
-// router.post('/', validateCourse, (req, res) => {
-//     const course = req.body
-//     let email = req.user.email
-//     Users.findBy({ email })
-//         .then(user =>
-//             {
-//                 if(user)
-//                 {
-//                     Courses.add(user.id, course)
-//                         .then(response => {
-//                             res.status(201).json({id: response[0]})
-//                         })
-//                         .catch(error => {
-//                             res.status(500).json({ message: 'Could not add course' })
-//                         })
-//                 }
-//                 else res.status(500).json({ message: 'Could not find user to add course for' })
-//             })
-//         .catch(err =>
-//             {
-//                 res.status(500).json({ message: 'Could not find user to add course for' })
-//             })
-    
-// })
+router.post('/', validateLearningPath, (req, res) => {
+    const path = req.body
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+        {
+            if(user)
+            {
+                Paths.add(user.id, path)
+                    .then(response => {
+                        res.status(201).json({id: response[0]})
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: 'Could not add learning path' })
+                    })
+            }
+            else res.status(500).json({ message: 'Could not find user to add learning path for' })
+        })
+    .catch(err =>
+        {
+            res.status(500).json({ message: 'Could not find user to add learning path for' })
+        })
+})
 
 module.exports = router

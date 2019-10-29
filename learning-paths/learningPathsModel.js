@@ -4,6 +4,7 @@ module.exports =
 {
     find,
     findById,
+    add,
 }
 
 function find() 
@@ -35,7 +36,6 @@ async function getTagsForPath(pathId)
 
 async function findCoursesForPath(pathId)
 {
-    console.log('a')
     let courseList = await db('paths as p')
         .join('paths_courses as pc', 'pc.path_id', '=', 'p.id')
         .join('courses as c', 'pc.course_id', '=', 'c.id')
@@ -43,4 +43,9 @@ async function findCoursesForPath(pathId)
         .where({ 'p.id': pathId })
 
     return courseList
+}
+
+async function add(path)
+{
+
 }
