@@ -197,7 +197,8 @@ async function removePathCourse(userId, pathId, courseId)
     else
     {
         await db('paths_courses').where({ course_id: courseId, path_id: pathId}).del()
-        return { message: 'Course removed from path', code: 200 }
+        let pathCourses = await findCoursesForPath(pathId)
+        return { message: 'Course removed from path', code: 200, pathCourses }
     }
 }
 

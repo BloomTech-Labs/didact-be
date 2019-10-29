@@ -1125,7 +1125,7 @@ router.delete('/:id/course/:courseId', (req, res) =>
                 Paths.removePathCourse(user.id, pathId, courseId)
                 .then(response => 
                 {
-                    if(response.code === 200) res.status(200).json({ message: response.message })
+                    if(response.code === 200) res.status(200).json({ message: response.message, pathCourses: response.pathCourses })
                     else res.status(response.code).json({ message: response.message })
                 })
                 .catch(error => 
