@@ -179,7 +179,6 @@ router.get('/:id', (req, res) => {
  * @apiParam {String} name The name of the Learning Path you want to create
  * @apiParam {String} description The description of the Learning Path you want to create
  * @apiParam {String} category The category of the Learning Path you want to create
-
  * 
  * @apiParamExample {json} Learning Path-Post-Example:
  * { 
@@ -236,7 +235,7 @@ router.get('/:id', (req, res) => {
  *  "message": "Could not find user to add Learning Path for"
  * }
  * 
- * @apiError (500) {Object} Add-Learning Path-Error Could not add Learning Path
+ * @apiError (500) {Object} Add-Learning-Path-Error Could not add Learning Path
  * 
  * @apiErrorExample 500-Learning-Path-Add-Error:
  * HTTP/1.1 500 Internal Server Error
@@ -261,15 +260,12 @@ router.post('/', validateLearningPath, (req, res) => {
     {
         if(user)
         {
-            console.log('user.id', user.id)
             Paths.add(user.id, path)
                 .then(response => 
                 {
-                    console.log('b')
                     res.status(201).json({id: response})
                 })
                 .catch(error => {
-                    console.log('a')
                     res.status(500).json({ message: 'Could not add learning path' })
                 })
         }
@@ -490,6 +486,88 @@ router.delete('/:id', (req, res) => {
         {
             res.status(500).json({ message: 'Could not find user to delete learning path for' })
         })
+})
+
+/**
+ * @api {post} /api/learning-paths/:id/user Join Learning Path
+ * @apiName JoinLearningPath
+ * @apiGroup Learning Paths
+ *  
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (201) {integer} Id An id of the Learning Path that the user joined
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *     "id": 2
+ *  }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to join to learning path
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to join to learning path"
+ * }
+ * 
+ * @apiError (500) {Object} Join-Learning-Path-Error Could not join learning path
+ * 
+ * @apiErrorExample 500-Join-Learning-Path-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not join learning path"
+ * }
+ * 
+ */
+
+router.post('/:id/user', (req, res) => {
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
+        {
+            Paths.join(user.id, req.params.id)
+            .then(response => 
+            {
+                console.log('b')
+                res.status(201).json({id: response})
+            })
+            .catch(error => {
+                console.log('a')
+                res.status(500).json({ message: 'Could not join learning path' })
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to join learning path' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Could not find user to join learning path' })
+    })
 })
 
 module.exports = router
