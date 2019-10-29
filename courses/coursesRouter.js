@@ -217,7 +217,7 @@ router.get('/:id', (req, res) => {
  * 	 "link": "http://apidocjs.com/",
  * }
  * 
- * @apiSuccess (201) {object} Course An object of the course that the user posted
+ * @apiSuccess (201) {integer} Id An id of the course that the user posted
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 201 Created

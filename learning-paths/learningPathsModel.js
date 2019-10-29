@@ -45,7 +45,14 @@ async function findCoursesForPath(pathId)
     return courseList
 }
 
-async function add(path)
+async function add(userId, path)
 {
-
+    let pathIds = await db('paths').insert(path, 'id')
+    let pathId = pathIds[0]
+    if(pathId) 
+    {
+        let up = await db('users_paths').insert({user_id: userId, path_id: pathId, created: 1})
+        console.log('up', up)
+        return pathId
+    }
 }

@@ -1015,10 +1015,10 @@ define({ "api": [
         "201": [
           {
             "group": "201",
-            "type": "object",
+            "type": "integer",
             "optional": false,
-            "field": "Course",
-            "description": "<p>An object of the course that the user posted</p>"
+            "field": "Id",
+            "description": "<p>An id of the course that the user posted</p>"
           }
         ]
       },
@@ -1703,6 +1703,102 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/api/learning-paths/:id",
+    "title": "Get Learning Path",
+    "name": "GetLearningPath",
+    "group": "Learning_Paths",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Learning",
+            "description": "<p>Path An object of the Learning Path</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"id\": 1,\n    \"name\": \"Onboarding Learning Path\",\n    \"description\": \"This learning path will get you on the road to success.\",\n    \"category\": \"Learning\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not retrieve learning path</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Error connecting with server\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathsRouter.js",
+    "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "get",
     "url": "/api/learning-paths",
     "title": "Get Learning Paths",
     "name": "GetLearningPaths",
@@ -1809,6 +1905,174 @@ define({ "api": [
         {
           "title": "500-Error-Response:",
           "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Error connecting with server\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathsRouter.js",
+    "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "post",
+    "url": "/api/courses",
+    "title": "Post Learning Path",
+    "name": "PostLearningPath",
+    "group": "Learning_Paths",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>The name of the Learning Path you want to create</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>The description of the Learning Path you want to create</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "category",
+            "description": "<p>The category of the Learning Path you want to create</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Learning Path-Post-Example:",
+          "content": "{ \n\t \"name\": \"Learn How to Write Docs\",\n\t \"description\": \"In this Learning Path, you will learn the tedium of writing docs.\",\n\t \"category\": \"Learning\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "201": [
+          {
+            "group": "201",
+            "type": "integer",
+            "optional": false,
+            "field": "Id",
+            "description": "<p>An id of the Learning Path that the user posted</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 201 Created\n {\n    \"id\": 2\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "Missing-Learning-Path-Data",
+            "description": "<p>The Learning Path data is absent</p>"
+          },
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "Missing-Learning-Path-Name",
+            "description": "<p>The Learning Path name is absent</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to add Learning Path for</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Add-Learning",
+            "description": "<p>Path-Error Could not add Learning Path</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Learning Path-Missing:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"Missing Learning Path data\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "400-Name-Missing:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"Learning Path name is required\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-User-Not-Found:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to add Learning Path for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Learning-Path-Add-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not add Learning Path\"\n}",
           "type": "json"
         }
       ]

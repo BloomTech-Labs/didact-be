@@ -246,28 +246,39 @@ router.get('/:id', (req, res) => {
  * 
  */
 
+function validateLearningPath(req, res, next)
+{
+    if(!req.body) res.status(400).json({ message: "Missing learning path data"})
+    else if(!req.body.name) res.status(400).json({ message: "Learning Path name is required"})
+    else next()
+}
+
 router.post('/', validateLearningPath, (req, res) => {
     const path = req.body
     let email = req.user.email
     Users.findBy({ email })
     .then(user =>
+    {
+        if(user)
         {
-            if(user)
-            {
-                Paths.add(user.id, path)
-                    .then(response => {
-                        res.status(201).json({id: response[0]})
-                    })
-                    .catch(error => {
-                        res.status(500).json({ message: 'Could not add learning path' })
-                    })
-            }
-            else res.status(500).json({ message: 'Could not find user to add learning path for' })
-        })
+            console.log('user.id', user.id)
+            Paths.add(user.id, path)
+                .then(response => 
+                {
+                    console.log('b')
+                    res.status(201).json({id: response})
+                })
+                .catch(error => {
+                    console.log('a')
+                    res.status(500).json({ message: 'Could not add learning path' })
+                })
+        }
+        else res.status(500).json({ message: 'Could not find user to add learning path for' })
+    })
     .catch(err =>
-        {
-            res.status(500).json({ message: 'Could not find user to add learning path for' })
-        })
+    {
+        res.status(500).json({ message: 'Could not find user to add learning path for' })
+    })
 })
 
 module.exports = router
