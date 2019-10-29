@@ -6,7 +6,7 @@ module.exports =
     findById,
     add,
     updatePathById,
-
+    deletePathById
 }
 
 function find() 
@@ -76,10 +76,21 @@ async function updatePathById(userId, pathId, changes)
     let pathObj = await findById(pathId)
     let path = pathObj.path
     console.log('pathObj', pathObj)
-    if(!path) return {message: 'No path found with that ID', code: 404}
+    if(!path) return {message: 'No learning path found with that ID', code: 404}
     console.log('pathObj', pathObj)
     console.log('path.creatorId, userId',path.creator_id, userId)
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     await db('paths').where({id: pathId}).update(changes)
+    return {code: 200}
+}
+
+async function deletePathById(userId, pathId)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+
+    if(!path) return {message: 'No path found with that ID', code: 404}
+    if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
+    let delReturn = await db('paths').where({id: pathId}).del()
     return {code: 200}
 }
