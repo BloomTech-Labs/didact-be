@@ -606,28 +606,32 @@ function validateCourse(req, res, next)
 router.post('/:id/tags', (req, res) => {
     const courseId = req.params.id
     let email = req.user.email
-    Users.findBy({ email })
-        .then(user =>
-            {
-                if(user)
+    if(!req.body.tag) res.status(400).json({ message: "Missing tag data" })
+    else
+    {
+        Users.findBy({ email })
+            .then(user =>
                 {
-                    Courses.addCourseTag(user.id, courseId, req.body.tag)
-                        .then(response => 
-                            {
-                                if(response.code === 201) res.status(201).json({ message: response.message })
-                                else res.status(response.code).json({ message: response.message })
+                    if(user)
+                    {
+                        Courses.addCourseTag(user.id, courseId, req.body.tag)
+                            .then(response => 
+                                {
+                                    if(response.code === 201) res.status(201).json({ message: response.message })
+                                    else res.status(response.code).json({ message: response.message })
+                                })
+                            .catch(error => {
+                                console.log(error)
+                                res.status(500).json({ message: 'Internal error: Could not add tags to course' })
                             })
-                        .catch(error => {
-                            console.log(error)
-                            res.status(500).json({ message: 'Internal error: Could not add tags to course' })
-                        })
-                }
-                else res.status(500).json({ message: 'Could not find user to add course for' })
-            })
-        .catch(err =>
-            {
-                res.status(500).json({ message: 'Could not find user to add course for' })
-            })
+                    }
+                    else res.status(500).json({ message: 'Could not find user to add course for' })
+                })
+            .catch(err =>
+                {
+                    res.status(500).json({ message: 'Could not find user to add course for' })
+                })
+    }
 
 })
 
