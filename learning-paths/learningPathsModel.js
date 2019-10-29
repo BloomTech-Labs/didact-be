@@ -19,6 +19,7 @@ async function findById(id)
     if(!path) return {message: 'No learning path found with that ID', code: 404}
     path.tags = await getTagsForPath(id)
     path.courses = await findCoursesForPath(id)
+    path.creatorId = await getCreatorIdForPath(id)
     return {path, code: 200}
 }
 
@@ -32,6 +33,17 @@ async function getTagsForPath(pathId)
 
     nameList = tagList.map(el => el.name)
     return nameList
+}
+
+async function getCreatorIdForPath(pathId)
+{
+    let creatorId = await db('paths as p')
+        .join('users_paths as up', 'up.path_id', '=', 'p.id')
+        .select('up.user_id')
+        .where({ 'p.id': pathId, 'up.created': 1 })
+    
+    console.log('creatorId', creatorId)
+    return creatorId[0].user_id
 }
 
 async function findCoursesForPath(pathId)
