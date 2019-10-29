@@ -19,7 +19,8 @@ async function findById(id)
     if(!path) return {message: 'No learning path found with that ID', code: 404}
     path.tags = await getTagsForPath(id)
     path.courses = await findCoursesForPath(id)
-    path.creatorId = await getCreatorIdForPath(id)
+    let creatorId = await getCreatorIdForPath(id)
+    if(creatorId) path.creatorId = creatorId
     return {path, code: 200}
 }
 
