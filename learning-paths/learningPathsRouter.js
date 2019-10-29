@@ -117,10 +117,19 @@ router.get('/', (req, res) => {
  * HTTP/1.1 200 OK
  * 
  * {
- *     "id": 1,
- *     "name": "Onboarding Learning Path",
- *     "description": "This learning path will get you on the road to success.",
- *     "category": "Learning"
+ *   "id": 3,
+ *   "name": "test path1",
+ *   "description": "a description of a learning path",
+ *   "category": "test cat",
+ *   "tags": [],
+ *   "courses": [
+ *     {
+ *       "id": 1,
+ *       "name": "Learning How to Learn: Powerful mental tools to help you master tough subjects",
+ *       "path_order": 5
+ *     }
+ *   ],
+ *   "creatorId": 1
  * }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
@@ -1004,7 +1013,8 @@ router.post('/:id/course/:courseId', (req, res) => {
                     Paths.addPathCourse(user.id, pathId, courseId, order)
                     .then(response => 
                     {
-                        if(response.code === 201) res.status(201).json({ message: response.message })
+                        console.log('response', response)
+                        if(response.code === 200) res.status(200).json({ message: response.message, pathCourses: response.pathCourses })
                         else res.status(response.code).json({ message: response.message })
                     })
                     .catch(error => 

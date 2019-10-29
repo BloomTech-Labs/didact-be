@@ -181,7 +181,8 @@ async function addPathCourse(userId, pathId, courseId, path_order)
     else
     {
         await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order })
-        return { message: 'Course added to path', code: 200 }
+        let pathCourses = await findCoursesForPath(pathId)
+        return { message: 'Course added to path', code: 200, pathCourses }
     }
 }
 
