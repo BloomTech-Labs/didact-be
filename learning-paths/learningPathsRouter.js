@@ -23,6 +23,13 @@ const Users = require('../users/usersModel')
  * 	"tag": "Something else"
  * }
  * 
+ * @apiParam {Integer} userId The user id of a user you want to get paths for
+ * 
+ * @apiParamExample {json} Get Learning Paths By Tag
+ * {
+ * 	"userId": 1
+ * }
+ * 
  * @apiSuccess (200) {Array} Learning Paths An array of the Learning Paths on the website, optionally filtered by url sent in body
  * 
  * @apiSuccessExample Success-Response:
@@ -76,26 +83,36 @@ async function filterByTag(aLearningPaths, tag)
 }
 
 router.get('/', (req, res) => {
-    Paths.find()
-    .then(response => 
+    if(req.body.userId)
+    {
+        Paths.findForUserId(req.body.userId)
+        .then(response =>
+        {
+            res.status(200).json(response)
+        })
+    }
+    else
+    {
+        Paths.find()
+        .then(response => 
         {
             if(req.body.tag) 
             {
                 filterByTag(response, req.body.tag)
                 .then(results =>
-                    {
-                        res.status(200).json(results)
-                    })
+                {
+                    res.status(200).json(results)
+                })
                 .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
             }
             else res.status(200).json(response)
         })
-    .catch(error => 
+        .catch(error => 
         {
             res.status(500).json({ message: 'Error connecting with server' })
         })
+    }
 })
-
 
 /**
  * @api {get} /api/learning-paths/:id Get Learning Path

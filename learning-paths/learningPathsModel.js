@@ -13,12 +13,22 @@ module.exports =
     deletePathTag,
     addPathCourse,
     removePathCourse,
-    updateCourseOrder
+    updateCourseOrder,
+    findForUserId
 }
 
 function find() 
 {
     return db('paths')
+}
+
+async function findForUserId(userId)
+{
+    let usersPaths = await db('paths as p')
+        .join('users_paths as up', 'up.path_id', '=', 'p.id')
+        .select('p.id', 'p.name', 'p.description', 'p.category')
+        .where({'up.user_id': userId})
+    return usersPaths
 }
 
 async function findById(id)
