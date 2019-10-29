@@ -12,7 +12,8 @@ module.exports =
     addPathTag,
     deletePathTag,
     addPathCourse,
-
+    removePathCourse,
+    
 }
 
 function find() 
@@ -160,6 +161,14 @@ async function deletePathTag(userId, pathId, tag)
     return { message: 'tag removed from path', code: 200 }
 }
 
+async function findCourseById(id)
+{
+    let course = await db('courses').where({id}).first()
+    
+    if(!course) return false
+    else return true
+}
+
 async function addPathCourse(userId, pathId, courseId, path_order)
 {
     let pathObj = await findById(pathId)
@@ -167,8 +176,26 @@ async function addPathCourse(userId, pathId, courseId, path_order)
 
     if(!path) return {message: 'No path found with that ID', code: 404}
     if(path.creatorId !== userId) return {message: 'User is not permitted to add course to this path', code: 403}
-    
-    await db('paths_courses').insert({course_id: courseId, path_id: pathId, path_order})
-    
-    return { message: 'Course added to path', code: 201 }
+    let courseExists = await findCourseById(courseId)
+    if(!courseExists) return {message: 'Course not found', code: 404}
+    else
+    {
+        await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order })
+        return { message: 'Course added to path', code: 200 }
+    }
+}
+
+async function removePathCourse(userId, pathId, courseId)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+    if(!path) return {message: 'No path found with that ID', code: 404}
+    if(path.creatorId !== userId) return {message: 'User is not permitted to add course to this path', code: 403}
+    let courseExists = await findCourseById(courseId)
+    if(!courseExists) return {message: 'Course not found', code: 404}
+    else
+    {
+        await db('paths_courses').where({ course_id: courseId, path_id: pathId}).del()
+        return { message: 'Course removed from path', code: 200 }
+    }
 }
