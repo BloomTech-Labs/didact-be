@@ -394,4 +394,102 @@ router.put('/:id', (req, res) => {
     }
 })
 
+/**
+ * @api {delete} /api/learning-paths/:id Delete Learning Path
+ * @apiName DeleteLearningPath
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Success A message that the learning path was deleted
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *     "message": "Learning path deleted"
+ *  }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (403) {Object} bad-request-error The user is not authorized to delete this learning path
+ * 
+ * @apiErrorExample 403-Error-Response:
+ * HTTP/1.1 403 Forbidden
+ * {
+ *  "message": "User is not permitted to change this learning path"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error The learning path with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No learning path found with that ID"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to delete learning path for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to delete learning path for"
+ * }
+ * 
+ * @apiError (500) {Object} Delete-learning path-Error Could not delete learning path
+ * 
+ * @apiErrorExample 500-learning path-Delete-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not delete learning path"
+ * }
+ * 
+ */
+
+router.delete('/:id', (req, res) => {
+
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+        {
+            if(user)
+            {
+                Paths.deletePathById(user.id, req.params.id)
+                    .then(response => {
+                        if(response.code === 404) res.status(404).json({message: response.message})
+                        else if(response.code === 403) res.status(403).json({message: response.message})
+                        else res.status(200).json({ message: 'Learning path deleted' })
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: 'Could not delete learning path' })
+                    })
+            }
+            else res.status(500).json({ message: 'Could not find user to delete learning path for' })
+        })
+    .catch(err =>
+        {
+            res.status(500).json({ message: 'Could not find user to delete learning path for' })
+        })
+})
+
 module.exports = router
