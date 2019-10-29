@@ -13,7 +13,7 @@ module.exports =
     deletePathTag,
     addPathCourse,
     removePathCourse,
-    
+    updateCourseOrder
 }
 
 function find() 
@@ -60,7 +60,7 @@ async function findCoursesForPath(pathId)
     let courseList = await db('paths as p')
         .join('paths_courses as pc', 'pc.path_id', '=', 'p.id')
         .join('courses as c', 'pc.course_id', '=', 'c.id')
-        .select('c.id', 'c.name')
+        .select('c.id', 'c.name', 'pc.path_order')
         .where({ 'p.id': pathId })
 
     return courseList
@@ -98,7 +98,7 @@ async function deletePathById(userId, pathId)
 
     if(!path) return {message: 'No path found with that ID', code: 404}
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
-    let delReturn = await db('paths').where({id: pathId}).del()
+    await db('paths').where({id: pathId}).del()
     return {code: 200}
 }
 
@@ -197,5 +197,21 @@ async function removePathCourse(userId, pathId, courseId)
     {
         await db('paths_courses').where({ course_id: courseId, path_id: pathId}).del()
         return { message: 'Course removed from path', code: 200 }
+    }
+}
+
+async function updateCourseOrder(userId, pathId, courseId, path_order)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+
+    if(!path) return {message: 'No path found with that ID', code: 404}
+    if(path.creatorId !== userId) return {message: 'User is not permitted to add course to this path', code: 403}
+    let courseExists = await findCourseById(courseId)
+    if(!courseExists) return {message: 'Course not found', code: 404}
+    else
+    {
+        await db('paths_courses').where({path_id: pathId, course_id: courseId}).update({path_order})
+        return { message: 'Course order updated in learning path', code: 200 }
     }
 }
