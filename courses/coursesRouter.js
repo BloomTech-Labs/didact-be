@@ -716,7 +716,7 @@ router.post('/:id/tags', (req, res) => {
  *  "message": "Could not find user to remove tag for"
  * }
  * 
- * @apiError (500) {Object} Add-Course-Error Could not remove tag
+ * @apiError (500) {Object} Delete-Tag-Error Could not remove tag
  * 
  * @apiErrorExample 500-Tag-Remove-Error:
  * HTTP/1.1 500 Internal Server Error
