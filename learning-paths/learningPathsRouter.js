@@ -898,4 +898,235 @@ router.delete('/:id/tags', (req, res) => {
     }
 })
 
+/**
+ * @api {post} /api/learning-paths/:id/course/:courseId Post Course To Learning Path
+ * @apiName PostCourseToLearningPath
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (201) {string} Message A message that the course was added
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ *  {
+ *     message: 'Course added to learning path'
+ *  }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (403) {Object} bad-request-error The user is not authorized to add course to this learning path
+ * 
+ * @apiErrorExample 403-Error-Response:
+ * HTTP/1.1 403 Forbidden
+ * {
+ *  "message": "User is not permitted to add course to this learning path"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error The learning path with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No learning path found with that ID"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to add course for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to add course for"
+ * }
+ * 
+ * @apiError (500) {Object} Add-Course-Error Could not add course
+ * 
+ * @apiErrorExample 500-Add-Course-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Internal error: could not add course to learning path"
+ * }
+ * 
+ */
+
+router.post('/:id/tags', (req, res) => {
+    const pathId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user =>
+        {
+            if(user)
+            {
+                Paths.addPathTag(user.id, pathId, req.body.tag)
+                .then(response => 
+                {
+                    if(response.code === 201) res.status(201).json({ message: response.message })
+                    else res.status(response.code).json({ message: response.message })
+                })
+                .catch(error => 
+                {
+                    console.log(error)
+                    res.status(500).json({ message: 'Internal error: Could not add tag to learning path' })
+                })
+            }
+            else res.status(500).json({ message: 'Could not find user to add learning path for' })
+        })
+        .catch(err =>
+        {
+            res.status(500).json({ message: 'Could not find user to add learning path for' })
+        })
+
+})
+
+/**
+ * @api {delete} /api/learning-paths/:id/tags Delete Tag From Learning Path
+ * @apiName DeleteTagFromLearningPath
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Object} tag The name of the tag you want to delete from the learning path
+ * 
+ * @apiParamExample {json} Tag Delete Example:
+ * { 
+        tag: 'Learning'
+ * }
+ * 
+ * @apiSuccess (200) {string} Message A message that the tag was removed
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *     message: 'tag removed from learning path'
+ *  }
+ * 
+ * @apiError (400) {Object} Missing-Tag-Data The tag data is absent
+ * 
+ * @apiErrorExample 400 Tag Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Missing tag data"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (403) {Object} bad-request-error The user is not authorized to remove tag from this learning path
+ * 
+ * @apiErrorExample 403-Error-Response:
+ * HTTP/1.1 403 Forbidden
+ * {
+ *  "message": "User is not permitted to remove tags from this learning path"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error The learning path with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No learning path found with that ID"
+ * }
+ * 
+ * @apiError (404) {Object} tag-not-found-error The tag with the name sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "Tag not found"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to remove tag for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to remove tag for"
+ * }
+ * 
+ * @apiError (500) {Object} Delete-Tag-Error Could not remove tag
+ * 
+ * @apiErrorExample 500-Tag-Remove-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Internal error: could not remove tag from learning path"
+ * }
+ * 
+ */
+
+router.delete('/:id/tags', (req, res) => {
+    if(!req.body.tag)
+    {
+        res.status(400).json({ message: "Missing tag data" })
+    }
+    else
+    {
+        const pathId = req.params.id
+        let email = req.user.email
+        Users.findBy({ email })
+            .then(user =>
+                {
+                    if(user)
+                    {
+                        Paths.deletePathTag(user.id, pathId, req.body.tag)
+                        .then(response => 
+                            {
+                                if(response.code === 200) res.status(200).json({ message: response.message })
+                                else res.status(response.code).json({ message: response.message })
+                            })
+                        .catch(error => 
+                            {
+                                console.log(error)
+                                res.status(500).json({ message: 'Internal error: Could not remove tags from path' })
+                            })
+                    }
+                    else res.status(500).json({ message: 'Could not find user to remove tag for' })
+                })
+            .catch(err =>
+                {
+                    res.status(500).json({ message: 'Could not find user to remove tag for' })
+                })
+    }
+})
+
 module.exports = router
