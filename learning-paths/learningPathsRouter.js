@@ -163,7 +163,7 @@ router.get('/:id', (req, res) => {
 })
 
 /**
- * @api {post} /api/courses Post Learning Path
+ * @api {post} /api/learning-paths Post Learning Path
  * @apiName PostLearningPath
  * @apiGroup Learning Paths
  *  
@@ -650,6 +650,122 @@ router.delete('/:id/user', (req, res) => {
     {
         res.status(500).json({ message: 'Could not find user to quit learning path' })
     })
+})
+
+/**
+ * @api {post} /api/learning-paths/:id/tags Post Tag To Learning Path
+ * @apiName PostTagToLearningPath
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Object} tag The name of the tag you want to create/add for the learning path
+ * 
+ * @apiParamExample {json} Tag Post Example:
+ * { 
+        tag: 'Learning'
+ * }
+ * 
+ * @apiSuccess (201) {string} Message A message that the tag was added
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ *  {
+ *     message: 'tag added to learning path'
+ *  }
+ * 
+ * @apiError (400) {Object} Missing-Tag-Data The tag data is absent
+ * 
+ * @apiErrorExample 400 Tag Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Missing tag data"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (403) {Object} bad-request-error The user is not authorized to add tag to this learning path
+ * 
+ * @apiErrorExample 403-Error-Response:
+ * HTTP/1.1 403 Forbidden
+ * {
+ *  "message": "User is not permitted to add tag to this learning path"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error The learning path with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No learning path found with that ID"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to add tag for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to add tag for"
+ * }
+ * 
+ * @apiError (500) {Object} Add-Tag-Error Could not add tag
+ * 
+ * @apiErrorExample 500-Tag-Add-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Internal error: could not add tag to learning path"
+ * }
+ * 
+ */
+
+router.post('/:id/tags', (req, res) => {
+    const pathId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user =>
+        {
+            if(user)
+            {
+                Paths.addPathTag(user.id, pathId, req.body.tag)
+                .then(response => 
+                {
+                    if(response.code === 201) res.status(201).json({ message: response.message })
+                    else res.status(response.code).json({ message: response.message })
+                })
+                .catch(error => 
+                {
+                    console.log(error)
+                    res.status(500).json({ message: 'Internal error: Could not add tag to learning path' })
+                })
+            }
+            else res.status(500).json({ message: 'Could not find user to add learning path for' })
+        })
+        .catch(err =>
+        {
+            res.status(500).json({ message: 'Could not find user to add learning path for' })
+        })
+
 })
 
 module.exports = router

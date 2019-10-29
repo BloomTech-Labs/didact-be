@@ -9,7 +9,7 @@ module.exports =
     deletePathById,
     joinLearningPath,
     quitLearningPath,
-    
+    addPathTag,
 }
 
 function find() 
@@ -109,4 +109,31 @@ function quitLearningPath(userId, pathId)
     return db('users_paths')
         .where({ user_id: userId, path_id: pathId })
         .del()
+}
+
+async function checkForTag(tagName)
+{
+    let tag = await db('tags').where({ name: tagName })
+    if(tag.length === 0) return (-1)
+    console.log('tag.id', tag[0].id)
+    return tag[0].id 
+}
+
+async function addPathTag(userId, pathId, tag)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+
+    if(!path) return {message: 'No path found with that ID', code: 404}
+    if(path.creatorId !== userId) return {message: 'User is not permitted to add tag to this path', code: 403}
+    
+    let tagId = await checkForTag(tag)
+    if(tagId === -1) 
+    {
+        tagId = await db('tags').insert({name: tag}, 'id')
+        await db('tags_paths').insert({tag_id: tagId[0], path_id: pathId})
+    }
+    else await db('tags_paths').insert({tag_id: tagId, path_id: pathId})
+    
+    return { message: 'tag added to path', code: 201 }
 }
