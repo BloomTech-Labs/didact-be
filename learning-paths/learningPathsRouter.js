@@ -281,4 +281,117 @@ router.post('/', validateLearningPath, (req, res) => {
     })
 })
 
+/**
+ * @api {put} /api/learning-paths/:id Edit Learning Path
+ * @apiName EditLearningPath
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Success A message that the Learning Path was updated
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *     "message": "Learning path updated"
+ *  }
+ * 
+ * @apiError (400) {Object} Missing-Learning-Path-Data The Learning Path data is absent
+ * 
+ * @apiErrorExample 400-Path-Data-Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Missing Learning Path data"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (403) {Object} bad-request-error The user is not authorized to edit this Learning Path
+ * 
+ * @apiErrorExample 403-Error-Response:
+ * HTTP/1.1 403 Forbidden
+ * {
+ *  "message": "User is not permitted to change this learning path"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error The Learning Path with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No Learning Path found with that ID"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to edit Learning Path for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to edit Learning Path for"
+ * }
+ * 
+ * @apiError (500) {Object} Edit-Learning Path-Error Could not edit Learning Path
+ * 
+ * @apiErrorExample 500-Learning Path-Edit-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not edit Learning Path"
+ * }
+ * 
+ */
+
+router.put('/:id', (req, res) => {
+    if(!req.body.changes) res.status(400).json({ message: 'Missing learning path changes' })
+    else
+    {
+        const changes = req.body.changes
+        let email = req.user.email
+        Users.findBy({ email })
+        .then(user =>
+        {
+            if(user)
+            {
+                Paths.updatePathById(user.id, req.params.id, changes)
+                .then(response => 
+                {
+                    if(response.code === 404) res.status(404).json({message: response.message})
+                    else if(response.code === 403) res.status(403).json({message: response.message})
+                    else res.status(200).json({ message: 'Learning path updated' })
+                })
+                .catch(error => 
+                {
+                    res.status(500).json({ message: 'Could not edit learning path' })
+                })
+            }
+            else res.status(500).json({ message: 'Could not find user to edit learning path for' })
+        })
+        .catch(err =>
+        {
+            res.status(500).json({ message: 'Could not find user to edit learning path for' })
+        })
+    }
+})
+
 module.exports = router

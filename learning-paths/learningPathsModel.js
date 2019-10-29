@@ -5,6 +5,8 @@ module.exports =
     find,
     findById,
     add,
+    updatePathById,
+
 }
 
 function find() 
@@ -43,7 +45,6 @@ async function getCreatorIdForPath(pathId)
         .select('up.user_id')
         .where({ 'p.id': pathId, 'up.created': 1 })
     
-    console.log('creatorId', creatorId)
     return creatorId[0].user_id
 }
 
@@ -68,4 +69,17 @@ async function add(userId, path)
         console.log('up', up)
         return pathId
     }
+}
+
+async function updatePathById(userId, pathId, changes)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+    console.log('pathObj', pathObj)
+    if(!path) return {message: 'No path found with that ID', code: 404}
+    console.log('pathObj', pathObj)
+    console.log('path.creatorId, userId',path.creator_id, userId)
+    if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
+    await db('paths').where({id: pathId}).update(changes)
+    return {code: 200}
 }
