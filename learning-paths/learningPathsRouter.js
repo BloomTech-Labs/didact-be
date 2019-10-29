@@ -551,11 +551,11 @@ router.post('/:id/user', (req, res) => {
     {
         if(user)
         {
-            Paths.join(user.id, req.params.id)
+            Paths.joinLearningPath(user.id, req.params.id)
             .then(response => 
             {
                 console.log('b')
-                res.status(201).json({id: response})
+                res.status(200).json({ message: 'Joined learning path' })
             })
             .catch(error => {
                 console.log('a')

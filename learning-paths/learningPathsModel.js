@@ -6,7 +6,10 @@ module.exports =
     findById,
     add,
     updatePathById,
-    deletePathById
+    deletePathById,
+    joinLearningPath,
+    quitLearningPath,
+    
 }
 
 function find() 
@@ -93,4 +96,17 @@ async function deletePathById(userId, pathId)
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     let delReturn = await db('paths').where({id: pathId}).del()
     return {code: 200}
+}
+
+function joinLearningPath(userId, pathId)
+{
+    return db('users_paths')
+        .insert({ user_id: userId, path_id: pathId })
+}
+
+function quitLearningPath(userId, pathId)
+{
+    return db('users_paths')
+        .where({ user_id: userId, path_id: pathId })
+        .del()
 }
