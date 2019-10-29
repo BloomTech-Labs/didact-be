@@ -670,7 +670,7 @@ router.delete('/:id/user', (req, res) => {
  * 
  * @apiParamExample {json} Tag Post Example:
  * { 
-        tag: 'Learning'
+ *   tag: 'Learning'
  * }
  * 
  * @apiSuccess (201) {string} Message A message that the tag was added
@@ -912,6 +912,13 @@ router.delete('/:id/tags', (req, res) => {
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
+ * @apiParam {Object} Order The order of the course to be added to the learning path
+ * 
+ * @apiParamExample {json} Course Post Example:
+ * { 
+ *    "order": 3
+ * }
+ * 
  * @apiSuccess (201) {string} Message A message that the course was added
  * 
  * @apiSuccessExample Success-Response:
@@ -970,33 +977,38 @@ router.delete('/:id/tags', (req, res) => {
  * 
  */
 
-router.post('/:id/tags', (req, res) => {
+router.post('/:id/course/:courseId', (req, res) => {
     const pathId = req.params.id
+    const courseId = req.params.courseId
     let email = req.user.email
-    Users.findBy({ email })
-        .then(user =>
-        {
-            if(user)
+    if(!req.body.order) res.status(400).json({ message: "must send order for course in body" })
+    else
+    {
+        const order = req.body.order
+        Users.findBy({ email })
+            .then(user =>
             {
-                Paths.addPathTag(user.id, pathId, req.body.tag)
-                .then(response => 
+                if(user)
                 {
-                    if(response.code === 201) res.status(201).json({ message: response.message })
-                    else res.status(response.code).json({ message: response.message })
-                })
-                .catch(error => 
-                {
-                    console.log(error)
-                    res.status(500).json({ message: 'Internal error: Could not add tag to learning path' })
-                })
-            }
-            else res.status(500).json({ message: 'Could not find user to add learning path for' })
-        })
-        .catch(err =>
-        {
-            res.status(500).json({ message: 'Could not find user to add learning path for' })
-        })
-
+                    Paths.addPathCourse(user.id, pathId, courseId, order)
+                    .then(response => 
+                    {
+                        if(response.code === 201) res.status(201).json({ message: response.message })
+                        else res.status(response.code).json({ message: response.message })
+                    })
+                    .catch(error => 
+                    {
+                        console.log(error)
+                        res.status(500).json({ message: 'Internal error: Could not add course to learning path' })
+                    })
+                }
+                else res.status(500).json({ message: 'Could not find user to add learning path for' })
+            })
+            .catch(err =>
+            {
+                res.status(500).json({ message: 'Could not find user to add learning path for' })
+            })
+    }
 })
 
 /**
