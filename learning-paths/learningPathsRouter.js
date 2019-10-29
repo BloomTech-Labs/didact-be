@@ -571,7 +571,7 @@ router.post('/:id/user', (req, res) => {
 })
 
 /**
- * @api {delete} /api/learning-paths/:id/user quit Learning Path
+ * @api {delete} /api/learning-paths/:id/user Quit Learning Path
  * @apiName QuitLearningPath
  * @apiGroup Learning Paths
  *  
