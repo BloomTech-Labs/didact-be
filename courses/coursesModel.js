@@ -26,7 +26,6 @@ function find() {
 
 async function findById(id)
 {
-    
     let course = await db('courses').where({id}).first()
     
     if(!course) return {message: 'No course found with that ID', code: 404}
