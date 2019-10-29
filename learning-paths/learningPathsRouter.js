@@ -570,4 +570,86 @@ router.post('/:id/user', (req, res) => {
     })
 })
 
+/**
+ * @api {delete} /api/learning-paths/:id/user quit Learning Path
+ * @apiName QuitLearningPath
+ * @apiGroup Learning Paths
+ *  
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (201) {integer} Id An id of the Learning Path that the user quit
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *     "message": "Quit learning path"
+ *  }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to quit to learning path
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to quit to learning path"
+ * }
+ * 
+ * @apiError (500) {Object} quit-Learning-Path-Error Could not quit learning path
+ * 
+ * @apiErrorExample 500-quit-Learning-Path-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not quit learning path"
+ * }
+ * 
+ */
+
+router.delete('/:id/user', (req, res) => {
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
+        {
+            Paths.quitLearningPath(user.id, req.params.id)
+            .then(response => 
+            {
+                console.log('b')
+                res.status(200).json({ message: 'Quit learning path' })
+            })
+            .catch(error => {
+                console.log('a')
+                res.status(500).json({ message: 'Could not quit learning path' })
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to quit learning path' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Could not find user to quit learning path' })
+    })
+})
+
 module.exports = router
