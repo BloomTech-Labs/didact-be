@@ -2217,7 +2217,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n\n{\n    \"id\": 1,\n    \"name\": \"Onboarding Learning Path\",\n    \"description\": \"This learning path will get you on the road to success.\",\n    \"category\": \"Learning\"\n}",
+          "content": "HTTP/1.1 200 OK\n\n{\n  \"id\": 3,\n  \"name\": \"test path1\",\n  \"description\": \"a description of a learning path\",\n  \"category\": \"test cat\",\n  \"tags\": [],\n  \"courses\": [\n    {\n      \"id\": 1,\n      \"name\": \"Learning How to Learn: Powerful mental tools to help you master tough subjects\",\n      \"path_order\": 5\n    }\n  ],\n  \"creatorId\": 1\n}",
           "type": "json"
         }
       ]
@@ -2307,6 +2307,13 @@ define({ "api": [
             "optional": false,
             "field": "tag",
             "description": "<p>An tag to filter the Learning Paths you want to find (optional)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>The user id of a user you want to get paths for</p>"
           }
         ]
       },
@@ -2314,6 +2321,11 @@ define({ "api": [
         {
           "title": "Get Learning Paths By Tag",
           "content": "{\n\t\"tag\": \"Something else\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Get Learning Paths By Tag",
+          "content": "{\n\t\"userId\": 1\n}",
           "type": "json"
         }
       ]
