@@ -64,6 +64,21 @@ exports.up = function(knex) {
         tbl.string('description', 1000)
         tbl.string('category', 125)
     })
+    .createTable('path_items', tbl =>
+    {
+        tbl.increments()
+        tbl.string('name').notNullable()
+        tbl.integer('path_id')
+        .unsigned()
+        .references('id')
+        .inTable('paths')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
+        tbl.string('description', 10000)
+        tbl.string('link', 1000)
+        tbl.string('type', 1000)
+        tbl.integer('path_order')
+    })
     .createTable('tags', tbl =>
     {
         tbl.increments()
@@ -160,6 +175,7 @@ exports.down = function(knex) {
     return knex.schema
         .dropTableIfExists('users_paths')
         .dropTableIfExists('paths_courses')
+        .dropTableIfExists('path_items')
         .dropTableIfExists('tags_paths')
         .dropTableIfExists('tags_courses')
         .dropTableIfExists('section_details')
