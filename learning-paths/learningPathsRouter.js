@@ -1582,10 +1582,11 @@ router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
  * @apiSuccess (200) {integer} Id An id of the Learning Path Item that the user deleted
  * 
  * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 Deleted
- *  {
- *     "id": 2
- *  }
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "path item with id 4 deleted",
+ *   "id": "4"
+ * }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
  * 

@@ -116,7 +116,7 @@ async function deletePathItem(userId, pathId, itemId)
     let path = pathObj.path
     if(!path) return {message: 'No learning path found with that ID', code: 404}
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
-    await db('path_items').where({id}).del()
+    await db('path_items').where({id: itemId}).del()
     return {code: 200, message: `path item with id ${itemId} deleted`, id: itemId }
 }
 
