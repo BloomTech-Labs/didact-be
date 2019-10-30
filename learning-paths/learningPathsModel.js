@@ -84,9 +84,14 @@ function findPathItemsForPath(pathId)
     return db('path_items as pi').where({'pi.path_id': pathId})
 }
 
-function addPathItem(pathId, item)
+function addPathItem(item)
 {
     return db('path_items').insert(item, 'id')
+}
+
+function updatePathItem(id, changes)
+{
+    return db('path_items').where({id}).update(changes)
 }
 
 async function add(userId, path)
