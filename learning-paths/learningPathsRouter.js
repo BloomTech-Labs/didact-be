@@ -180,6 +180,14 @@ router.get('/', (req, res) => {
  *  "message": "Invalid Credentials"
  * }
  * 
+ * @apiError (404) {Object} not-found-error The Learning Path with id sent was not found in database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "No Learning Path found with that ID"
+ * }
+ * 
  * @apiError (500) {Object} internal-server-error Could not retrieve learning path
  * 
  * @apiErrorExample 500-Error-Response:
@@ -1328,7 +1336,7 @@ router.put('/:id/courses/:courseId', (req, res) => {
  *     "id": 2
  *  }
  * 
- * @apiError (400) {Object} Missing-Learning-Path-Data The Learning Path Item data is absent
+ * @apiError (400) {Object} Missing-Learning-Path-Item-Data The Learning Path Item data is absent
  * 
  * @apiErrorExample 400-Learning Path Item-Missing:
  * HTTP/1.1 400 Bad Request
@@ -1336,7 +1344,7 @@ router.put('/:id/courses/:courseId', (req, res) => {
  *  "message": "Missing Learning Path Item data"
  * }
  * 
- * @apiError (400) {Object} Missing-Learning-Path-Name The Learning Path Item name is absent
+ * @apiError (400) {Object} Missing-Learning-Path-Item-Name The Learning Path Item name is absent
  * 
  * @apiErrorExample 400-Name-Missing:
  * HTTP/1.1 400 Bad Request
@@ -1371,12 +1379,20 @@ router.put('/:id/courses/:courseId', (req, res) => {
  * @apiError (404) {Object} Find-Path-Error Could not find Learning Path to add Learning Path Item for
  * 
  * @apiErrorExample 404-Path-Not-Found:
- * HTTP/1.1 500 Internal Server Error
+ * HTTP/1.1 404 Internal Server Error
  * {
  *  "message": "No learning path found with that ID"
  * }
  * 
- * @apiError (500) {Object} Add-Learning-Path-Error Could not add Learning Path Item
+ * @apiError (403) {Object} Not-Authorized Could not add Learning Path item, user not authorized
+ * 
+ * @apiErrorExample 403-Not-Authorized-Found:
+ * HTTP/1.1 403 Internal Server Error
+ * {
+ *  "message": "User is not permitted to change this path"
+ * }
+ * 
+ * @apiError (500) {Object} Add-Learning-Path-Item-Error Could not add Learning Path Item
  * 
  * @apiErrorExample 500-Learning-Path-Add-Error:
  * HTTP/1.1 500 Internal Server Error
@@ -1414,7 +1430,7 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
             {
                 if(response.code === 403) res.status(403).json({ message: response.message })
                 else if(response.code === 404) res.status(404).json({ message: response.message })
-                else res.status(201).json({ message: response.message })
+                else res.status(201).json({ message: response.message, id: response.id })
             })
             .catch(error => 
             {
