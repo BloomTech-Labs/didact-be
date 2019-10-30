@@ -1320,6 +1320,7 @@ router.put('/:id/courses/:courseId', (req, res) => {
  * @apiParam {String} description The description of the Learning Path Item you want to create
  * @apiParam {String} category The category of the Learning Path Item you want to create
  * @apiParam {String} link The link of the Learning Path Item you want to create
+ * @apiParam {Integer} path_order The order of the Learning Path Item in the path
  * 
  * @apiParamExample {json} Learning Path Item-Post-Example:
  * { 
@@ -1498,15 +1499,15 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
  *  "message": "Invalid Credentials"
  * }
  * 
- * @apiError (500) {Object} Find-User-Error Could not find user to add Learning Path Item for
+ * @apiError (500) {Object} Find-User-Error Could not find user to update Learning Path Item for
  * 
  * @apiErrorExample 500-User-Not-Found:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Could not find user to add Learning Path Item for"
+ *  "message": "Could not find user to update Learning Path Item for"
  * }
  * 
- * @apiError (404) {Object} Find-Path-Error Could not find Learning Path to add Learning Path Item for
+ * @apiError (404) {Object} Find-Path-Error Could not find Learning Path to update Learning Path Item for
  * 
  * @apiErrorExample 404-Path-Not-Found:
  * HTTP/1.1 404 Internal Server Error
@@ -1516,18 +1517,18 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
  * 
  * @apiError (403) {Object} Not-Authorized Could not add Learning Path item, user not authorized
  * 
- * @apiErrorExample 403-Not-Authorized-Found:
+ * @apiErrorExample 403-Not-Authorized:
  * HTTP/1.1 403 Internal Server Error
  * {
  *  "message": "User is not permitted to change this path"
  * }
  * 
- * @apiError (500) {Object} Add-Learning-Path-Item-Error Could not add Learning Path Item
+ * @apiError (500) {Object} Update-Learning-Path-Item-Error Could not update Learning Path Item
  * 
- * @apiErrorExample 500-Learning-Path-Add-Error:
+ * @apiErrorExample 500-Update-Learning-Path-Item-Error:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Could not add Learning Path Item"
+ *  "message": "Could not update Learning Path Item"
  * }
  * 
  */
@@ -1547,7 +1548,7 @@ router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
             {
                 if(response.code === 403) res.status(403).json({ message: response.message })
                 else if(response.code === 404) res.status(404).json({ message: response.message })
-                else res.status(201).json({ message: response.message, id: response.id })
+                else res.status(200).json({ message: response.message, id: response.id })
             })
             .catch(error => 
             {
@@ -1562,6 +1563,105 @@ router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     })
 })
 
+/**
+ * @api {delete} /api/learning-paths/:id/path-items/:itemId Delete Learning Path Item
+ * @apiName DeleteLearningPathItem
+ * @apiGroup Learning Path Items
+ *  
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {integer} Id An id of the Learning Path Item that the user deleted
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 Deleted
+ *  {
+ *     "id": 2
+ *  }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to delete Learning Path Item for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to delete Learning Path Item for"
+ * }
+ * 
+ * @apiError (404) {Object} Find-Path-Error Could not find Learning Path to delete Learning Path Item for
+ * 
+ * @apiErrorExample 404-Path-Not-Found:
+ * HTTP/1.1 404 Internal Server Error
+ * {
+ *  "message": "No learning path found with that ID"
+ * }
+ * 
+ * @apiError (403) {Object} Not-Authorized Could not delete Learning Path item, user not authorized
+ * 
+ * @apiErrorExample 403-Not-Authorized-Found:
+ * HTTP/1.1 403 Internal Server Error
+ * {
+ *  "message": "User is not permitted to change this path item"
+ * }
+ * 
+ * @apiError (500) {Object} Delete-Learning-Path-Item-Error Could not add Learning Path Item
+ * 
+ * @apiErrorExample 500-Delete-Learning-Path-Item-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not delete Learning Path Item"
+ * }
+ * 
+ */
 
+router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
+    const pathId = req.params.id
+    const itemId = req.params.itemId
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
+        {
+            Paths.deletePathItem(user.id, pathId, itemId)
+            .then(response => 
+            {
+                if(response.code === 403) res.status(403).json({ message: response.message })
+                else if(response.code === 404) res.status(404).json({ message: response.message })
+                else res.status(200).json({ message: response.message, id: response.id })
+            })
+            .catch(error => 
+            {
+                res.status(500).json({ message: 'Could not delete learning path Item' })
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to delete learning path Item for' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Could not find user to delete learning path Item for' })
+    })
+})
 
 module.exports = router

@@ -93,9 +93,11 @@ async function addPathItem(userId, pathId, item)
     let path = pathObj.path
     if(!path) return {message: 'No learning path found with that ID', code: 404}
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
-    item.path_id = pathId
-    let insertId = await db('path_items').insert(item, 'id')
-    return {code: 201, message: `item added to path`, id: insertId }
+    item.path_id = Number(pathId)
+    console.log(item)
+    let insertIds = await db('path_items').insert(item, 'id')
+    console.log(insertIds)
+    return {code: 201, message: `item added to path`, id: insertIds[0] }
 }
 
 async function updatePathItem(userId, pathId, itemId, changes)
@@ -108,7 +110,7 @@ async function updatePathItem(userId, pathId, itemId, changes)
     return {code: 200, message: `path item with id ${itemId} updated`, id: itemId }
 }
 
-function deletePathItem(userId, pathId, itemId)
+async function deletePathItem(userId, pathId, itemId)
 {
     let pathObj = await findById(pathId)
     let path = pathObj.path
