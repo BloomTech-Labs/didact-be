@@ -17,6 +17,9 @@ module.exports =
     findForUserId,
     findPathItemsForPath,
     addPathItem,
+    updatePathItem,
+    deletePathItem,
+    
 }
 
 function find() 
@@ -92,6 +95,11 @@ function addPathItem(item)
 function updatePathItem(id, changes)
 {
     return db('path_items').where({id}).update(changes)
+}
+
+function deletePathItem(id)
+{
+    return db('path_items').where({id}).del()
 }
 
 async function add(userId, path)
