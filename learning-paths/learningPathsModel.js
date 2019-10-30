@@ -16,6 +16,7 @@ module.exports =
     updateCourseOrder,
     findForUserId,
     findPathItemsForPath,
+    addPathItem,
 }
 
 function find() 
@@ -81,6 +82,11 @@ async function findCoursesForPath(pathId)
 function findPathItemsForPath(pathId)
 {
     return db('path_items as pi').where({'pi.path_id': pathId})
+}
+
+function addPathItem(pathId, item)
+{
+    return db('path_items').insert(item, 'id')
 }
 
 async function add(userId, path)
