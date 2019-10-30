@@ -15,9 +15,8 @@ passport.use(new FacebookAuth({
   profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'picture']
 },
   function (accessToken, refreshToken, profile, cb) {
-    console.log(profile)
     // console.log({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email })
-    Users.FBfindOrCreate({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email })
+    Users.FBfindOrCreate({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email, photo: profile.photos[0].value })
       .then(response => {
         cb(null, profile._json)
       })

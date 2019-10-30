@@ -23,6 +23,13 @@ const Users = require('../users/usersModel')
  * 	"tag": "Something else"
  * }
  * 
+ * @apiParam {Integer} userId The user id of a user you want to get paths for
+ * 
+ * @apiParamExample {json} Get Learning Paths By Tag
+ * {
+ * 	"userId": 1
+ * }
+ * 
  * @apiSuccess (200) {Array} Learning Paths An array of the Learning Paths on the website, optionally filtered by url sent in body
  * 
  * @apiSuccessExample Success-Response:
@@ -76,26 +83,36 @@ async function filterByTag(aLearningPaths, tag)
 }
 
 router.get('/', (req, res) => {
-    Paths.find()
-    .then(response => 
+    if(req.body.userId)
+    {
+        Paths.findForUserId(req.body.userId)
+        .then(response =>
+        {
+            res.status(200).json(response)
+        })
+    }
+    else
+    {
+        Paths.find()
+        .then(response => 
         {
             if(req.body.tag) 
             {
                 filterByTag(response, req.body.tag)
                 .then(results =>
-                    {
-                        res.status(200).json(results)
-                    })
+                {
+                    res.status(200).json(results)
+                })
                 .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
             }
             else res.status(200).json(response)
         })
-    .catch(error => 
+        .catch(error => 
         {
             res.status(500).json({ message: 'Error connecting with server' })
         })
+    }
 })
-
 
 /**
  * @api {get} /api/learning-paths/:id Get Learning Path
@@ -117,10 +134,19 @@ router.get('/', (req, res) => {
  * HTTP/1.1 200 OK
  * 
  * {
- *     "id": 1,
- *     "name": "Onboarding Learning Path",
- *     "description": "This learning path will get you on the road to success.",
- *     "category": "Learning"
+ *   "id": 3,
+ *   "name": "test path1",
+ *   "description": "a description of a learning path",
+ *   "category": "test cat",
+ *   "tags": [],
+ *   "courses": [
+ *     {
+ *       "id": 1,
+ *       "name": "Learning How to Learn: Powerful mental tools to help you master tough subjects",
+ *       "path_order": 5
+ *     }
+ *   ],
+ *   "creatorId": 1
  * }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
@@ -1004,7 +1030,8 @@ router.post('/:id/course/:courseId', (req, res) => {
                     Paths.addPathCourse(user.id, pathId, courseId, order)
                     .then(response => 
                     {
-                        if(response.code === 201) res.status(201).json({ message: response.message })
+                        console.log('response', response)
+                        if(response.code === 200) res.status(200).json({ message: response.message, pathCourses: response.pathCourses })
                         else res.status(response.code).json({ message: response.message })
                     })
                     .catch(error => 
@@ -1115,7 +1142,7 @@ router.delete('/:id/course/:courseId', (req, res) =>
                 Paths.removePathCourse(user.id, pathId, courseId)
                 .then(response => 
                 {
-                    if(response.code === 200) res.status(200).json({ message: response.message })
+                    if(response.code === 200) res.status(200).json({ message: response.message, pathCourses: response.pathCourses })
                     else res.status(response.code).json({ message: response.message })
                 })
                 .catch(error => 

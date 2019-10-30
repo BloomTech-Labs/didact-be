@@ -13,12 +13,22 @@ module.exports =
     deletePathTag,
     addPathCourse,
     removePathCourse,
-    updateCourseOrder
+    updateCourseOrder,
+    findForUserId
 }
 
 function find() 
 {
     return db('paths')
+}
+
+async function findForUserId(userId)
+{
+    let usersPaths = await db('paths as p')
+        .join('users_paths as up', 'up.path_id', '=', 'p.id')
+        .select('p.id', 'p.name', 'p.description', 'p.category')
+        .where({'up.user_id': userId})
+    return usersPaths
 }
 
 async function findById(id)
@@ -181,7 +191,8 @@ async function addPathCourse(userId, pathId, courseId, path_order)
     else
     {
         await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order })
-        return { message: 'Course added to path', code: 200 }
+        let pathCourses = await findCoursesForPath(pathId)
+        return { message: 'Course added to path', code: 200, pathCourses }
     }
 }
 
@@ -196,7 +207,8 @@ async function removePathCourse(userId, pathId, courseId)
     else
     {
         await db('paths_courses').where({ course_id: courseId, path_id: pathId}).del()
-        return { message: 'Course removed from path', code: 200 }
+        let pathCourses = await findCoursesForPath(pathId)
+        return { message: 'Course removed from path', code: 200, pathCourses }
     }
 }
 
