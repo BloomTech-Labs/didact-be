@@ -134,16 +134,31 @@ router.get('/', (req, res) => {
  * HTTP/1.1 200 OK
  * 
  * {
- *   "id": 3,
- *   "name": "test path1",
- *   "description": "a description of a learning path",
- *   "category": "test cat",
- *   "tags": [],
+ *   "id": 1,
+ *   "name": "Onboarding Learning Path",
+ *   "description": "This learning path will get you on the road to success.",
+ *   "category": "Learning",
+ *   "tags": [
+ *     "Video",
+ *     "Coursera",
+ *     "Free"
+ *   ],
  *   "courses": [
  *     {
  *       "id": 1,
  *       "name": "Learning How to Learn: Powerful mental tools to help you master tough subjects",
- *       "path_order": 5
+ *       "path_order": 0
+ *     }
+ *   ],
+ *   "pathItems": [
+ *     {
+ *       "id": 1,
+ *       "name": "seed path item",
+ *       "path_id": 1,
+ *       "description": "temporary seed path item, until we have a better placeholder",
+ *       "link": null,
+ *       "type": "video",
+ *       "path_order": 7
  *     }
  *   ],
  *   "creatorId": 1
@@ -1278,5 +1293,7 @@ router.put('/:id/course/:courseId', (req, res) => {
             })
     }
 })
+
+
 
 module.exports = router
