@@ -14,7 +14,12 @@ module.exports =
     addPathCourse,
     removePathCourse,
     updateCourseOrder,
-    findForUserId
+    findForUserId,
+    findPathItemsForPath,
+    addPathItem,
+    updatePathItem,
+    deletePathItem,
+
 }
 
 function find() 
@@ -38,6 +43,7 @@ async function findById(id)
     if(!path) return {message: 'No learning path found with that ID', code: 404}
     path.tags = await getTagsForPath(id)
     path.courses = await findCoursesForPath(id)
+    path.pathItems = await findPathItemsForPath(id)
     let creatorId = await getCreatorIdForPath(id)
     if(creatorId) path.creatorId = creatorId
     return {path, code: 200}
@@ -76,6 +82,44 @@ async function findCoursesForPath(pathId)
     return courseList
 }
 
+function findPathItemsForPath(pathId)
+{
+    return db('path_items as pi').where({'pi.path_id': pathId})
+}
+
+async function addPathItem(userId, pathId, item)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+    if(!path) return {message: 'No learning path found with that ID', code: 404}
+    if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
+    item.path_id = Number(pathId)
+    console.log(item)
+    let insertIds = await db('path_items').insert(item, 'id')
+    console.log(insertIds)
+    return {code: 201, message: `item added to path`, id: insertIds[0] }
+}
+
+async function updatePathItem(userId, pathId, itemId, changes)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+    if(!path) return {message: 'No learning path found with that ID', code: 404}
+    if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
+    await db('path_items').where({id: itemId}).update(changes)
+    return {code: 200, message: `path item with id ${itemId} updated`, id: itemId }
+}
+
+async function deletePathItem(userId, pathId, itemId)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+    if(!path) return {message: 'No learning path found with that ID', code: 404}
+    if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
+    await db('path_items').where({id: itemId}).del()
+    return {code: 200, message: `path item with id ${itemId} deleted`, id: itemId }
+}
+
 async function add(userId, path)
 {
     let pathIds = await db('paths').insert(path, 'id')
@@ -92,10 +136,7 @@ async function updatePathById(userId, pathId, changes)
 {
     let pathObj = await findById(pathId)
     let path = pathObj.path
-    console.log('pathObj', pathObj)
     if(!path) return {message: 'No learning path found with that ID', code: 404}
-    console.log('pathObj', pathObj)
-    console.log('path.creatorId, userId',path.creator_id, userId)
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     await db('paths').where({id: pathId}).update(changes)
     return {code: 200}
