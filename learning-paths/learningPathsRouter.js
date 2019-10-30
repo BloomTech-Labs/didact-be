@@ -530,7 +530,7 @@ router.delete('/:id', (req, res) => {
 })
 
 /**
- * @api {post} /api/learning-paths/:id/user Join Learning Path
+ * @api {post} /api/learning-paths/:id/users Join Learning Path
  * @apiName JoinLearningPath
  * @apiGroup Learning Paths
  *  
@@ -585,7 +585,7 @@ router.delete('/:id', (req, res) => {
  * 
  */
 
-router.post('/:id/user', (req, res) => {
+router.post('/:id/users', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
     .then(user =>
@@ -612,7 +612,7 @@ router.post('/:id/user', (req, res) => {
 })
 
 /**
- * @api {delete} /api/learning-paths/:id/user Quit Learning Path
+ * @api {delete} /api/learning-paths/:id/users Quit Learning Path
  * @apiName QuitLearningPath
  * @apiGroup Learning Paths
  *  
@@ -667,7 +667,7 @@ router.post('/:id/user', (req, res) => {
  * 
  */
 
-router.delete('/:id/user', (req, res) => {
+router.delete('/:id/users', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
     .then(user =>
@@ -943,7 +943,7 @@ router.delete('/:id/tags', (req, res) => {
 })
 
 /**
- * @api {post} /api/learning-paths/:id/course/:courseId Post Course To Learning Path
+ * @api {post} /api/learning-paths/:id/courses/:courseId Post Course To Learning Path
  * @apiName PostCourseToLearningPath
  * @apiGroup Learning Paths
  * 
@@ -1029,7 +1029,7 @@ router.delete('/:id/tags', (req, res) => {
  * 
  */
 
-router.post('/:id/course/:courseId', (req, res) => {
+router.post('/:id/courses/:courseId', (req, res) => {
     const pathId = req.params.id
     const courseId = req.params.courseId
     let email = req.user.email
@@ -1065,7 +1065,7 @@ router.post('/:id/course/:courseId', (req, res) => {
 })
 
 /**
- * @api {delete} /api/learning-paths/:id/course/coursId Remove Course From Learning Path
+ * @api {delete} /api/learning-paths/:id/courses/courseId Remove Course From Learning Path
  * @apiName RemoveCourseFromLearningPath
  * @apiGroup Learning Paths
  * 
@@ -1144,7 +1144,7 @@ router.post('/:id/course/:courseId', (req, res) => {
  * 
  */
 
-router.delete('/:id/course/:courseId', (req, res) => 
+router.delete('/:id/courses/:courseId', (req, res) => 
 {
     const pathId = req.params.id
     const courseId = req.params.courseId
@@ -1174,7 +1174,7 @@ router.delete('/:id/course/:courseId', (req, res) =>
 })
 
 /**
- * @api {put} /api/learning-paths/:id/course/:courseId Update Course Order In Learning Path
+ * @api {put} /api/learning-paths/:id/courses/:courseId Update Course Order In Learning Path
  * @apiName UpdateCourseOrderInLearningPath
  * @apiGroup Learning Paths
  * 
@@ -1260,7 +1260,7 @@ router.delete('/:id/course/:courseId', (req, res) =>
  * 
  */
 
-router.put('/:id/course/:courseId', (req, res) => {
+router.put('/:id/courses/:courseId', (req, res) => {
     const pathId = req.params.id
     const courseId = req.params.courseId
     let email = req.user.email
@@ -1294,6 +1294,139 @@ router.put('/:id/course/:courseId', (req, res) => {
     }
 })
 
+/**
+ * @api {post} /api/learning-paths/:id/path-items Post Learning Path Item
+ * @apiName PostLearningPathItem
+ * @apiGroup Learning Path Items
+ *  
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {String} name The name of the Learning Path Item you want to create
+ * @apiParam {String} description The description of the Learning Path Item you want to create
+ * @apiParam {String} category The category of the Learning Path Item you want to create
+ * @apiParam {String} link The link of the Learning Path Item you want to create
+ * 
+ * @apiParamExample {json} Learning Path Item-Post-Example:
+ * { 
+ * 	 "name": "apidoc video",
+ * 	 "description": "In this Learning Path Item, you will learn the tedium of writing docs.",
+ * 	 "category": "Docs",
+ * }
+ * 
+ * @apiSuccess (201) {integer} Id An id of the Learning Path Item that the user posted
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ *  {
+ *     "id": 2
+ *  }
+ * 
+ * @apiError (400) {Object} Missing-Learning-Path-Data The Learning Path Item data is absent
+ * 
+ * @apiErrorExample 400-Learning Path Item-Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Missing Learning Path Item data"
+ * }
+ * 
+ * @apiError (400) {Object} Missing-Learning-Path-Name The Learning Path Item name is absent
+ * 
+ * @apiErrorExample 400-Name-Missing:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Learning Path Item name is required"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to add Learning Path Item for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to add Learning Path Item for"
+ * }
+ * 
+ * @apiError (404) {Object} Find-Path-Error Could not find Learning Path to add Learning Path Item for
+ * 
+ * @apiErrorExample 404-Path-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "No learning path found with that ID"
+ * }
+ * 
+ * @apiError (500) {Object} Add-Learning-Path-Error Could not add Learning Path Item
+ * 
+ * @apiErrorExample 500-Learning-Path-Add-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not add Learning Path Item"
+ * }
+ * 
+ */
 
+function verifyLearningPath(req, res, next)
+{
+    Paths.findById(req.params.id)
+    .then(response => next())
+    .catch(err => res.status(404).json({ message: "No learning path found with that ID" }))
+}
+
+function validateLearningPathItem(req, res, next)
+{
+    if(!req.body) res.status(400).json({ message: "Missing learning path item data"})
+    else if(!req.body.name) res.status(400).json({ message: "Learning Path Item name is required"})
+    else next()
+}
+
+router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (req, res) => {
+    const pathId = req.params.id
+    const pathItem = req.body
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
+        {
+            Paths.addPathItem(user.id, pathId, pathItem)
+            .then(response => 
+            {
+                if(response.code === 403) res.status(403).json({ message: response.message })
+                else if(response.code === 404) res.status(404).json({ message: response.message })
+                else res.status(201).json({ message: response.message })
+            })
+            .catch(error => 
+            {
+                res.status(500).json({ message: 'Could not add learning path Item' })
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to add learning path Item for' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Could not find user to add learning path Item for' })
+    })
+})
 
 module.exports = router
