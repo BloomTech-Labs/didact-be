@@ -11,6 +11,7 @@ exports.up = function(knex) {
         tbl.string('facebookID')
         tbl.string('googleID')
         tbl.string('slackID')
+        tbl.string('photo')
     })
     .createTable('courses', tbl =>
     {
