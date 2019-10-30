@@ -1445,4 +1445,123 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
     })
 })
 
+/**
+ * @api {put} /api/learning-paths/:id/path-items/:itemId Update Learning Path Item
+ * @apiName UpdateLearningPathItem
+ * @apiGroup Learning Path Items
+ *  
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {String} name The name of the Learning Path Item you want to create
+ * @apiParam {String} description The description of the Learning Path Item you want to create
+ * @apiParam {String} category The category of the Learning Path Item you want to create
+ * @apiParam {String} link The link of the Learning Path Item you want to create
+ * 
+ * @apiParamExample {Object} Learning-Path-Item-Update-Example:
+ * { 
+ *   "changes":
+ *   {
+ *      "name": "apidoc videos",
+ * 	    "description": "In this Learning Path Item, you will learn the tedium of writing docs.",
+ * 	    "category": "Docs"
+ *   }
+ * }
+ * 
+ * @apiSuccess (200) {integer} Id An id of the Learning Path Item that the user Updated
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 Updated
+ *  {
+ *     "id": 2
+ *  }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to add Learning Path Item for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to add Learning Path Item for"
+ * }
+ * 
+ * @apiError (404) {Object} Find-Path-Error Could not find Learning Path to add Learning Path Item for
+ * 
+ * @apiErrorExample 404-Path-Not-Found:
+ * HTTP/1.1 404 Internal Server Error
+ * {
+ *  "message": "No learning path found with that ID"
+ * }
+ * 
+ * @apiError (403) {Object} Not-Authorized Could not add Learning Path item, user not authorized
+ * 
+ * @apiErrorExample 403-Not-Authorized-Found:
+ * HTTP/1.1 403 Internal Server Error
+ * {
+ *  "message": "User is not permitted to change this path"
+ * }
+ * 
+ * @apiError (500) {Object} Add-Learning-Path-Item-Error Could not add Learning Path Item
+ * 
+ * @apiErrorExample 500-Learning-Path-Add-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not add Learning Path Item"
+ * }
+ * 
+ */
+
+router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
+    const pathId = req.params.id
+    const itemId = req.params.itemId
+    const changes = req.body
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
+        {
+            Paths.updatePathItem(user.id, pathId, itemId, changes)
+            .then(response => 
+            {
+                if(response.code === 403) res.status(403).json({ message: response.message })
+                else if(response.code === 404) res.status(404).json({ message: response.message })
+                else res.status(201).json({ message: response.message, id: response.id })
+            })
+            .catch(error => 
+            {
+                res.status(500).json({ message: 'Could not update learning path Item' })
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to update learning path Item for' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Could not find user to update learning path Item for' })
+    })
+})
+
+
+
 module.exports = router
