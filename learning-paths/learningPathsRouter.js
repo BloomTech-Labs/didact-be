@@ -1333,9 +1333,10 @@ router.put('/:id/courses/:courseId', (req, res) => {
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 201 Created
- *  {
- *     "id": 2
- *  }
+ * {
+ *   "message": "item added to path",
+ *   "id": 4
+ * }
  * 
  * @apiError (400) {Object} Missing-Learning-Path-Item-Data The Learning Path Item data is absent
  * 
@@ -1478,10 +1479,11 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
  * @apiSuccess (200) {integer} Id An id of the Learning Path Item that the user Updated
  * 
  * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 Updated
- *  {
- *     "id": 2
- *  }
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "path item with id 4 updated",
+ *   "id": "4"
+ * }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
  * 
