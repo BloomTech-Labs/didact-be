@@ -24,6 +24,25 @@ exports.seed = function(knex, Promise)
                 foreign_instructors: "Dr. Barbara Oakley, Dr. Terrence Sejnowski",
                 foreign_rating: "4.8 stars",
             },
+            {
+                name: "Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential",
+                link: "https://www.coursera.org/learn/mindshift",
+                description: "Mindshift is designed to help boost your career and life in today’s fast-paced learning environment." +
+                " Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs," +
+                " how to seek out and work with mentors, the secrets to avoiding career ruts (and catastrophes) and general ruts in life," +
+                " and insights such as the value of selective ignorance over general competence.  We’ll provide practical insights from" +
+                " science about how to learn and change effectively even in maturity, and we’ll build on what you already know to take" +
+                " your life’s learning in fantastic new directions.  This course is designed to show you how to look at what you’re learning," +
+                " and your place in what’s unfolding in the society around you, so you can be what you want to be, given the real world" +
+                " constraints that life puts on us all. You’ll see that by using certain mental tools and insights, you can learn and do" +
+                " more—far more—than you might have ever dreamed!" +
+                " This course can be taken independent of, concurrent with, or subsequent to, its companion course, Learning How to Learn." + 
+                " (Mindshift is more career focused, and Learning How to Learn is more learning focused.)",
+                creator_id: 1,
+                foreign_instructors: "Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo",
+                foreign_rating: "4.8 stars",
+            },
+
         ]
     )
 }
