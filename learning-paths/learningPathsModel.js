@@ -76,7 +76,7 @@ async function findCoursesForPath(pathId)
     let courseList = await db('paths as p')
         .join('paths_courses as pc', 'pc.path_id', '=', 'p.id')
         .join('courses as c', 'pc.course_id', '=', 'c.id')
-        .select('c.id', 'c.name', 'pc.path_order')
+        .select('c.id', 'c.name', 'pc.path_order', 'c.link', 'c.description', 'c.foreign_instructors', 'c.foreign_rating')
         .where({ 'p.id': pathId })
 
     return courseList
