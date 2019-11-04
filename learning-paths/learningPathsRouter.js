@@ -83,8 +83,10 @@ async function filterByTag(aLearningPaths, tag)
 }
 
 router.get('/', (req, res) => {
+    console.log('body from get learning paths', req.body)
     if(req.body.getYours)
     {
+        console.log('inside get your learning paths, req.body.getYours', req.body.getYours)
         let email = req.user.email
         Users.findBy({ email })
         .then(user =>
