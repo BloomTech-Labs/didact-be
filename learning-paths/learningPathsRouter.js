@@ -1267,8 +1267,8 @@ router.delete('/:id/courses/:courseId', (req, res) =>
 })
 
 /**
- * @api {put} /api/learning-paths/:id/courses/:courseId Update Course Order In Learning Path
- * @apiName UpdateCourseOrderInLearningPath
+ * @api {put} /api/learning-paths/:id/order Update Content Order In Learning Path
+ * @apiName UpdateContentOrderInLearningPath
  * @apiGroup Learning Paths
  * 
  * @apiHeader {string} Content-Type the type of content being sent
@@ -1280,19 +1280,32 @@ router.delete('/:id/courses/:courseId', (req, res) =>
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Object} Order The order of the course to be updated in the learning path
+ * @apiParam {Array} Content The content to be updated in the learning path
  * 
- * @apiParamExample {json} Course Post Example:
+ * @apiParamExample {json} Content Put Example:
  * { 
- *    "order": 3
+ *    content: 
+ *    [
+ *          {
+ *              "name": "Some Course",
+ *              "id": 1,
+ *              "order": 4
+ *          },
+ *          {
+ *              "name": "Some Path Item",
+ *              "path_id": 1,
+ *              "id": 3,
+ *              "order": 2
+ *          }
+ *    ]
  * }
  * 
- * @apiSuccess (200) {Object} Message A message that the course was updated
+ * @apiSuccess (200) {Object} Message A message that the content was updated
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *     message: 'Course order updated in learning path'
+ *     message: 'Content order updated in learning path'
  *  }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
@@ -1311,20 +1324,20 @@ router.delete('/:id/courses/:courseId', (req, res) =>
  *  "message": "Invalid Credentials"
  * }
  * 
- * @apiError (403) {Object} Unauthorized The user is not authorized to update course order in this learning path
+ * @apiError (403) {Object} Unauthorized The user is not authorized to update content order in this learning path
  * 
  * @apiErrorExample 403-Error-Response:
  * HTTP/1.1 403 Forbidden
  * {
- *  "message": "User is not permitted to update course order in this learning path"
+ *  "message": "User is not permitted to update content order in this learning path"
  * }
  * 
- * @apiError (404) {Object} course-not-found-error The course with the id sent was not found in database
+ * @apiError (404) {Object} content-not-found-error The content with the id sent was not found in database
  * 
  * @apiErrorExample 404-Error-Response:
  * HTTP/1.1 404 Not Found
  * {
- *  "message": "Course not found"
+ *  "message": "Content not found"
  * }
  * 
  * @apiError (404) {Object} not-found-error The learning path with id sent was not found in database
@@ -1335,54 +1348,53 @@ router.delete('/:id/courses/:courseId', (req, res) =>
  *  "message": "No learning path found with that ID"
  * }
  * 
- * @apiError (500) {Object} Find-User-Error Could not find user to update course order for
+ * @apiError (500) {Object} Find-User-Error Could not find user to update content order for
  * 
  * @apiErrorExample 500-User-Not-Found:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Could not find user to update course order for"
+ *  "message": "Could not find user to update content order for"
  * }
  * 
- * @apiError (500) {Object} Update-Course-Order-Error Could not update course order
+ * @apiError (500) {Object} Update-Content-Order-Error Could not update content order
  * 
- * @apiErrorExample 500-Update-Course-Order-Error:
+ * @apiErrorExample 500-Update-Content-Order-Error:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Internal error: could not update course order in learning path"
+ *  "message": "Internal error: could not update content order in learning path"
  * }
  * 
  */
 
-router.put('/:id/courses/:courseId', (req, res) => {
+router.put('/:id/order', (req, res) => {
     const pathId = req.params.id
-    const courseId = req.params.courseId
     let email = req.user.email
-    if(!req.body.order) res.status(400).json({ message: "must send order for course in body" })
+    if(!req.body.learningPathContent) res.status(400).json({ message: "must send content for learning path in body" })
     else
     {
-        const order = req.body.order
+        let content = req.body.learningPathContent
         Users.findBy({ email })
             .then(user =>
             {
                 if(user)
                 {
-                    Paths.updateCourseOrder(user.id, pathId, courseId, order)
+                    Paths.updateContentOrder(user.id, pathId, content)
                     .then(response => 
                     {
-                        if(response.code === 200) res.status(200).json({ message: response.message })
+                        if(response=== 200) res.status(200).json({ message: response.message })
                         else res.status(response.code).json({ message: response.message })
                     })
                     .catch(error => 
                     {
                         console.log(error)
-                        res.status(500).json({ message: 'Internal error: Could not update course order' })
+                        res.status(500).json({ message: 'Internal error: Could not update learning path content order' })
                     })
                 }
-                else res.status(500).json({ message: 'Could not find user to update course order for' })
+                else res.status(500).json({ message: 'Could not find user to update learning path content order' })
             })
             .catch(err =>
             {
-                res.status(500).json({ message: 'Could not find user to update course order for' })
+                res.status(500).json({ message: 'Could not find user to update learning path content order' })
             })
     }
 })
