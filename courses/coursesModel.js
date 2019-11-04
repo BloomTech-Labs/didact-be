@@ -202,4 +202,7 @@ async function deleteSectionDetails(userId, courseId, sectionId, detailId) {
     return {code: 200, message: 'delete successful'}
 }
 
-
+async function generateUdemyCourse(userId, title, courseId, courseArray)
+{
+    
+}

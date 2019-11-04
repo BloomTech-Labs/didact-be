@@ -551,14 +551,6 @@ router.delete('/:id', (req, res) => {
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiSuccess (201) {integer} Id An id of the Learning Path that the user joined
- * 
- * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 OK
- *  {
- *     "id": 2
- *  }
- * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
  * 
  * @apiErrorExample 401-Error-Response:
