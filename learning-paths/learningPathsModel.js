@@ -282,7 +282,7 @@ async function updateContentOrder(userId, pathId, content)
         {
             if(content[i].path_id && content[i].path_id === Number(pathId))
             {
-                await updatePathById(userId, pathId, content[i].id, content[i].path_order)
+                await updatePathItem(userId, pathId, content[i].id, {path_order: content[i].path_order})
             }
             else
             {

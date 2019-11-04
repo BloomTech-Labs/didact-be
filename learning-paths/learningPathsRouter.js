@@ -1386,7 +1386,6 @@ router.put('/:id/order', (req, res) => {
                     })
                     .catch(error => 
                     {
-                        console.log(error)
                         res.status(500).json({ message: 'Internal error: Could not update learning path content order' })
                     })
                 }
