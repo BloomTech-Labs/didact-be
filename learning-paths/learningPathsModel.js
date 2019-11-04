@@ -19,7 +19,8 @@ module.exports =
     addPathItem,
     updatePathItem,
     deletePathItem,
-    updateContentOrder
+    updateContentOrder,
+    findForNotUserId
 }
 
 function find() 
@@ -33,6 +34,15 @@ async function findForUserId(userId)
         .join('users_paths as up', 'up.path_id', '=', 'p.id')
         .select('p.id', 'p.name', 'p.description', 'p.category')
         .where({'up.user_id': userId})
+    return usersPaths
+}
+
+async function findForNotUserId(userId)
+{
+    let usersPaths = await db('paths as p')
+        .join('users_paths as up', 'up.path_id', '=', 'p.id')
+        .select('p.id', 'p.name', 'p.description', 'p.category')
+        .whereNot({'up.user_id': userId})
     return usersPaths
 }
 
