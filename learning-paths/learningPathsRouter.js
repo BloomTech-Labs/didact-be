@@ -63,67 +63,42 @@ const Users = require('../users/usersModel')
  * 
  */
 
-async function filterByTag(aLearningPaths, tag)
-{
-    let retArr = []
-    for(let i=0; i<aLearningPaths.length; i++)
-    {
-        let tags = await Paths.getTagsForPath(aLearningPaths[i].id)
-        tags = tags.map(el => el.toLowerCase())
-        if(tags.includes(tag.toLowerCase())) retArr.push(aLearningPaths[i])
-    }
-    return retArr
-}
+// async function filterByTag(aLearningPaths, tag)
+// {
+//     let retArr = []
+//     for(let i=0; i<aLearningPaths.length; i++)
+//     {
+//         let tags = await Paths.getTagsForPath(aLearningPaths[i].id)
+//         tags = tags.map(el => el.toLowerCase())
+//         if(tags.includes(tag.toLowerCase())) retArr.push(aLearningPaths[i])
+//     }
+//     return retArr
+// }
 
 router.get('/', (req, res) => {
-    console.log('body from get learning paths', req.body)
-    if(req.body.getYours)
+    
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
     {
-        console.log('inside get your learning paths, req.body.getYours', req.body.getYours)
-        let email = req.user.email
-        Users.findBy({ email })
-        .then(user =>
+        if(user)
         {
-            if(user)
+            Paths.findForNotUserId(user.id)
+            .then(response =>
             {
-                Paths.findForUserId(user.id)
-                .then(response =>
-                {
-                    res.status(200).json(response)
-                })
-                .catch(err =>
-                {
-                    res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
-                })
-            }
-            else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
-        })
-        .catch(err =>
-        {
-            res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
-        })
-    }
-    else
+                res.status(200).json(response)
+            })
+            .catch(err =>
+            {
+                res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+            })
+        }
+        else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+    .catch(err =>
     {
-        Paths.find()
-        .then(response => 
-        {
-            if(req.body.tag) 
-            {
-                filterByTag(response, req.body.tag)
-                .then(results =>
-                {
-                    res.status(200).json(results)
-                })
-                .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
-            }
-            else res.status(200).json(response)
-        })
-        .catch(error => 
-        {
-            res.status(500).json({ message: 'Error connecting with server' })
-        })
-    }
+        res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
 })
 
 
