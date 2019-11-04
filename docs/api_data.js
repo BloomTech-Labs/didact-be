@@ -2849,8 +2849,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "Integer",
             "optional": false,
-            "field": "userId",
-            "description": "<p>The user id of a user you want to get paths for</p>"
+            "field": "getYours",
+            "description": "<p>Filters the learning paths by whether or not you're only getting the ones you signed up for.</p>"
           }
         ]
       },
@@ -2861,8 +2861,8 @@ define({ "api": [
           "type": "json"
         },
         {
-          "title": "Get Learning Paths By Tag",
-          "content": "{\n\t\"userId\": 1\n}",
+          "title": "Get Learning Paths",
+          "content": "{\n\t\"getYours\": true\n}",
           "type": "json"
         }
       ]
@@ -2959,26 +2959,6 @@ define({ "api": [
         {
           "title": "Header-Example:",
           "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "201": [
-          {
-            "group": "201",
-            "type": "integer",
-            "optional": false,
-            "field": "Id",
-            "description": "<p>An id of the Learning Path that the user joined</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n {\n    \"id\": 2\n }",
           "type": "json"
         }
       ]
