@@ -19,7 +19,7 @@ module.exports =
     addPathItem,
     updatePathItem,
     deletePathItem,
-
+    updateContentOrder
 }
 
 function find() 
@@ -266,5 +266,33 @@ async function updateCourseOrder(userId, pathId, courseId, path_order)
     {
         await db('paths_courses').where({path_id: pathId, course_id: courseId}).update({path_order})
         return { message: 'Course order updated in learning path', code: 200 }
+    }
+}
+
+async function updateContentOrder(userId, pathId, content)
+{
+    try
+    {
+        let pathObj = await findById(pathId)
+        let path = pathObj.path
+    
+        if(!path) return {message: 'No path found with that ID', code: 404}
+        if(path.creatorId !== userId) return {message: 'User is not permitted to add course to this path', code: 403}
+        for(let i=0; i<content.length; i++)
+        {
+            if(content[i].path_id && content[i].path_id === Number(pathId))
+            {
+                await updatePathById(userId, pathId, content[i].id, content[i].path_order)
+            }
+            else
+            {
+                await updateCourseOrder(userId, pathId, content[i].id, content[i].path_order)
+            }
+        }
+        return {message: 'Learning Path order updated', code: 200}
+    }
+    catch(error)
+    {
+        return {message: 'Error updating learning path order', code: 500}
     }
 }
