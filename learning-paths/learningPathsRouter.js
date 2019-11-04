@@ -23,13 +23,6 @@ const Users = require('../users/usersModel')
  * 	"tag": "Something else"
  * }
  * 
- * @apiParam {Integer} getYours Filters the learning paths by whether or not you're only getting the ones you signed up for.
- * 
- * @apiParamExample {json} Get Learning Paths
- * {
- * 	"getYours": true
- * }
- * 
  * @apiSuccess (200) {Array} Learning Paths An array of the Learning Paths on the website, optionally filtered by url sent in body
  * 
  * @apiSuccessExample Success-Response:
@@ -131,6 +124,87 @@ router.get('/', (req, res) => {
             res.status(500).json({ message: 'Error connecting with server' })
         })
     }
+})
+
+
+/**
+ * @api {get} /api/learning-paths/yours Get Your Learning Paths
+ * @apiName GetYourLearningPaths
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Array} Learning Paths An array of the Learning Paths on the website, optionally filtered by url sent in body
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * 
+ * [
+ *   {
+ *     "id": 1,
+ *     "name": "Onboarding Learning Path",
+ *     "description": "This learning path will get you on the road to success.",
+ *     "category": "Learning"
+ *   }
+ * ]
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Could not retrieve learning paths
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Error connecting with server"
+ * }
+ * 
+ */
+
+router.get('/yours', (req, res) => {
+    
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
+        {
+            Paths.findForUserId(user.id)
+            .then(response =>
+            {
+                res.status(200).json(response)
+            })
+            .catch(err =>
+            {
+                res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+            })
+        }
+        else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
 })
 
 /**
