@@ -76,6 +76,7 @@ router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
             console.log(err)
             res.status(500).json(err)
         })
+    })
     .catch(err => res.status(500).json({ message: 'Could not find user to add Udemy course for' }))
 })
 

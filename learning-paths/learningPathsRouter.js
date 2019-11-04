@@ -23,11 +23,11 @@ const Users = require('../users/usersModel')
  * 	"tag": "Something else"
  * }
  * 
- * @apiParam {Integer} userId The user id of a user you want to get paths for
+ * @apiParam {Integer} getYours Filters the learning paths by whether or not you're only getting the ones you signed up for.
  * 
- * @apiParamExample {json} Get Learning Paths By Tag
+ * @apiParamExample {json} Get Learning Paths
  * {
- * 	"userId": 1
+ * 	"getYours": true
  * }
  * 
  * @apiSuccess (200) {Array} Learning Paths An array of the Learning Paths on the website, optionally filtered by url sent in body
@@ -83,12 +83,29 @@ async function filterByTag(aLearningPaths, tag)
 }
 
 router.get('/', (req, res) => {
-    if(req.body.userId)
+    if(req.body.getYours)
     {
-        Paths.findForUserId(req.body.userId)
-        .then(response =>
+        let email = req.user.email
+        Users.findBy({ email })
+        .then(user =>
         {
-            res.status(200).json(response)
+            if(user)
+            {
+                Paths.findForUserId(user.id)
+                .then(response =>
+                {
+                    res.status(200).json(response)
+                })
+                .catch(err =>
+                {
+                    res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+                })
+            }
+            else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+        })
+        .catch(err =>
+        {
+            res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
         })
     }
     else
