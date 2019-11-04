@@ -41,8 +41,8 @@ async function findForNotUserId(userId)
 {
     let usersPaths = await db('paths as p')
         .join('users_paths as up', 'up.path_id', '=', 'p.id')
-        .select('p.id', 'p.name', 'p.description', 'p.category')
         .whereNot({'up.user_id': userId})
+        .select('p.id', 'p.name', 'p.description', 'p.category')
     return usersPaths
 }
 
