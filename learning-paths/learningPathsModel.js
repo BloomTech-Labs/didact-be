@@ -40,7 +40,7 @@ async function findForUserId(userId)
 
 async function findForOwner(userId)
 {
-    let ownedPaths = await db('paths as p')
+    let ownedPaths = await db('paths as p').where({'p.creator_id': userId})
     for(let i=0; i<ownedPaths.length; i++)
     {
         let tempCourses = await findCoursesForPath(ownedPaths[i].id)
