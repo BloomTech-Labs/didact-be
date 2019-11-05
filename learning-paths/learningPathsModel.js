@@ -20,7 +20,8 @@ module.exports =
     updatePathItem,
     deletePathItem,
     updateContentOrder,
-    findForNotUserId
+    findForNotUserId,
+    findForOwner
 }
 
 function find() 
@@ -35,6 +36,23 @@ async function findForUserId(userId)
         .select('p.id', 'p.name', 'p.description', 'p.category')
         .where({'up.user_id': userId})
     return usersPaths
+}
+
+async function findForOwner(userId)
+{
+    let ownedPaths = await db('paths as p')
+    for(let i=0; i<ownedPaths.length; i++)
+    {
+        let tempCourses = await findCoursesForPath(ownedPaths[i].id)
+        tempCourses = tempCourses.map(el => el.id)
+        ownedPaths[i].courseIds = tempCourses
+
+        let tempPI = await findPathItemsForPath(ownedPaths[i].id)
+
+        ownedPaths[i].contentLength = tempPI.length + tempCourses.length
+    }
+
+    return ownedPaths
 }
 
 async function findForNotUserId(userId)
