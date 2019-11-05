@@ -63,6 +63,7 @@ async function findById(id)
     }
     catch(error)
     {
+        console.log('error from findById', error)
         return {message: error, code: 500}
     }
 }

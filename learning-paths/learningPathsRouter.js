@@ -271,6 +271,7 @@ router.get('/:id', (req, res) => {
     .then(response => 
         {
             if(response.code === 404) res.status(404).json({ message: response.message })
+            else if (response.code === 500) res.status(500).json({ message: response.message })
             else res.status(200).json(response.path)
         })
     .catch(error => 
