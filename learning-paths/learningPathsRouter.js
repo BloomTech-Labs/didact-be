@@ -1128,7 +1128,7 @@ router.post('/:id/courses/:courseId', (req, res) => {
     const pathId = req.params.id
     const courseId = req.params.courseId
     let email = req.user.email
-    if(!req.body.order >= 0) res.status(400).json({ message: "must send order for course in body" })
+    if(!req.body.order) res.status(400).json({ message: "must send order for course in body" })
     else
     {
         const order = req.body.order
