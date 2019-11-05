@@ -57,8 +57,8 @@ async function findById(id)
         path.tags = await getTagsForPath(id)
         path.courses = await findCoursesForPath(id)
         path.pathItems = await findPathItemsForPath(id)
-        let creatorId = await getCreatorIdForPath(id)
-        if(creatorId) path.creatorId = creatorId
+        // let creatorId = await getCreatorIdForPath(id)
+        // if(creatorId) path.creatorId = creatorId
         return {path, code: 200}
     }
     catch(error)
@@ -82,12 +82,19 @@ async function getTagsForPath(pathId)
 
 async function getCreatorIdForPath(pathId)
 {
-    let creatorId = await db('paths as p')
-        .join('users_paths as up', 'up.path_id', '=', 'p.id')
-        .select('up.user_id')
-        .where({ 'p.id': pathId, 'up.created': 1 })
-    
-    return creatorId[0].user_id
+    try
+    {
+        let creatorId = await db('paths as p')
+            .join('users_paths as up', 'up.path_id', '=', 'p.id')
+            .select('up.user_id')
+            .where({ 'p.id': pathId, 'up.created': 1 })
+        
+        return creatorId[0].user_id
+    }
+    catch(error)
+    {
+        return 0
+    }
 }
 
 async function findCoursesForPath(pathId)
@@ -141,6 +148,7 @@ async function deletePathItem(userId, pathId, itemId)
 
 async function add(userId, path)
 {
+    path.creator_id = Number(userId)
     let pathIds = await db('paths').insert(path, 'id')
     let pathId = pathIds[0]
     if(pathId) 
