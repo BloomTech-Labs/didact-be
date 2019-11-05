@@ -182,6 +182,32 @@ router.get('/yours', (req, res) => {
     })
 })
 
+router.get('/yours-owned', (req, res) => {
+    
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
+        {
+            Paths.findForOwner(user.id)
+            .then(response =>
+            {
+                res.status(200).json(response)
+            })
+            .catch(err =>
+            {
+                res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+            })
+        }
+        else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+})
+
 /**
  * @api {get} /api/learning-paths/:id Get Learning Path
  * @apiName GetLearningPath
