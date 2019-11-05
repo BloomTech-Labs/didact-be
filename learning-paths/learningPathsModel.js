@@ -57,7 +57,7 @@ async function findById(id)
         path.tags = await getTagsForPath(id)
         path.courses = await findCoursesForPath(id)
         path.pathItems = await findPathItemsForPath(id)
-        // let creatorId = await getCreatorIdForPath(id)
+        path.creatorId = path.creator_id
         // if(creatorId) path.creatorId = creatorId
         return {path, code: 200}
     }
