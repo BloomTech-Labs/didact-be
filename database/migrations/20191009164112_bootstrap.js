@@ -168,7 +168,7 @@ exports.up = function(knex) {
         tbl.primary(['user_id', 'path_id'])
     })
 
-
+    
 };
 
 exports.down = function(knex) {

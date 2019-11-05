@@ -49,15 +49,22 @@ async function findForNotUserId(userId)
 
 async function findById(id)
 {
-    let path = await db('paths').where({id}).first()
-    
-    if(!path) return {message: 'No learning path found with that ID', code: 404}
-    path.tags = await getTagsForPath(id)
-    path.courses = await findCoursesForPath(id)
-    path.pathItems = await findPathItemsForPath(id)
-    let creatorId = await getCreatorIdForPath(id)
-    if(creatorId) path.creatorId = creatorId
-    return {path, code: 200}
+    try
+    {
+        let path = await db('paths').where({id}).first()
+        
+        if(!path) return {message: 'No learning path found with that ID', code: 404}
+        path.tags = await getTagsForPath(id)
+        path.courses = await findCoursesForPath(id)
+        path.pathItems = await findPathItemsForPath(id)
+        let creatorId = await getCreatorIdForPath(id)
+        if(creatorId) path.creatorId = creatorId
+        return {path, code: 200}
+    }
+    catch(error)
+    {
+        return {message: error, code: 500}
+    }
 }
 
 async function getTagsForPath(pathId) 
