@@ -63,6 +63,7 @@ exports.up = function(knex) {
         tbl.string('name', 255).notNullable()
         tbl.string('description', 1000)
         tbl.string('category', 125)
+        tbl.integer('creator_id').notNullable()
     })
     .createTable('path_items', tbl =>
     {
