@@ -39,11 +39,12 @@ async function findForUserId(userId)
 
 async function findForNotUserId(userId)
 {
-    let usersPaths = await db('paths as p')
-        .join('users_paths as up', 'up.path_id', '=', 'p.id')
-        .whereNot({'up.user_id': userId})
-        .select('p.id', 'p.name', 'p.description', 'p.category')
-    return usersPaths
+    let allPaths = await find()
+    let usersPaths = await findForUserId(userId)
+    usersPaths = usersPaths.map(el => el.id)
+    let notUsersPaths = allPaths.filter(el => !usersPaths.includes(el.id) )
+    
+    return notUsersPaths
 }
 
 async function findById(id)
