@@ -16,8 +16,14 @@ function findBy(filter) {
         .first();
 }
 
-function add(user) {
-    return db('users').insert(user);
+// function add(user) {
+//     return db('users').insert(user);
+// }
+
+async function add(user) {
+    let userId = db('users').insert(user, 'id');
+    let success = await db('users_paths').insert({user_id: userId, path_id: 1})
+    return success
 }
 
 function findById(id) {
