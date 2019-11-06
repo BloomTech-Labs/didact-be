@@ -23,11 +23,97 @@ const Users = require('../users/usersModel')
  * 	"tag": "Something else"
  * }
  * 
- * @apiParam {Integer} userId The user id of a user you want to get paths for
+ * @apiSuccess (200) {Array} Learning Paths An array of the Learning Paths on the website, optionally filtered by url sent in body
  * 
- * @apiParamExample {json} Get Learning Paths By Tag
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * 
+ * [
+ *   {
+ *     "id": 1,
+ *     "name": "Onboarding Learning Path",
+ *     "description": "This learning path will get you on the road to success.",
+ *     "category": "Learning"
+ *   }
+ * ]
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
  * {
- * 	"userId": 1
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Could not retrieve learning paths
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Error connecting with server"
+ * }
+ * 
+ */
+
+// async function filterByTag(aLearningPaths, tag)
+// {
+//     let retArr = []
+//     for(let i=0; i<aLearningPaths.length; i++)
+//     {
+//         let tags = await Paths.getTagsForPath(aLearningPaths[i].id)
+//         tags = tags.map(el => el.toLowerCase())
+//         if(tags.includes(tag.toLowerCase())) retArr.push(aLearningPaths[i])
+//     }
+//     return retArr
+// }
+
+router.get('/', (req, res) => {
+    
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
+        {
+            Paths.findForNotUserId(user.id)
+            .then(response =>
+            {
+                res.status(200).json(response)
+            })
+            .catch(err =>
+            {
+                res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+            })
+        }
+        else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+})
+
+
+/**
+ * @api {get} /api/learning-paths/yours Get Your Learning Paths
+ * @apiName GetYourLearningPaths
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
  * @apiSuccess (200) {Array} Learning Paths An array of the Learning Paths on the website, optionally filtered by url sent in body
@@ -70,48 +156,56 @@ const Users = require('../users/usersModel')
  * 
  */
 
-async function filterByTag(aLearningPaths, tag)
-{
-    let retArr = []
-    for(let i=0; i<aLearningPaths.length; i++)
+router.get('/yours', (req, res) => {
+    
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
     {
-        let tags = await Paths.getTagsForPath(aLearningPaths[i].id)
-        tags = tags.map(el => el.toLowerCase())
-        if(tags.includes(tag.toLowerCase())) retArr.push(aLearningPaths[i])
-    }
-    return retArr
-}
-
-router.get('/', (req, res) => {
-    if(req.body.userId)
-    {
-        Paths.findForUserId(req.body.userId)
-        .then(response =>
+        if(user)
         {
-            res.status(200).json(response)
-        })
-    }
-    else
-    {
-        Paths.find()
-        .then(response => 
-        {
-            if(req.body.tag) 
+            Paths.findForUserId(user.id)
+            .then(response =>
             {
-                filterByTag(response, req.body.tag)
-                .then(results =>
-                {
-                    res.status(200).json(results)
-                })
-                .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
-            }
-            else res.status(200).json(response)
-        })
-        .catch(error => 
+                res.status(200).json(response)
+            })
+            .catch(err =>
+            {
+                res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+            })
+        }
+        else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+})
+
+router.get('/yours-owned', (req, res) => {
+    
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        if(user)
         {
-            res.status(500).json({ message: 'Error connecting with server' })
-        })
-    }
+            Paths.findForOwner(user.id)
+            .then(response =>
+            {
+                res.status(200).json(response)
+            })
+            .catch(err =>
+            {
+                res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+            })
+        }
+        else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
+    .catch(err =>
+    {
+        res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+    })
 })
 
 /**
@@ -203,6 +297,7 @@ router.get('/:id', (req, res) => {
     .then(response => 
         {
             if(response.code === 404) res.status(404).json({ message: response.message })
+            else if (response.code === 500) res.status(500).json({ message: response.message })
             else res.status(200).json(response.path)
         })
     .catch(error => 
@@ -550,14 +645,6 @@ router.delete('/:id', (req, res) => {
  *  "Content-Type": "application/json",
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
- * 
- * @apiSuccess (201) {integer} Id An id of the Learning Path that the user joined
- * 
- * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 OK
- *  {
- *     "id": 2
- *  }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
  * 
@@ -1182,8 +1269,8 @@ router.delete('/:id/courses/:courseId', (req, res) =>
 })
 
 /**
- * @api {put} /api/learning-paths/:id/courses/:courseId Update Course Order In Learning Path
- * @apiName UpdateCourseOrderInLearningPath
+ * @api {put} /api/learning-paths/:id/order Update Content Order In Learning Path
+ * @apiName UpdateContentOrderInLearningPath
  * @apiGroup Learning Paths
  * 
  * @apiHeader {string} Content-Type the type of content being sent
@@ -1195,19 +1282,32 @@ router.delete('/:id/courses/:courseId', (req, res) =>
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiParam {Object} Order The order of the course to be updated in the learning path
+ * @apiParam {Array} Content The content to be updated in the learning path
  * 
- * @apiParamExample {json} Course Post Example:
+ * @apiParamExample {json} Content Put Example:
  * { 
- *    "order": 3
+ *    content: 
+ *    [
+ *          {
+ *              "name": "Some Course",
+ *              "id": 1,
+ *              "order": 4
+ *          },
+ *          {
+ *              "name": "Some Path Item",
+ *              "path_id": 1,
+ *              "id": 3,
+ *              "order": 2
+ *          }
+ *    ]
  * }
  * 
- * @apiSuccess (200) {Object} Message A message that the course was updated
+ * @apiSuccess (200) {Object} Message A message that the content was updated
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *     message: 'Course order updated in learning path'
+ *     message: 'Content order updated in learning path'
  *  }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
@@ -1226,20 +1326,20 @@ router.delete('/:id/courses/:courseId', (req, res) =>
  *  "message": "Invalid Credentials"
  * }
  * 
- * @apiError (403) {Object} Unauthorized The user is not authorized to update course order in this learning path
+ * @apiError (403) {Object} Unauthorized The user is not authorized to update content order in this learning path
  * 
  * @apiErrorExample 403-Error-Response:
  * HTTP/1.1 403 Forbidden
  * {
- *  "message": "User is not permitted to update course order in this learning path"
+ *  "message": "User is not permitted to update content order in this learning path"
  * }
  * 
- * @apiError (404) {Object} course-not-found-error The course with the id sent was not found in database
+ * @apiError (404) {Object} content-not-found-error The content with the id sent was not found in database
  * 
  * @apiErrorExample 404-Error-Response:
  * HTTP/1.1 404 Not Found
  * {
- *  "message": "Course not found"
+ *  "message": "Content not found"
  * }
  * 
  * @apiError (404) {Object} not-found-error The learning path with id sent was not found in database
@@ -1250,54 +1350,52 @@ router.delete('/:id/courses/:courseId', (req, res) =>
  *  "message": "No learning path found with that ID"
  * }
  * 
- * @apiError (500) {Object} Find-User-Error Could not find user to update course order for
+ * @apiError (500) {Object} Find-User-Error Could not find user to update content order for
  * 
  * @apiErrorExample 500-User-Not-Found:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Could not find user to update course order for"
+ *  "message": "Could not find user to update content order for"
  * }
  * 
- * @apiError (500) {Object} Update-Course-Order-Error Could not update course order
+ * @apiError (500) {Object} Update-Content-Order-Error Could not update content order
  * 
- * @apiErrorExample 500-Update-Course-Order-Error:
+ * @apiErrorExample 500-Update-Content-Order-Error:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Internal error: could not update course order in learning path"
+ *  "message": "Internal error: could not update content order in learning path"
  * }
  * 
  */
 
-router.put('/:id/courses/:courseId', (req, res) => {
+router.put('/:id/order', (req, res) => {
     const pathId = req.params.id
-    const courseId = req.params.courseId
     let email = req.user.email
-    if(!req.body.order) res.status(400).json({ message: "must send order for course in body" })
+    if(!req.body.learningPathContent) res.status(400).json({ message: "must send content for learning path in body" })
     else
     {
-        const order = req.body.order
+        let content = req.body.learningPathContent
         Users.findBy({ email })
             .then(user =>
             {
                 if(user)
                 {
-                    Paths.updateCourseOrder(user.id, pathId, courseId, order)
+                    Paths.updateContentOrder(user.id, pathId, content)
                     .then(response => 
                     {
-                        if(response.code === 200) res.status(200).json({ message: response.message })
+                        if(response=== 200) res.status(200).json({ message: response.message })
                         else res.status(response.code).json({ message: response.message })
                     })
                     .catch(error => 
                     {
-                        console.log(error)
-                        res.status(500).json({ message: 'Internal error: Could not update course order' })
+                        res.status(500).json({ message: 'Internal error: Could not update learning path content order' })
                     })
                 }
-                else res.status(500).json({ message: 'Could not find user to update course order for' })
+                else res.status(500).json({ message: 'Could not find user to update learning path content order' })
             })
             .catch(err =>
             {
-                res.status(500).json({ message: 'Could not find user to update course order for' })
+                res.status(500).json({ message: 'Could not find user to update learning path content order' })
             })
     }
 })

@@ -2844,13 +2844,6 @@ define({ "api": [
             "optional": false,
             "field": "tag",
             "description": "<p>An tag to filter the Learning Paths you want to find (optional)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Integer",
-            "optional": false,
-            "field": "userId",
-            "description": "<p>The user id of a user you want to get paths for</p>"
           }
         ]
       },
@@ -2859,10 +2852,101 @@ define({ "api": [
           "title": "Get Learning Paths By Tag",
           "content": "{\n\t\"tag\": \"Something else\"\n}",
           "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Array",
+            "optional": false,
+            "field": "Learning",
+            "description": "<p>Paths An array of the Learning Paths on the website, optionally filtered by url sent in body</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n[\n  {\n    \"id\": 1,\n    \"name\": \"Onboarding Learning Path\",\n    \"description\": \"This learning path will get you on the road to success.\",\n    \"category\": \"Learning\"\n  }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not retrieve learning paths</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
         },
         {
-          "title": "Get Learning Paths By Tag",
-          "content": "{\n\t\"userId\": 1\n}",
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Error connecting with server\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathsRouter.js",
+    "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "get",
+    "url": "/api/learning-paths/yours",
+    "title": "Get Your Learning Paths",
+    "name": "GetYourLearningPaths",
+    "group": "Learning_Paths",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
           "type": "json"
         }
       ]
@@ -2959,26 +3043,6 @@ define({ "api": [
         {
           "title": "Header-Example:",
           "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "201": [
-          {
-            "group": "201",
-            "type": "integer",
-            "optional": false,
-            "field": "Id",
-            "description": "<p>An id of the Learning Path that the user joined</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n {\n    \"id\": 2\n }",
           "type": "json"
         }
       ]
@@ -3802,9 +3866,9 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/api/learning-paths/:id/courses/:courseId",
-    "title": "Update Course Order In Learning Path",
-    "name": "UpdateCourseOrderInLearningPath",
+    "url": "/api/learning-paths/:id/order",
+    "title": "Update Content Order In Learning Path",
+    "name": "UpdateContentOrderInLearningPath",
     "group": "Learning_Paths",
     "header": {
       "fields": {
@@ -3838,17 +3902,17 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "Object",
+            "type": "Array",
             "optional": false,
-            "field": "Order",
-            "description": "<p>The order of the course to be updated in the learning path</p>"
+            "field": "Content",
+            "description": "<p>The content to be updated in the learning path</p>"
           }
         ]
       },
       "examples": [
         {
-          "title": "Course Post Example:",
-          "content": "{ \n   \"order\": 3\n}",
+          "title": "Content Put Example:",
+          "content": "{ \n   content: \n   [\n         {\n             \"name\": \"Some Course\",\n             \"id\": 1,\n             \"order\": 4\n         },\n         {\n             \"name\": \"Some Path Item\",\n             \"path_id\": 1,\n             \"id\": 3,\n             \"order\": 2\n         }\n   ]\n}",
           "type": "json"
         }
       ]
@@ -3861,14 +3925,14 @@ define({ "api": [
             "type": "Object",
             "optional": false,
             "field": "Message",
-            "description": "<p>A message that the course was updated</p>"
+            "description": "<p>A message that the content was updated</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n {\n    message: 'Course order updated in learning path'\n }",
+          "content": "HTTP/1.1 200 OK\n {\n    message: 'Content order updated in learning path'\n }",
           "type": "json"
         }
       ]
@@ -3890,7 +3954,7 @@ define({ "api": [
             "type": "Object",
             "optional": false,
             "field": "Unauthorized",
-            "description": "<p>The user is not authorized to update course order in this learning path</p>"
+            "description": "<p>The user is not authorized to update content order in this learning path</p>"
           }
         ],
         "404": [
@@ -3898,8 +3962,8 @@ define({ "api": [
             "group": "404",
             "type": "Object",
             "optional": false,
-            "field": "course-not-found-error",
-            "description": "<p>The course with the id sent was not found in database</p>"
+            "field": "content-not-found-error",
+            "description": "<p>The content with the id sent was not found in database</p>"
           },
           {
             "group": "404",
@@ -3915,14 +3979,14 @@ define({ "api": [
             "type": "Object",
             "optional": false,
             "field": "Find-User-Error",
-            "description": "<p>Could not find user to update course order for</p>"
+            "description": "<p>Could not find user to update content order for</p>"
           },
           {
             "group": "500",
             "type": "Object",
             "optional": false,
-            "field": "Update-Course-Order-Error",
-            "description": "<p>Could not update course order</p>"
+            "field": "Update-Content-Order-Error",
+            "description": "<p>Could not update content order</p>"
           }
         ]
       },
@@ -3939,12 +4003,12 @@ define({ "api": [
         },
         {
           "title": "403-Error-Response:",
-          "content": "HTTP/1.1 403 Forbidden\n{\n \"message\": \"User is not permitted to update course order in this learning path\"\n}",
+          "content": "HTTP/1.1 403 Forbidden\n{\n \"message\": \"User is not permitted to update content order in this learning path\"\n}",
           "type": "json"
         },
         {
           "title": "404-Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"Course not found\"\n}",
+          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"Content not found\"\n}",
           "type": "json"
         },
         {
@@ -3954,12 +4018,12 @@ define({ "api": [
         },
         {
           "title": "500-User-Not-Found:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to update course order for\"\n}",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to update content order for\"\n}",
           "type": "json"
         },
         {
-          "title": "500-Update-Course-Order-Error:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Internal error: could not update course order in learning path\"\n}",
+          "title": "500-Update-Content-Order-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Internal error: could not update content order in learning path\"\n}",
           "type": "json"
         }
       ]

@@ -19,7 +19,9 @@ module.exports =
     addPathItem,
     updatePathItem,
     deletePathItem,
-
+    updateContentOrder,
+    findForNotUserId,
+    findForOwner
 }
 
 function find() 
@@ -36,17 +38,52 @@ async function findForUserId(userId)
     return usersPaths
 }
 
+async function findForOwner(userId)
+{
+    let ownedPaths = await db('paths as p').where({'p.creator_id': userId})
+    for(let i=0; i<ownedPaths.length; i++)
+    {
+        let tempCourses = await findCoursesForPath(ownedPaths[i].id)
+        tempCourses = tempCourses.map(el => el.id)
+        ownedPaths[i].courseIds = tempCourses
+
+        let tempPI = await findPathItemsForPath(ownedPaths[i].id)
+
+        ownedPaths[i].contentLength = tempPI.length + tempCourses.length
+    }
+
+    return ownedPaths
+}
+
+async function findForNotUserId(userId)
+{
+    let allPaths = await find()
+    let usersPaths = await findForUserId(userId)
+    usersPaths = usersPaths.map(el => el.id)
+    let notUsersPaths = allPaths.filter(el => !usersPaths.includes(el.id) )
+    
+    return notUsersPaths
+}
+
 async function findById(id)
 {
-    let path = await db('paths').where({id}).first()
-    
-    if(!path) return {message: 'No learning path found with that ID', code: 404}
-    path.tags = await getTagsForPath(id)
-    path.courses = await findCoursesForPath(id)
-    path.pathItems = await findPathItemsForPath(id)
-    let creatorId = await getCreatorIdForPath(id)
-    if(creatorId) path.creatorId = creatorId
-    return {path, code: 200}
+    try
+    {
+        let path = await db('paths').where({id}).first()
+        
+        if(!path) return {message: 'No learning path found with that ID', code: 404}
+        path.tags = await getTagsForPath(id)
+        path.courses = await findCoursesForPath(id)
+        path.pathItems = await findPathItemsForPath(id)
+        path.creatorId = path.creator_id
+        // if(creatorId) path.creatorId = creatorId
+        return {path, code: 200}
+    }
+    catch(error)
+    {
+        console.log('error from findById', error)
+        return {message: error, code: 500}
+    }
 }
 
 async function getTagsForPath(pathId) 
@@ -63,12 +100,19 @@ async function getTagsForPath(pathId)
 
 async function getCreatorIdForPath(pathId)
 {
-    let creatorId = await db('paths as p')
-        .join('users_paths as up', 'up.path_id', '=', 'p.id')
-        .select('up.user_id')
-        .where({ 'p.id': pathId, 'up.created': 1 })
-    
-    return creatorId[0].user_id
+    try
+    {
+        let creatorId = await db('paths as p')
+            .join('users_paths as up', 'up.path_id', '=', 'p.id')
+            .select('up.user_id')
+            .where({ 'p.id': pathId, 'up.created': 1 })
+        
+        return creatorId[0].user_id
+    }
+    catch(error)
+    {
+        return 0
+    }
 }
 
 async function findCoursesForPath(pathId)
@@ -122,6 +166,7 @@ async function deletePathItem(userId, pathId, itemId)
 
 async function add(userId, path)
 {
+    path.creator_id = Number(userId)
     let pathIds = await db('paths').insert(path, 'id')
     let pathId = pathIds[0]
     if(pathId) 
@@ -266,5 +311,33 @@ async function updateCourseOrder(userId, pathId, courseId, path_order)
     {
         await db('paths_courses').where({path_id: pathId, course_id: courseId}).update({path_order})
         return { message: 'Course order updated in learning path', code: 200 }
+    }
+}
+
+async function updateContentOrder(userId, pathId, content)
+{
+    try
+    {
+        let pathObj = await findById(pathId)
+        let path = pathObj.path
+    
+        if(!path) return {message: 'No path found with that ID', code: 404}
+        if(path.creatorId !== userId) return {message: 'User is not permitted to add course to this path', code: 403}
+        for(let i=0; i<content.length; i++)
+        {
+            if(content[i].path_id && content[i].path_id === Number(pathId))
+            {
+                await updatePathItem(userId, pathId, content[i].id, {path_order: content[i].path_order})
+            }
+            else
+            {
+                await updateCourseOrder(userId, pathId, content[i].id, content[i].path_order)
+            }
+        }
+        return {message: 'Learning Path order updated', code: 200}
+    }
+    catch(error)
+    {
+        return {message: 'Error updating learning path order', code: 500}
     }
 }

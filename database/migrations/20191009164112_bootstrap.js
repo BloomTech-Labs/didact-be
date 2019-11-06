@@ -63,6 +63,7 @@ exports.up = function(knex) {
         tbl.string('name', 255).notNullable()
         tbl.string('description', 1000)
         tbl.string('category', 125)
+        tbl.integer('creator_id').notNullable()
     })
     .createTable('path_items', tbl =>
     {
@@ -168,7 +169,74 @@ exports.up = function(knex) {
         tbl.primary(['user_id', 'path_id'])
     })
 
+    // .createTable('users_section_details', tbl =>
+    // {
+    //     tbl
+    //         .integer('user_id')
+    //         .unsigned()
+    //         .references('id')
+    //         .inTable('users')
+    //         .onDelete('CASCADE')
+    //         .onUpdate('CASCADE')
+    //     tbl
+    //         .integer('section_details_id')
+    //         .unsigned()
+    //         .references('id')
+    //         .inTable('section_details')
+    //         .onDelete('CASCADE')
+    //         .onUpdate('CASCADE')
 
+    //     tbl.boolean('manually_completed').notNullable().defaultTo(0)
+    //     tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+
+    //     tbl.primary(['user_id', 'section_details_id'])
+    // })
+
+    // .createTable('users_sections', tbl =>
+    // {
+    //     tbl
+    //         .integer('user_id')
+    //         .unsigned()
+    //         .references('id')
+    //         .inTable('users')
+    //         .onDelete('CASCADE')
+    //         .onUpdate('CASCADE')
+    //     tbl
+    //         .integer('section_id')
+    //         .unsigned()
+    //         .references('id')
+    //         .inTable('course_sections')
+    //         .onDelete('CASCADE')
+    //         .onUpdate('CASCADE')
+
+    //     tbl.boolean('manually_completed').notNullable().defaultTo(0)
+    //     tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+
+    //     tbl.primary(['user_id', 'section_id'])
+    // })
+
+    // .createTable('users_courses', tbl =>
+    // {
+    //     tbl
+    //         .integer('user_id')
+    //         .unsigned()
+    //         .references('id')
+    //         .inTable('users')
+    //         .onDelete('CASCADE')
+    //         .onUpdate('CASCADE')
+    //     tbl
+    //         .integer('section_id')
+    //         .unsigned()
+    //         .references('id')
+    //         .inTable('course_sections')
+    //         .onDelete('CASCADE')
+    //         .onUpdate('CASCADE')
+
+    //     tbl.boolean('manually_completed').notNullable().defaultTo(0)
+    //     tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+
+    //     tbl.primary(['user_id', 'section_id'])
+    // })
 };
 
 exports.down = function(knex) {
