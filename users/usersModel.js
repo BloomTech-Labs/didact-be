@@ -53,7 +53,7 @@ async function FBfindOrCreate(userObj) {
         .where({ facebookID: userObj.facebookID })
     if (user.length === 0) {
         let newUser = await db('users')
-            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID }, 'id')
+            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID, photo: userObj.photo }, 'id')
         console.log(newUser)
         return db('users').where({ id: newUser[0] }).first()
     }
@@ -83,7 +83,7 @@ async function GGLfindOrCreate(userObj) {
         .where({ googleID: userObj.googleID })
     if (user.length === 0) {
         let newUser = await db('users')
-            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, googleID: userObj.googleID }, 'id')
+            .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, googleID: userObj.googleID, photo: userObj.photo }, 'id')
         console.log(newUser)
         return db('users').where({ id: newUser[0] }).first()
     }

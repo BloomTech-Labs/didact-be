@@ -15,9 +15,8 @@ passport.use(new FacebookAuth({
   profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name', 'picture']
 },
   function (accessToken, refreshToken, profile, cb) {
-    console.log(profile)
     // console.log({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email })
-    Users.FBfindOrCreate({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email })
+    Users.FBfindOrCreate({ facebookID: profile._json.id, first_name: profile._json.first_name, last_name: profile._json.last_name, email: profile._json.email, photo: profile.photos[0].value })
       .then(response => {
         cb(null, profile._json)
       })
@@ -48,8 +47,11 @@ router.get('/callback',
     const token = generateToken(req.user)
     // console.log({ token, id: req.user.id, email: req.user.email})
     // res.status(200).json({ token, id: req.user.id, email: req.user.email});
-    res.redirect(`https://didactlms.com/auth?token=${token}`)
     // res.json(req.user)
+
+
+    // res.redirect(`https://staging-didact-fe.netlify.com/auth?token=${token}`)
+    res.redirect(`https://didactlms.com/auth?token=${token}`)
   });
 
 function generateToken(user) {

@@ -26,7 +26,6 @@ function find() {
 
 async function findById(id)
 {
-    
     let course = await db('courses').where({id}).first()
     
     if(!course) return {message: 'No course found with that ID', code: 404}
@@ -203,4 +202,7 @@ async function deleteSectionDetails(userId, courseId, sectionId, detailId) {
     return {code: 200, message: 'delete successful'}
 }
 
-
+async function generateUdemyCourse(userId, title, courseId, courseArray)
+{
+    
+}

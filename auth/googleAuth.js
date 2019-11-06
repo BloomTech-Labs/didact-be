@@ -13,7 +13,7 @@ passport.use(new GoogleStrategy({
     callbackURL: `${secrets.passportUrl}/api/auth/google/callback`
 },
     function (accessToken, refreshToken, profile, cb) {
-        Users.GGLfindOrCreate({ googleID: profile._json.sub, first_name: profile._json.given_name, last_name: profile._json.family_name, email: profile._json.email })
+        Users.GGLfindOrCreate({ googleID: profile._json.sub, first_name: profile._json.given_name, last_name: profile._json.family_name, email: profile._json.email, photo: profile.photos[0].value })
             .then(response => {
                 cb(null, profile._json)
             })
@@ -42,6 +42,7 @@ router.get('/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     function (req, res) {
         const token = generateToken(req.user)
+        // res.redirect(`https://staging-didact-fe.netlify.com/auth?token=${token}`)
         res.redirect(`https://didactlms.com/auth?token=${token}`)
     });
 

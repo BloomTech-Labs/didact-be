@@ -75,7 +75,7 @@ router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
                 .then(user => {
                     if (user && bcrypt.compareSync(originalPass, user.password)) {
                         const token = generateToken(user)
-                        res.status(201).json({ token, id: user.id, email: user.email});
+                        res.status(201).json({ token, id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name });
                     } else {
                         res.status(401).json({ message: 'Invalid Credentials' });
                     }
@@ -111,6 +111,7 @@ router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
  * HTTP/1.1 200 OK
  * {
  *   "message": "User Created",
+ *   "token": "fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf",
  *   "email": "doctest@example.com"
  * }
  * 
@@ -139,7 +140,7 @@ router.post('/login', validateUserLogin, (req, res) => {
         .then(user => {
             if (user && bcrypt.compareSync(password, user.password)) {
                 const token = generateToken(user)
-                res.status(200).json({ token, id: user.id, email: user.email});
+                res.status(200).json({ token, id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name});
             } else {
                 res.status(401).json({ message: 'Invalid Credentials' });
             }
@@ -161,7 +162,7 @@ router.post('/', (req, res) => {
                 Users.findBy({email: decodedToken.email})
                 .then(user =>
                     {
-                        if(user) res.status(200).json({email: decodedToken.email, id: user.id})
+                        if(user) res.status(200).json({email: decodedToken.email, id: user.id, photo: user.photo || null, first_name: user.first_name, last_name: user.last_name })
                         else res.status(404).json({ message: 'No such user found' })
                     })
                 .catch(err =>
