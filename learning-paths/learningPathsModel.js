@@ -172,7 +172,7 @@ async function add(userId, path)
     if(pathId) 
     {
         let up = await db('users_paths').insert({user_id: userId, path_id: pathId, created: 1})
-        console.log('up', up)
+        
         return pathId
     }
 }

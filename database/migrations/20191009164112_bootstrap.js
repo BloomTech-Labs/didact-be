@@ -169,7 +169,7 @@ exports.up = function(knex) {
         tbl.primary(['user_id', 'path_id'])
     })
 
-    .createTable('users_section_details', tbl =>
+    .createTable('users_path_items', tbl =>
     {
         tbl
             .integer('user_id')
@@ -179,40 +179,17 @@ exports.up = function(knex) {
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
         tbl
-            .integer('section_details_id')
+            .integer('path_item_id')
             .unsigned()
             .references('id')
-            .inTable('section_details')
+            .inTable('path_items')
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
 
         tbl.boolean('manually_completed').notNullable().defaultTo(0)
         tbl.boolean('automatically_completed').notNullable().defaultTo(0)
 
-        tbl.primary(['user_id', 'section_details_id'])
-    })
-
-    .createTable('users_sections', tbl =>
-    {
-        tbl
-            .integer('user_id')
-            .unsigned()
-            .references('id')
-            .inTable('users')
-            .onDelete('CASCADE')
-            .onUpdate('CASCADE')
-        tbl
-            .integer('section_id')
-            .unsigned()
-            .references('id')
-            .inTable('course_sections')
-            .onDelete('CASCADE')
-            .onUpdate('CASCADE')
-
-        tbl.boolean('manually_completed').notNullable().defaultTo(0)
-        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
-
-        tbl.primary(['user_id', 'section_id'])
+        tbl.primary(['user_id', 'path_item_id'])
     })
 
     .createTable('users_courses', tbl =>
@@ -225,7 +202,30 @@ exports.up = function(knex) {
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
         tbl
-            .integer('section_id')
+            .integer('course_id')
+            .unsigned()
+            .references('id')
+            .inTable('courses')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+
+        tbl.boolean('manually_completed').notNullable().defaultTo(0)
+        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+
+        tbl.primary(['user_id', 'course_id'])
+    })
+
+    .createTable('users_sections', tbl =>
+    {
+        tbl
+            .integer('user_id')
+            .unsigned()
+            .references('id')
+            .inTable('users')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+        tbl
+            .integer('course_section_id')
             .unsigned()
             .references('id')
             .inTable('course_sections')
@@ -235,12 +235,40 @@ exports.up = function(knex) {
         tbl.boolean('manually_completed').notNullable().defaultTo(0)
         tbl.boolean('automatically_completed').notNullable().defaultTo(0)
 
-        tbl.primary(['user_id', 'section_id'])
+        tbl.primary(['user_id', 'course_section_id'])
     })
+
+    .createTable('users_section_details', tbl =>
+    {
+        tbl
+            .integer('user_id')
+            .unsigned()
+            .references('id')
+            .inTable('users')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+        tbl
+            .integer('section_detail_id')
+            .unsigned()
+            .references('id')
+            .inTable('section_details')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+
+        tbl.boolean('manually_completed').notNullable().defaultTo(0)
+        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+
+        tbl.primary(['user_id', 'section_detail_id'])
+    })
+    
 };
 
 exports.down = function(knex) {
     return knex.schema
+        .dropTableIfExists('users_section_details')
+        .dropTableIfExists('users_sections')
+        .dropTableIfExists('users_courses')
+        .dropTableIfExists('users_path_items')
         .dropTableIfExists('users_paths')
         .dropTableIfExists('paths_courses')
         .dropTableIfExists('path_items')
