@@ -1946,7 +1946,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Path_Items"
   },
   {
@@ -2156,7 +2156,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Path_Items"
   },
   {
@@ -2333,7 +2333,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Path_Items"
   },
   {
@@ -2469,7 +2469,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -2651,7 +2651,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -2801,7 +2801,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -2911,7 +2911,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3027,7 +3027,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3123,7 +3123,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3211,7 +3211,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3379,7 +3379,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3547,7 +3547,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3717,7 +3717,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3825,7 +3825,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3973,7 +3973,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -4141,7 +4141,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
