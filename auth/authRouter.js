@@ -40,8 +40,6 @@ router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
         })
 })
 
-
-
 router.post('/login', validateUserLogin, (req, res) => {
     let { email, password } = req.body
 
@@ -94,7 +92,6 @@ function generateToken(user) {
         expiresIn: '1d'
     }
     
-
     return jwt.sign(payload, secrets.jwtSecret, options)
 }
 

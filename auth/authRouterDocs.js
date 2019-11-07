@@ -97,3 +97,61 @@
  * 
  */
 
+/**
+ * @api {post} /api/auth/ Post Token For Verification
+ * @apiName PostTokenForVerification
+ * @apiGroup Authentication
+ * 
+ * @apiParam {String} token The user's token
+ * 
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *    "token": "1f1n3h87fh1938rfng9387fn"
+ *  }
+ * 
+ * @apiSuccess (200) {Object} user An object with the user id and username and token
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "email": "doctest@example.com",
+ *   "id": 3,
+ *   "photo": null,
+ *   "first_name": "Doc",
+ *   "last_name": "Test"
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The token is missing.
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "No token provided"
+ * }
+ * 
+ * @apiError (401) {Object} Verify-Error Token does not exist
+ * 
+ * @apiErrorExample 401-Verify-Error:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Token does not exist"
+ * }
+ * 
+ * @apiError (404) {Object} User-Not-Found The User Wasn't Found for the Token.
+ * 
+ * @apiErrorExample 404-User-Not-Found:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "No such user found"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Could not retrieve user.
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "message": "Internal server error, could not retrieve user"
+ * }
+ * 
+ */
+

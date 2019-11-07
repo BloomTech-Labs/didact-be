@@ -92,6 +92,118 @@
   },
   {
     "type": "post",
+    "url": "/api/auth/",
+    "title": "Post Token For Verification",
+    "name": "PostTokenForVerification",
+    "group": "Authentication",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>The user's token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n  \"token\": \"1f1n3h87fh1938rfng9387fn\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "user",
+            "description": "<p>An object with the user id and username and token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"email\": \"doctest@example.com\",\n  \"id\": 3,\n  \"photo\": null,\n  \"first_name\": \"Doc\",\n  \"last_name\": \"Test\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The token is missing.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "Verify-Error",
+            "description": "<p>Token does not exist</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "User-Not-Found",
+            "description": "<p>The User Wasn't Found for the Token.</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not retrieve user.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"No token provided\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Verify-Error:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Token does not exist\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-User-Not-Found:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"No such user found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"message\": \"Internal server error, could not retrieve user\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./auth/authRouterDocs.js",
+    "groupTitle": "Authentication"
+  },
+  {
+    "type": "post",
     "url": "/api/auth/register",
     "title": "Post User Registration",
     "name": "PostUser",
@@ -370,7 +482,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -552,7 +664,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -702,7 +814,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -812,7 +924,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -940,7 +1052,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -1108,7 +1220,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -1278,7 +1390,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -1383,7 +1495,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
   },
   {
@@ -1434,7 +1546,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n    \n  {\n      \"courseSection\": [\n          {\n              \"id\": 59,\n              \"name\": \"How to Become a Better Learner\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/f839b/how-to-become-a-better-learner\",\n              \"type\": \"video\",\n              \"order\": 1\n          },\n          {\n              \"id\": 60,\n              \"name\": \"Introduction to Renaissance Learning and Unlocking Your Potential\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/SIck3/introduction-to-renaissance-learning-and-unlocking-your-potential\",\n              \"type\": \"video\",\n              \"order\": 2\n          }\n      ]\n }\n}",
+          "content": "HTTP/1.1 200 OK   \n  {\n      \"courseSection\": [\n          {\n              \"id\": 59,\n              \"name\": \"How to Become a Better Learner\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/f839b/how-to-become-a-better-learner\",\n              \"type\": \"video\",\n              \"order\": 1\n          },\n          {\n              \"id\": 60,\n              \"name\": \"Introduction to Renaissance Learning and Unlocking Your Potential\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/SIck3/introduction-to-renaissance-learning-and-unlocking-your-potential\",\n              \"type\": \"video\",\n              \"order\": 2\n          }\n      ]\n }",
           "type": "json"
         }
       ]
@@ -1488,7 +1600,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
   },
   {
@@ -1579,7 +1691,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
   },
   {
@@ -1698,7 +1810,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
   },
   {
@@ -4134,7 +4246,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Sections"
   },
   {
@@ -4239,7 +4351,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Sections"
   },
   {
@@ -4330,7 +4442,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Sections"
   },
   {
@@ -4449,7 +4561,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Sections"
   },
   {
