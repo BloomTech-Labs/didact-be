@@ -1,4 +1,5 @@
 const db = require('../database/dbConfig');
+const learningPath = require('../learning-paths/learningPathsModel')
 
 module.exports = {
     add,
@@ -16,8 +17,14 @@ function findBy(filter) {
         .first();
 }
 
-function add(user) {
-    return db('users').insert(user);
+// function add(user) {
+//     return db('users').insert(user);
+// }
+
+async function add(user) {
+    let userId = await db('users').insert(user, 'id');
+    await learningPath.joinLearningPath(userId, 1)
+    return userId
 }
 
 function findById(id) {
