@@ -47,7 +47,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"User Created\",\n  \"token\": \"fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf\",\n  \"email\": \"doctest@example.com\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"fn9837f987fnh3987fn48fng98h\",\n  \"id\": 3,\n  \"email\": \"doctest@example.com\",\n  \"first_name\": \"Doc\",\n  \"last_name\": \"Test\"\n}",
           "type": "json"
         }
       ]
@@ -87,7 +87,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./auth/authRouter.js",
+    "filename": "./auth/authRouterDocs.js",
     "groupTitle": "Authentication"
   },
   {
@@ -152,7 +152,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 Created\n{\n  \"token\": \"fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf\",\n  \"id\": 3,\n  \"email\": \"doctest@example.com\"\n}",
+          "content": "HTTP/1.1 201 Created\n{\n  \"token\": \"fn9837f987fnh3987fn48fng98h\",\n  \"id\": 3,\n  \"email\": \"doctest@example.com\",\n  \"first_name\": \"Doc\",\n  \"last_name\": \"Test\"\n}",
           "type": "json"
         }
       ]
@@ -206,7 +206,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./auth/authRouter.js",
+    "filename": "./auth/authRouterDocs.js",
     "groupTitle": "Authentication"
   },
   {
