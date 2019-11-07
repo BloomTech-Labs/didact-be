@@ -225,7 +225,7 @@ exports.up = function(knex) {
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
         tbl
-            .integer('course_section_id')
+            .integer('section_id')
             .unsigned()
             .references('id')
             .inTable('course_sections')
@@ -235,7 +235,7 @@ exports.up = function(knex) {
         tbl.boolean('manually_completed').notNullable().defaultTo(0)
         tbl.boolean('automatically_completed').notNullable().defaultTo(0)
 
-        tbl.primary(['user_id', 'course_section_id'])
+        tbl.primary(['user_id', 'section_id'])
     })
 
     .createTable('users_section_details', tbl =>
