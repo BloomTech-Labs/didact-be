@@ -15,6 +15,12 @@ exports.seed = function(knex, Promise)
                 created: false,
                 rating: 0
             },
+            {
+                user_id: 2,
+                path_id: 2,
+                created: true,
+                rating: 0
+            },
         ]
     )
 }
