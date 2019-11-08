@@ -1,4 +1,5 @@
 const db = require('../database/dbConfig')
+const Courses = require('../courses/coursesModel')
 
 module.exports = 
 {
@@ -207,7 +208,7 @@ async function joinLearningPath(userId, pathId, order)
         let pathItems = await findPathItemsForPath(pathId)
         let pathCourses = await findCoursesForPath(pathId)
         await pathItems.forEach(el => addUserPathItem(userId, el.id))
-        // await pathCourses.forEach(el => addUserCourses(userId, el.id))
+        await pathCourses.forEach(el => addUserCourse(userId, el.id))
         return 1
     }
     catch(error)
@@ -234,6 +235,31 @@ async function addUserPathItem(userId, pathItemId)
         console.log('error from addUserPathItem', error)
         return 0
     }
+}
+
+async function addUserCourse(userId, courseId)
+{
+    try
+    {
+        let existingEntry = await db('users_courses').where({'user_id': userId, 'course_id': courseId}).first()
+        console.log('existingEntry', existingEntry)
+        if(!existingEntry)
+        {
+            await db('users_courses').insert({user_id: userId, course_id: courseId})
+            let sections = await Courses.findCourseSectionsByCourseId(courseId)
+        }
+        return 1
+    }
+    catch(error)
+    {
+        console.log('error from addUserCourses', error)
+        return 0
+    }
+}
+
+async function addUserSections(userId, sectionId)
+{
+
 }
 
 function quitLearningPath(userId, pathId)
