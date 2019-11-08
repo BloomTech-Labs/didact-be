@@ -195,15 +195,16 @@ router.delete('/:id', (req, res) => {
             res.status(500).json({ message: 'Could not find user to delete learning path for' })
         })
 })
-
+//TODO: Validate order, update docs
 router.post('/:id/users', (req, res) => {
     let email = req.user.email
+    let order = req.body.order
     Users.findBy({ email })
     .then(user =>
     {
         if(user)
         {
-            Paths.joinLearningPath(user.id, req.params.id)
+            Paths.joinLearningPath(user.id, req.params.id, order)
             .then(response => 
             {
                 console.log('b')

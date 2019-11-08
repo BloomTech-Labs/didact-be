@@ -199,10 +199,10 @@ async function deletePathById(userId, pathId)
     return {code: 200}
 }
 
-function joinLearningPath(userId, pathId)
+function joinLearningPath(userId, pathId, order)
 {
     return db('users_paths')
-        .insert({ user_id: userId, path_id: pathId })
+        .insert({ user_id: userId, path_id: pathId, user_path_order: order })
 }
 
 function quitLearningPath(userId, pathId)
