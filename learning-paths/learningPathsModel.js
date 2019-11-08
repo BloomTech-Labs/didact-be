@@ -21,7 +21,8 @@ module.exports =
     deletePathItem,
     updateContentOrder,
     findForNotUserId,
-    findForOwner
+    findForOwner,
+    updatePathOrder
 }
 
 function find() 
@@ -33,7 +34,7 @@ async function findForUserId(userId)
 {
     let usersPaths = await db('paths as p')
         .join('users_paths as up', 'up.path_id', '=', 'p.id')
-        .select('p.id', 'p.name', 'p.description', 'p.category')
+        .select('p.id', 'p.name', 'p.description', 'p.category', 'up.user_path_order')
         .where({'up.user_id': userId})
     return usersPaths
 }
@@ -339,5 +340,35 @@ async function updateContentOrder(userId, pathId, content)
     catch(error)
     {
         return {message: 'Error updating learning path order', code: 500}
+    }
+}
+
+async function updatePathOrder(userId, pathOrderArray)
+{
+    // console.log('pathOrderArray', pathOrderArray)
+    try
+    {
+        let usersPaths = await db('users_paths')
+            .where({'user_id': userId})
+
+        // console.log(`usersPaths`, usersPaths)
+        let pathOrderIds = pathOrderArray.map(el => el.pathId)
+        for(let i=0; i<usersPaths.length; i++)
+        {
+            let ind = pathOrderIds.indexOf(usersPaths[i].path_id)
+            if(ind >= -1)
+            {
+                console.log('ind',ind)
+                console.log('pathorderarr[ind]', pathOrderArray[ind])
+                let user_path_order = pathOrderArray[ind].userPathOrder
+                await db('users_paths').where({path_id: usersPaths[i].path_id, user_id: userId}).update({user_path_order})
+            }
+        }
+        return {code: 200, message: 'User\'s path order updated'}
+    }
+    catch(error)
+    {
+        console.log('error', error)
+        return {code: 500, message: 'Internal error: Could not update learning path order'}
     }
 }

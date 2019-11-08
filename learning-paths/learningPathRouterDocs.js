@@ -59,17 +59,87 @@
  * 
  */
 
-// async function filterByTag(aLearningPaths, tag)
-// {
-//     let retArr = []
-//     for(let i=0; i<aLearningPaths.length; i++)
-//     {
-//         let tags = await Paths.getTagsForPath(aLearningPaths[i].id)
-//         tags = tags.map(el => el.toLowerCase())
-//         if(tags.includes(tag.toLowerCase())) retArr.push(aLearningPaths[i])
-//     }
-//     return retArr
-// }
+/**
+ * @api {put} /api/learning-paths Put Learning Paths Order For User
+ * @apiName PutLearningPathsOrderForUser
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiParam {Array} pathOrderArray An array of the path orders for the user.
+ * 
+ * @apiParamExample {json} Get Learning Paths By Tag
+ * {
+ * 	"pathOrderArray": 
+ * 	[
+ * 		{
+ * 			"pathId": 1,
+ * 			"userPathOrder": 1
+ * 		},
+ * 		{
+ * 			"pathId": 2,
+ * 			"userPathOrder": 0
+ * 		}
+ * 	]
+ * }
+ * 
+ * @apiSuccess (200) {String} message A message confirming that the user's path orders were updated
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * 
+ * {
+ *   "message": "User's path order updated"
+ * }
+ * 
+ * @apiError (400) {String} message The user must send a pathOrderArray
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "message": "must send pathOrderArray"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Couldn't-Find-User Could not find the user to update for
+ * 
+ * @apiErrorExample 500-Couldn't-Find-User:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to update learning path order for"
+ * }
+ * 
+ * @apiError (500) {Object} Update-Error Could not update the learning path order
+ * 
+ * @apiErrorExample 500-Update-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Internal error: Could not update learning path order"
+ * }
+ * 
+ */
 
 /**
  * @api {get} /api/learning-paths/yours Get Your Learning Paths
