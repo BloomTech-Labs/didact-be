@@ -64,6 +64,7 @@ exports.up = function(knex) {
         tbl.string('description', 1000)
         tbl.string('category', 125)
         tbl.integer('creator_id').notNullable()
+        tbl.string('font_awesome_name', 1000)
     })
     .createTable('path_items', tbl =>
     {
@@ -165,6 +166,9 @@ exports.up = function(knex) {
         
         tbl.boolean('created').notNullable().defaultTo(0)
         tbl.integer('rating').notNullable().defaultTo(0)
+        tbl.integer('user_path_order').notNullable()
+        tbl.boolean('manually_completed').notNullable().defaultTo(0)
+        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
 
         tbl.primary(['user_id', 'path_id'])
     })
