@@ -18,7 +18,8 @@ module.exports = {
     addSectionDetails,
     updateSectionDetails,
     deleteSectionDetails,
-    manualLessonCompleteToggle
+    manualLessonCompleteToggle,
+    manualSectionCompleteToggle
 }
 
 function find() {
@@ -208,19 +209,98 @@ async function generateUdemyCourse(userId, title, courseId, courseArray)
     
 }
 
-async function manualLessonCompleteToggle(userId, sectionDetailId)
+
+async function findUserSectionDetailsBySectionId(userId, sectionId)
+{
+    try 
+    {
+        return await db('course_sections as cs')
+            .join('section_details as sd','sd.course_sections_id', '=', 'cs.id')
+            .join('users_section_details as usd', 'usd.section_detail_id', '=', 'sd.id')
+            .select('usd.*')
+            .where({'usd.user_id': userId, 'cs.id': sectionId})
+    }
+    catch(error)
+    {
+        return 0
+    }
+}
+
+async function manualLessonCompleteToggle(userId, courseId, sectionId, sectionDetailId)
 {
     try
     {
-        console.log('test1')
         let userLesson = await db('users_section_details').where({user_id: userId, section_detail_id: sectionDetailId}).first()
         userLesson.manually_completed = !userLesson.manually_completed
         await db('users_section_details').where({user_id: userId, section_detail_id: sectionDetailId}).update(userLesson)
+
+        //automaticall complete sections, if all lessons completed
+        let userSectionDetails = await findUserSectionDetailsBySectionId(userId, sectionId)
+        let isComplete = userSectionDetails.every(el => el.automatically_completed || el.manually_completed)
+        if(isComplete) await db('users_sections as us')
+            .where({'us.section_id': sectionId, 'us.user_id': userId})
+            .update({automatically_completed: true})
+        
         return {code: 200, message: 'Lesson completion toggled'}
     }
     catch(error)
     {
         console.log(error)
         return {code: 500, message: 'Internal Error: Could not toggle lesson completion'}
+    }
+}
+
+async function findUserSectionsByCourseId(userId, courseId)
+{
+    try 
+    {
+        return await db('courses as c')
+            .join('course_sections as cs','cs.course_id', '=', 'c.id')
+            .join('users_sections as us', 'us.section_id', '=', 'cs.id')
+            .select('us.*')
+            .where({'us.user_id': userId, 'c.id': courseId})
+    }
+    catch(error)
+    {
+        return 0
+    }
+}
+
+async function manualSectionCompleteToggle(userId, courseId, sectionId)
+{
+    try
+    {
+        let userSection = await db('users_sections').where({user_id: userId, section_id: sectionId}).first()
+        userSection.manually_completed = !userSection.manually_completed
+        await db('users_sections').where({user_id: userId, section_id: sectionId}).update(userSection)
+
+        // automatically complete lessons below section for user
+        let usersSectionDetails = await db('course_sections as cs')
+            .join('section_details as sd', 'sd.course_sections_id', '=', 'cs.id')
+            .join('users_section_details as usd', 'usd.section_detail_id', '=', 'sd.id')
+            .select('usd.*')
+            .where({'cs.id': sectionId, 'usd.user_id': userId})
+
+        for(let i=0; i<usersSectionDetails.length; i++)
+        {
+            console.log('toggling lessons in section', usersSectionDetails[i].section_detail_id)
+            await db('users_section_details').where({user_id: userId, section_detail_id: usersSectionDetails[i].section_detail_id})
+                .update({automatically_completed: !usersSectionDetails[i].automatically_completed})
+        }
+
+        //automatically complete course above section if all sections complete
+        let userSections = await findUserSectionsByCourseId(userId, courseId)
+        console.log('blah', userSections)
+        let isComplete = userSections.every(el => el.automatically_completed || el.manually_completed)
+        if(isComplete) await db('users_courses as uc')
+            .where({'uc.course_id': courseId, 'uc.user_id': userId})
+            .update({automatically_completed: true})
+
+        return {code: 200, message: 'Section completion toggled'}
+    }
+    catch(error)
+    {
+        console.log(error)
+        return {code: 500, message: 'Internal Error: Could not toggle section completion'}
     }
 }
