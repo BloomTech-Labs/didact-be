@@ -465,3 +465,9 @@ async function updatePathOrder(userId, pathOrderArray)
         return {code: 500, message: 'Internal error: Could not update learning path order'}
     }
 }
+
+async function manualLessonCompleteToggle(userId, sectionDetailId)
+{
+    let userLesson = await db('users_section_detail').where({user_id: userId, section_detail_id: sectionDetailId}).first()
+    console.log('userLesson', userLesson)
+}
