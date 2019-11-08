@@ -109,19 +109,21 @@ router.get('/:id', (req, res) => {
 function validateLearningPath(req, res, next)
 {
     if(!req.body) res.status(400).json({ message: "Missing learning path data"})
-    else if(!req.body.name) res.status(400).json({ message: "Learning Path name is required"})
+    else if(!req.body.path.name) res.status(400).json({ message: "Learning Path name is required"})
+    else if(!req.body.userPathOrder) res.status(400).json({ message: "userPathOrder is required"})
     else next()
 }
 
 router.post('/', validateLearningPath, (req, res) => {
-    const path = req.body
+    const path = req.body.path
+    const order = req.body.userPathOrder
     let email = req.user.email
     Users.findBy({ email })
     .then(user =>
     {
         if(user)
         {
-            Paths.add(user.id, path)
+            Paths.add(user.id, path, order)
                 .then(response => 
                 {
                     res.status(201).json({id: response})
@@ -195,15 +197,16 @@ router.delete('/:id', (req, res) => {
             res.status(500).json({ message: 'Could not find user to delete learning path for' })
         })
 })
-
+//TODO: Validate order, update docs
 router.post('/:id/users', (req, res) => {
     let email = req.user.email
+    let order = req.body.order
     Users.findBy({ email })
     .then(user =>
     {
         if(user)
         {
-            Paths.joinLearningPath(user.id, req.params.id)
+            Paths.joinLearningPath(user.id, req.params.id, order)
             .then(response => 
             {
                 console.log('b')
