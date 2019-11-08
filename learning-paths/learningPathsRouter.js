@@ -2,6 +2,18 @@ const router = require('express').Router()
 const Paths = require('./learningPathsModel')
 const Users = require('../users/usersModel')
 
+// async function filterByTag(aLearningPaths, tag)
+// {
+//     let retArr = []
+//     for(let i=0; i<aLearningPaths.length; i++)
+//     {
+//         let tags = await Paths.getTagsForPath(aLearningPaths[i].id)
+//         tags = tags.map(el => el.toLowerCase())
+//         if(tags.includes(tag.toLowerCase())) retArr.push(aLearningPaths[i])
+//     }
+//     return retArr
+// }
+
 router.get('/', (req, res) => {
     
     let email = req.user.email
@@ -499,6 +511,37 @@ router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     {
         res.status(500).json({ message: 'Could not find user to delete learning path Item for' })
     })
+})
+
+router.put('/', (req, res) => {
+    let email = req.user.email
+    if(!req.body.pathOrderArray) res.status(400).json({ message: "must send pathOrderArray" })
+    else
+    {
+        let pathOrderArray = req.body.pathOrderArray
+        Users.findBy({ email })
+            .then(user =>
+            {
+                if(user)
+                {
+                    Paths.updatePathOrder(user.id, pathOrderArray)
+                    .then(response => 
+                    {
+                        if(response=== 200) res.status(200).json({ message: response.message })
+                        else res.status(response.code).json({ message: response.message })
+                    })
+                    .catch(error => 
+                    {
+                        res.status(500).json({ message: 'Internal error: Could not update learning path order' })
+                    })
+                }
+                else res.status(500).json({ message: 'Could not find user to update learning path order for' })
+            })
+            .catch(err =>
+            {
+                res.status(500).json({ message: 'Could not find user to update learning path order for' })
+            })
+    }
 })
 
 module.exports = router

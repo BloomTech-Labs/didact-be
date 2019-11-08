@@ -289,7 +289,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/fWyi5/reading-chunking",
                     type: "reading",
-                    order: 13,
+                    order: 14,
                 },
                 {
                     name: "Optional Interview with Dr. Norman Fortenberry - Learning at MIT",
@@ -297,7 +297,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/NoDez/optional-interview-with-dr-norman-fortenberry-learning-at-mit",
                     type: "video",
-                    order: 14,
+                    order: 15,
                 },
                 {
                     name: "Optional Interview with Scott Young, a 'Marco Polo' of Learning",
@@ -305,7 +305,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "coursera.org/learn/learning-how-to-learn/lecture/8dpx6/optional-interview-with-scott-young-a-marco-polo-of-learning",
                     type: "video",
-                    order: 15,
+                    order: 16,
                 },
                 // ***************************************************************************************************************************
                 {
@@ -507,7 +507,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/Ignxl/change-your-thoughts-change-your-life",
                     type: "video",
-                    order: 6,
+                    order: 5,
                 },
                 {
                     name: "Retrieval Practice",
@@ -515,7 +515,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/quiz/950xa/retrieval-practice",
                     type: "quiz",
-                    order: 7,
+                    order: 6,
                 },
                 {
                     name: "The Value of Teamwork",
@@ -523,7 +523,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/KyGCI/the-value-of-teamwork",
                     type: "video",
-                    order: 8,
+                    order: 7,
                 },
                 {
                     name: "A Test Checklist",
@@ -531,7 +531,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/D40pr/a-test-checklist",
                     type: "video",
-                    order: 9,
+                    order: 8,
                 },
                 {
                     name: "Hard Start - Jump to Easy",
@@ -539,7 +539,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/8s6D6/hard-start-jump-to-easy",
                     type: "video",
-                    order: 10,
+                    order: 9,
                 },
                 {
                     name: "Final Helpful Hints for Tests",
@@ -547,7 +547,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/qcZLL/final-helpful-hints-for-tests",
                     type: "video",
-                    order: 11,
+                    order: 10,
                 },
                 {
                     name: "Summary for Module 4",
@@ -555,7 +555,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/9T5on/summary-for-module-4",
                     type: "video",
-                    order: 12,
+                    order: 11,
                 },
                 {
                     name: "Wrapup to the Course by Terrence Sejnowski and Barbara Oakley",
@@ -563,7 +563,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/Emras/wrapup-to-the-course-by-terrence-sejnowski-and-barbara-oakley",
                     type: "video",
-                    order: 13,
+                    order: 12,
                 },
                 {
                     name: "Retrieval Practice",
@@ -726,7 +726,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/qKaOA/favorite-places-to-study-and-helpful-study-apps",
                     type: "discussion",
-                    order: 9,
+                    order: 10,
                 },
                 {
                     name: "Your environment affects who you are",
@@ -734,7 +734,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/KBuYQ/1-9-your-environment-affects-who-you-are",
                     type: "video",
-                    order: 10,
+                    order: 11,
                 },
                 {
                     name: "The Changing World – Matching Aspirations with Opportunity",
@@ -742,7 +742,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/QcEPL/1-10-the-changing-world-matching-aspirations-with-opportunity",
                     type: "video",
-                    order: 11,
+                    order: 12,
                 },
                 {
                     name: "Natural Passions, Career Choice, and Gender",
@@ -750,7 +750,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/a42Oz/1-11-natural-passions-career-choice-and-gender",
                     type: "video",
-                    order: 12,
+                    order: 13,
                 },
                 {
                     name: "Your challenge",
@@ -758,7 +758,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/2QdYz/your-challenge",
                     type: "discussion",
-                    order: 13,
+                    order: 14,
                 },
                 {
                     name: "Week 1 Wrap Up",
@@ -766,7 +766,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/kpt1z/1-12-week-1-wrap-up",
                     type: "video",
-                    order: 14,
+                    order: 15,
                 },
                 {
                     name: "Week 1 Quiz",
@@ -774,7 +774,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/exam/6g9QE/week-1",
                     type: "quiz",
-                    order: 15,
+                    order: 16,
                 },
                 {
                     name: "Optional Bonus Video: Nelson Dellis Memory Tips #1",
@@ -782,7 +782,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/jEdP0/optional-bonus-video-nelson-dellis-memory-tips-1",
                     type: "video",
-                    order: 16,
+                    order: 17,
                 },
                 {
                     name: "Peer-graded Assignment: A first look in the mirror",
@@ -790,7 +790,7 @@ exports.seed = function (knex, Promise) {
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/peer/aeWXP/a-first-look-in-the-mirror",
                     type: "assignment",
-                    order: 16,
+                    order: 18,
                 },
                 // *****************************************************************************************************************************
                 {
