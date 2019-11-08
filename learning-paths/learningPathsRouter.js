@@ -113,7 +113,7 @@ function validateLearningPath(req, res, next)
     else if(!req.body.userPathOrder) res.status(400).json({ message: "userPathOrder is required"})
     else next()
 }
-
+//TODO: Update Docs
 router.post('/', validateLearningPath, (req, res) => {
     const path = req.body.path
     const order = req.body.userPathOrder
@@ -209,8 +209,9 @@ router.post('/:id/users', (req, res) => {
             Paths.joinLearningPath(user.id, req.params.id, order)
             .then(response => 
             {
-                console.log('b')
-                res.status(200).json({ message: 'Joined learning path' })
+                console.log('b', response)
+                response == 1 ? res.status(200).json({ message: 'Joined learning path' }) :
+                res.status(500).json({ message: 'Could not join learning path' })
             })
             .catch(error => {
                 console.log('a')

@@ -199,10 +199,41 @@ async function deletePathById(userId, pathId)
     return {code: 200}
 }
 
-function joinLearningPath(userId, pathId, order)
+async function joinLearningPath(userId, pathId, order)
 {
-    return db('users_paths')
-        .insert({ user_id: userId, path_id: pathId, user_path_order: order })
+    try
+    {
+        await db('users_paths').insert({ user_id: userId, path_id: pathId, user_path_order: order })
+        let pathItems = await findPathItemsForPath(pathId)
+        let pathCourses = await findCoursesForPath(pathId)
+        await pathItems.forEach(el => addUserPathItem(userId, el.id))
+        // await pathCourses.forEach(el => addUserCourses(userId, el.id))
+        return 1
+    }
+    catch(error)
+    {
+        console.log(`error from join learning path`, error)
+        return 0
+    }
+}
+
+async function addUserPathItem(userId, pathItemId)
+{
+    try
+    {
+        let existingEntry = await db('users_path_items').where({'user_id': userId, 'path_item_id': pathItemId}).first()
+        console.log('existingEntry', existingEntry)
+        if(!existingEntry)
+        {
+            await db('users_path_items').insert({user_id: userId, path_item_id: pathItemId})
+        }
+        return 1
+    }
+    catch(error)
+    {
+        console.log('error from addUserPathItem', error)
+        return 0
+    }
 }
 
 function quitLearningPath(userId, pathId)
