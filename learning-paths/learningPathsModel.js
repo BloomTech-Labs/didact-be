@@ -165,14 +165,14 @@ async function deletePathItem(userId, pathId, itemId)
     return {code: 200, message: `path item with id ${itemId} deleted`, id: itemId }
 }
 
-async function add(userId, path)
+async function add(userId, path, order)
 {
     path.creator_id = Number(userId)
     let pathIds = await db('paths').insert(path, 'id')
     let pathId = pathIds[0]
     if(pathId) 
     {
-        let up = await db('users_paths').insert({user_id: userId, path_id: pathId, created: 1})
+        let up = await db('users_paths').insert({user_id: userId, path_id: pathId, created: 1, user_path_order: order})
         
         return pathId
     }
