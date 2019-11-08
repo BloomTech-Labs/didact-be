@@ -113,7 +113,7 @@ function validateLearningPath(req, res, next)
     else if(!req.body.userPathOrder) res.status(400).json({ message: "userPathOrder is required"})
     else next()
 }
-
+//TODO: Update Docs
 router.post('/', validateLearningPath, (req, res) => {
     const path = req.body.path
     const order = req.body.userPathOrder
@@ -197,32 +197,38 @@ router.delete('/:id', (req, res) => {
             res.status(500).json({ message: 'Could not find user to delete learning path for' })
         })
 })
-//TODO: Validate order, update docs
+
+//TODO: update docs
 router.post('/:id/users', (req, res) => {
     let email = req.user.email
-    let order = req.body.order
-    Users.findBy({ email })
-    .then(user =>
+    if(!req.body.order) res.status(400).json({ message: 'Must send order for path' })
+    else
     {
-        if(user)
+        let order = req.body.order
+        Users.findBy({ email })
+        .then(user =>
         {
-            Paths.joinLearningPath(user.id, req.params.id, order)
-            .then(response => 
+            if(user)
             {
-                console.log('b')
-                res.status(200).json({ message: 'Joined learning path' })
-            })
-            .catch(error => {
-                console.log('a')
-                res.status(500).json({ message: 'Could not join learning path' })
-            })
-        }
-        else res.status(500).json({ message: 'Could not find user to join learning path' })
-    })
-    .catch(err =>
-    {
-        res.status(500).json({ message: 'Could not find user to join learning path' })
-    })
+                Paths.joinLearningPath(user.id, req.params.id, order)
+                .then(response => 
+                {
+                    console.log('b', response)
+                    response == 1 ? res.status(200).json({ message: 'Joined learning path' }) :
+                    res.status(500).json({ message: 'Could not join learning path' })
+                })
+                .catch(error => {
+                    console.log('a')
+                    res.status(500).json({ message: 'Could not join learning path' })
+                })
+            }
+            else res.status(500).json({ message: 'Could not find user to join learning path' })
+        })
+        .catch(err =>
+        {
+            res.status(500).json({ message: 'Could not find user to join learning path' })
+        })
+    }
 })
 
 router.delete('/:id/users', (req, res) => {

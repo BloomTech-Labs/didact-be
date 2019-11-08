@@ -1,4 +1,5 @@
 const db = require('../database/dbConfig')
+const Courses = require('../courses/coursesModel')
 
 module.exports = 
 {
@@ -199,10 +200,102 @@ async function deletePathById(userId, pathId)
     return {code: 200}
 }
 
-function joinLearningPath(userId, pathId, order)
+async function joinLearningPath(userId, pathId, order)
 {
-    return db('users_paths')
-        .insert({ user_id: userId, path_id: pathId, user_path_order: order })
+    try
+    {
+        await db('users_paths').insert({ user_id: userId, path_id: pathId, user_path_order: order })
+        let pathItems = await findPathItemsForPath(pathId)
+        let pathCourses = await findCoursesForPath(pathId)
+        await pathItems.forEach(el => addUserPathItem(userId, el.id))
+        await pathCourses.forEach(el => addUserCourse(userId, el.id))
+        return 1
+    }
+    catch(error)
+    {
+        console.log(`error from join learning path`, error)
+        return 0
+    }
+}
+
+async function addUserPathItem(userId, pathItemId)
+{
+    try
+    {
+        let existingEntry = await db('users_path_items').where({'user_id': userId, 'path_item_id': pathItemId}).first()
+        console.log('existingEntry', existingEntry)
+        if(!existingEntry)
+        {
+            await db('users_path_items').insert({user_id: userId, path_item_id: pathItemId})
+        }
+        return 1
+    }
+    catch(error)
+    {
+        console.log('error from addUserPathItem', error)
+        return 0
+    }
+}
+
+async function addUserCourse(userId, courseId)
+{
+    try
+    {
+        let existingEntry = await db('users_courses').where({'user_id': userId, 'course_id': courseId}).first()
+        console.log('existingEntry', existingEntry)
+        if(!existingEntry)
+        {
+            await db('users_courses').insert({user_id: userId, course_id: courseId})
+            let sections = await Courses.findCourseSectionsByCourseId(courseId)
+            sections.forEach(el => addUserSection(userId, el.id))
+        }
+        return 1
+    }
+    catch(error)
+    {
+        console.log('error from addUserCourse', error)
+        return 0
+    }
+}
+
+async function addUserSection(userId, sectionId)
+{
+    try
+    {
+        let existingEntry = await db('users_sections').where({'user_id': userId, 'section_id': sectionId}).first()
+        console.log('existingEntry', existingEntry)
+        if(!existingEntry)
+        {
+            await db('users_sections').insert({user_id: userId, section_id: sectionId})
+            let sectionDetails = await Courses.findSectionDetailsByCourseSectionsId(sectionId)
+            sectionDetails.forEach(el => addUserSectionDetail(userId, el.id))
+        }
+        return 1
+    }
+    catch(error)
+    {
+        console.log('error from addUserSection', error)
+        return 0
+    }
+}
+
+async function addUserSectionDetail(userId, sectionDetailId)
+{
+    try
+    {
+        let existingEntry = await db('users_section_details').where({'user_id': userId, 'section_detail_id': sectionDetailId}).first()
+        console.log('existingEntry', existingEntry)
+        if(!existingEntry)
+        {
+            await db('users_section_details').insert({user_id: userId, section_detail_id: sectionDetailId})
+        }
+        return 1
+    }
+    catch(error)
+    {
+        console.log('error from addUserSectionDetail', error)
+        return 0
+    }
 }
 
 function quitLearningPath(userId, pathId)
@@ -372,3 +465,4 @@ async function updatePathOrder(userId, pathOrderArray)
         return {code: 500, message: 'Internal error: Could not update learning path order'}
     }
 }
+

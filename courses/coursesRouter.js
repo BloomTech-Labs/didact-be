@@ -270,18 +270,38 @@ router.put('/:id/sections/:section_id', (req, res) => {
                 if(!req.body.changes) res.status(400).json({message: 'Could not find section in body'})
                 else {
                     Courses.updateCourseSection(user.id, courseId, sectionId, req.body.changes)
-                        .then(updateRes => {
-                            updateRes === 0 ? res.status(404).json({message: `Section not found with id of ${sectionId}`}) 
-                            : updateRes.code === 200 ? res.status(200).json({message: `Section has been updated`})
-                            : res.status(403).json({message: updateRes.message})
-                        })
-                        .catch(err => res.status(500).json(err))
+                    .then(updateRes => {
+                        updateRes === 0 ? res.status(404).json({message: `Section not found with id of ${sectionId}`}) 
+                        : updateRes.code === 200 ? res.status(200).json({message: `Section has been updated`})
+                        : res.status(403).json({message: updateRes.message})
+                    })
+                    .catch(err => res.status(500).json(err))
                 }
             }
             else res.status(500).json({ message: 'Could not find user to add course for' })
         })
     .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
+})
 
+router.put('/:id/sections/:section_id/togglecomplete', (req, res) => {
+    const sectionId = req.params.section_id
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+        {
+            if(user)
+            {
+                Courses.manualSectionCompleteToggle(user.id, courseId, sectionId)
+                .then(updateRes => {
+                    if(updateRes.code === 200) res.status(200).json({message: updateRes.message})
+                    else res.status(updateRes.code).json({message: updateRes.message})
+                })
+                .catch(err => res.status(500).json({message: 'Internal Error: Could not toggle section completion'}))
+            }
+            else res.status(500).json({ message: 'Could not find user to add course for' })
+        })
+    .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
 })
 
 router.delete('/:id/sections/:section_id', (req, res) => {
@@ -370,6 +390,32 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
                 else res.status(500).json({ message: 'Could not find user to update course for' })
             })
         .catch(err => res.status(500).json({ message: 'Could not find user to update course for' }))
+    
+})
+
+//TODO: Docs for this
+router.put('/:id/sections/:section_id/details/:detail_id/togglecomplete', (req, res) => {
+    const courseId = req.params.id
+    const sectionId = req.params.section_id
+    const detailId = req.params.detail_id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        console.log(user)
+        if(user)
+        {
+            Courses.manualLessonCompleteToggle(user.id, courseId, sectionId, detailId)
+            .then(updateRes => 
+            {
+                if(updateRes.code === 200) res.status(200).json({message: updateRes.message})
+                else res.status(updateRes.code).json({message: updateRes.message})
+            })
+            .catch(err => res.status(500).json({message: 'Internal Error: Could not toggle lesson completion'}))
+        }
+        else res.status(500).json({ message: 'Could not find user to update course for' })
+    })
+    .catch(err => res.status(500).json({ message: 'Could not find user to update course for' }))
     
 })
 
