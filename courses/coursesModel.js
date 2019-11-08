@@ -17,7 +17,8 @@ module.exports = {
     deleteCourseSection,
     addSectionDetails,
     updateSectionDetails,
-    deleteSectionDetails
+    deleteSectionDetails,
+    manualLessonCompleteToggle
 }
 
 function find() {
@@ -205,4 +206,21 @@ async function deleteSectionDetails(userId, courseId, sectionId, detailId) {
 async function generateUdemyCourse(userId, title, courseId, courseArray)
 {
     
+}
+
+async function manualLessonCompleteToggle(userId, sectionDetailId)
+{
+    try
+    {
+        console.log('test1')
+        let userLesson = await db('users_section_details').where({user_id: userId, section_detail_id: sectionDetailId}).first()
+        userLesson.manually_completed = !userLesson.manually_completed
+        await db('users_section_details').where({user_id: userId, section_detail_id: sectionDetailId}).update(userLesson)
+        return {code: 200, message: 'Lesson completion toggled'}
+    }
+    catch(error)
+    {
+        console.log(error)
+        return {code: 500, message: 'Internal Error: Could not toggle lesson completion'}
+    }
 }

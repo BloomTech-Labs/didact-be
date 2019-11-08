@@ -466,8 +466,3 @@ async function updatePathOrder(userId, pathOrderArray)
     }
 }
 
-async function manualLessonCompleteToggle(userId, sectionDetailId)
-{
-    let userLesson = await db('users_section_detail').where({user_id: userId, section_detail_id: sectionDetailId}).first()
-    console.log('userLesson', userLesson)
-}

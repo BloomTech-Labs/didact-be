@@ -373,6 +373,30 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
     
 })
 
+//TODO: Docs for this
+router.put('/:id/sections/:section_id/details/:detail_id/toggleComplete', (req, res) => {
+    const detailId = req.params.detail_id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+    {
+        console.log(user)
+        if(user)
+        {
+            Courses.manualLessonCompleteToggle(user.id, detailId)
+            .then(updateRes => 
+            {
+                if(updateRes.code === 200) res.status(200).json({message: updateRes.message})
+                else res.status(updateRes.code).json({message: updateRes.message})
+            })
+            .catch(err => res.status(500).json({message: 'Internal Error: Could not toggle lesson completion'}))
+        }
+        else res.status(500).json({ message: 'Could not find user to update course for' })
+    })
+    .catch(err => res.status(500).json({ message: 'Could not find user to update course for' }))
+    
+})
+
 router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
     const detailId = req.params.detail_id
     const sectionId = req.params.section_id
