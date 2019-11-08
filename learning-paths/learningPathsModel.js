@@ -247,19 +247,55 @@ async function addUserCourse(userId, courseId)
         {
             await db('users_courses').insert({user_id: userId, course_id: courseId})
             let sections = await Courses.findCourseSectionsByCourseId(courseId)
+            sections.forEach(el => addUserSection(userId, el.id))
         }
         return 1
     }
     catch(error)
     {
-        console.log('error from addUserCourses', error)
+        console.log('error from addUserCourse', error)
         return 0
     }
 }
 
-async function addUserSections(userId, sectionId)
+async function addUserSection(userId, sectionId)
 {
+    try
+    {
+        let existingEntry = await db('users_sections').where({'user_id': userId, 'section_id': sectionId}).first()
+        console.log('existingEntry', existingEntry)
+        if(!existingEntry)
+        {
+            await db('users_sections').insert({user_id: userId, section_id: sectionId})
+            let sectionDetails = await Courses.findSectionDetailsByCourseSectionsId(sectionId)
+            sectionDetails.forEach(el => addUserSectionDetail(userId, el.id))
+        }
+        return 1
+    }
+    catch(error)
+    {
+        console.log('error from addUserSection', error)
+        return 0
+    }
+}
 
+async function addUserSectionDetail(userId, sectionDetailId)
+{
+    try
+    {
+        let existingEntry = await db('users_section_details').where({'user_id': userId, 'section_detail_id': sectionDetailId}).first()
+        console.log('existingEntry', existingEntry)
+        if(!existingEntry)
+        {
+            await db('users_section_details').insert({user_id: userId, section_detail_id: sectionDetailId})
+        }
+        return 1
+    }
+    catch(error)
+    {
+        console.log('error from addUserSectionDetail', error)
+        return 0
+    }
 }
 
 function quitLearningPath(userId, pathId)
