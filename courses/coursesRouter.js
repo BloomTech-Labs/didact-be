@@ -106,6 +106,27 @@ router.put('/:id', (req, res) => {
     }
 })
 
+//TODO: Docs for this
+router.put('/:id/togglecomplete', (req, res) => {
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user =>
+        {
+            if(user)
+            {
+                Courses.manualCourseCompleteToggle(user.id, courseId)
+                .then(updateRes => {
+                    if(updateRes.code === 200) res.status(200).json({message: updateRes.message})
+                    else res.status(updateRes.code).json({message: updateRes.message})
+                })
+                .catch(err => res.status(500).json({message: 'Internal Error: Could not toggle course completion'}))
+            }
+            else res.status(500).json({ message: 'Could not find user to update course for' })
+        })
+    .catch(err => res.status(500).json({ message: 'Could not find user to update course for' }))
+})
+
 router.delete('/:id', (req, res) => {
 
     let email = req.user.email
@@ -253,9 +274,9 @@ router.post('/:id/sections', (req, res) => {
                             .catch(err => res.status(500).json(err))
                     }
                 }
-                else res.status(500).json({ message: 'Could not find user to add course for' })
+                else res.status(500).json({ message: 'Could not find user to add section for' })
             })
-        .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
+        .catch(err => res.status(500).json({ message: 'Could not find user to add section for' }))
 })
 
 router.put('/:id/sections/:section_id', (req, res) => {
@@ -278,9 +299,9 @@ router.put('/:id/sections/:section_id', (req, res) => {
                     .catch(err => res.status(500).json(err))
                 }
             }
-            else res.status(500).json({ message: 'Could not find user to add course for' })
+            else res.status(500).json({ message: 'Could not find user to update section for' })
         })
-    .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
+    .catch(err => res.status(500).json({ message: 'Could not find user to update section for' }))
 })
 //TODO: Docs for this
 router.put('/:id/sections/:section_id/togglecomplete', (req, res) => {
@@ -299,9 +320,9 @@ router.put('/:id/sections/:section_id/togglecomplete', (req, res) => {
                 })
                 .catch(err => res.status(500).json({message: 'Internal Error: Could not toggle section completion'}))
             }
-            else res.status(500).json({ message: 'Could not find user to add course for' })
+            else res.status(500).json({ message: 'Could not find user to update section for' })
         })
-    .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
+    .catch(err => res.status(500).json({ message: 'Could not find user to update section for' }))
 })
 
 router.delete('/:id/sections/:section_id', (req, res) => {
@@ -321,9 +342,9 @@ router.delete('/:id/sections/:section_id', (req, res) => {
                     })
                     .catch(err => res.status(500).json(err))
             }
-            else res.status(500).json({ message: 'Could not find user to add course for' })
+            else res.status(500).json({ message: 'Could not find user to delete section for' })
         })
-    .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
+    .catch(err => res.status(500).json({ message: 'Could not find user to delete section for' }))
 
 })
 
@@ -360,9 +381,9 @@ router.post('/:id/sections/:s_id', (req, res) => {
                             .catch(err => res.status(500).json(err))
                     }
                 }
-                else res.status(500).json({ message: 'Could not find user to add course for' })
+                else res.status(500).json({ message: 'Could not find user to add lesson for' })
             })
-        .catch(err => res.status(500).json({ message: 'Could not find user to add course for' }))
+        .catch(err => res.status(500).json({ message: 'Could not find user to add lesson for' }))
 })  
 
 router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
@@ -387,9 +408,9 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
                             .catch(err => res.status(500).json(err))
                     }
                 }
-                else res.status(500).json({ message: 'Could not find user to update course for' })
+                else res.status(500).json({ message: 'Could not find user to update lesson for' })
             })
-        .catch(err => res.status(500).json({ message: 'Could not find user to update course for' }))
+        .catch(err => res.status(500).json({ message: 'Could not find user to update lesson for' }))
     
 })
 
@@ -413,9 +434,9 @@ router.put('/:id/sections/:section_id/details/:detail_id/togglecomplete', (req, 
             })
             .catch(err => res.status(500).json({message: 'Internal Error: Could not toggle lesson completion'}))
         }
-        else res.status(500).json({ message: 'Could not find user to update course for' })
+        else res.status(500).json({ message: 'Could not find user to update lesson for' })
     })
-    .catch(err => res.status(500).json({ message: 'Could not find user to update course for' }))
+    .catch(err => res.status(500).json({ message: 'Could not find user to update lesson for' }))
 })
 
 router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
@@ -437,9 +458,9 @@ router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
                         })
                         .catch(err => res.status(500).json(err))
                 }
-                else res.status(500).json({ message: 'Could not find user to delete course for' })
+                else res.status(500).json({ message: 'Could not find user to delete lesson for' })
             })
-        .catch(err => res.status(500).json({ message: 'Could not find user to delete course for' }))  
+        .catch(err => res.status(500).json({ message: 'Could not find user to delete lesson for' }))  
 })
 
 module.exports = router

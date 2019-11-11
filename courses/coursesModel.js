@@ -19,7 +19,8 @@ module.exports = {
     updateSectionDetails,
     deleteSectionDetails,
     manualLessonCompleteToggle,
-    manualSectionCompleteToggle
+    manualSectionCompleteToggle,
+    manualCourseCompleteToggle
 }
 
 function find() {
@@ -321,7 +322,23 @@ async function findUserCoursesByPathId(userId, pathId)
     }
 }
 
-async function manualCourseCompleteToggle(userId, pathId, courseId)
+async function findPathIdsForUserIdCourseId(userId, courseId)
+{
+    try
+    {
+        return await db('paths as p')
+            .join('paths_courses as pc', 'pc.path_id', '=', 'p.id')
+            .join('users_paths as up', 'pc.path_id', '=', 'p.id')
+            .select('p.id')
+            .where({'up.user_id': userId, 'pc.course_id': courseId})
+    }
+    catch(error)
+    {
+        return 0
+    }
+}
+
+async function manualCourseCompleteToggle(userId, courseId)
 {
     try
     {
@@ -350,11 +367,11 @@ async function manualCourseCompleteToggle(userId, pathId, courseId)
             .select('usd.*')
             .where({'cs.id': sectionId, 'usd.user_id': userId})
 
-            for(let i=0; i<usersSectionDetails.length; i++)
+            for(let j=0; j<usersSectionDetails.length; j++)
             {
-                console.log('toggling lessons in section', usersSectionDetails[i].section_detail_id)
-                await db('users_section_details').where({user_id: userId, section_detail_id: usersSectionDetails[i].section_detail_id})
-                    .update({automatically_completed: !usersSectionDetails[i].automatically_completed})
+                console.log('toggling lessons in section', usersSectionDetails[j].section_detail_id)
+                await db('users_section_details').where({user_id: userId, section_detail_id: usersSectionDetails[j].section_detail_id})
+                    .update({automatically_completed: !usersSectionDetails[j].automatically_completed})
             }
         }
 
@@ -362,22 +379,24 @@ async function manualCourseCompleteToggle(userId, pathId, courseId)
 
         //automatically complete path above course if all courses complete
 
-        //TODO: Make function to find all paths for the user, check each path for course IDs for match with param.
-        //TODO: Loop through each path which contains toggled course, if all toggled, complete path.
+        let pathIds = await findPathIdsForUserIdCourseId(userId, courseId)
+        for(let i=0; i<pathIds.length; i++)
+        {
+            let userCourses = await findUserCoursesByPathId(userId, pathIds[i])
+            console.log('blah', userCourses)
+            let isComplete = userCourses.every(el => el.automatically_completed || el.manually_completed)
+            if(isComplete) await db('users_paths as up')
+                .where({'up.path_id': pathId, 'uc.user_id': userId})
+                .update({automatically_completed: true})
 
-        // let userCourses = await findUserCoursesByPathId(userId, pathId)
-        // console.log('blah', userCourses)
-        // let isComplete = userCourses.every(el => el.automatically_completed || el.manually_completed)
-        // if(isComplete) await db('users_paths as up')
-        //     .where({'up.path_id': pathId, 'uc.user_id': userId})
-        //     .update({automatically_completed: true})
+        }
 
         return {code: 200, message: 'Course completion toggled'}
     }
     catch(error)
     {
         console.log(error)
-        return {code: 500, message: 'Internal Error: Could not toggle section completion'}
+        return {code: 500, message: 'Internal Error: Could not toggle course completion'}
     }
 }
 
