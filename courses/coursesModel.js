@@ -23,6 +23,7 @@ module.exports = {
     manualCourseCompleteToggle,
     getLessonsWithUserCompletion,
     findYourCourseSectionsByCourseId,
+    findYoursById,
 }
 
 function find() {
@@ -414,7 +415,6 @@ async function getLessonsWithUserCompletion(userId, sectionId)
     return userLessons
 }
 
-
 async function findYourCourseSectionsByCourseId(userId, courseId)
 {
     let userSections = await findUserSectionsByCourseId(userId, courseId)
@@ -432,4 +432,28 @@ async function findYourCourseSectionsByCourseId(userId, courseId)
 
     }
     return sectionArr
+}
+
+async function findYoursById(userId, courseId)
+{
+    let userSections = await findUserSectionsByCourseId(userId, courseId)
+    let sectionIds = userSections.map(el => el.section_id)
+    let lessonArr = []
+    for(let i = 0; i < sectionIds.length; i++)
+    {
+        let sectionLessons = await findUserSectionDetailsBySectionId(userId, sectionIds[i])
+        sectionLessons.forEach(el => 
+        {
+            lessonArr.push(el)
+        })
+        
+        // let finalArr = lessonArr.concat(sectionLessons)
+    }
+    let total = lessonArr.length
+    let completed = lessonArr.filter(el => (el.manually_completed || el.automatically_completed)).length
+    
+    let retCourse = await findById(courseId)
+    retCourse.course.total = total
+    retCourse.course.completed = completed
+    return retCourse
 }

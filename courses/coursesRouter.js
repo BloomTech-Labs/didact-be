@@ -34,6 +34,30 @@ router.get('/', (req, res) => {
         })
 })
 
+router.get('/:id/yours', (req, res) => {
+    const id = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user => {
+        if (user) {
+            Courses.findYoursById(user.id, id)
+            .then(response => {
+                if (response.code === 404) res.status(404).json({ message: response.message })
+                else res.status(200).json(response.course)
+            })
+            .catch(error => {
+                res.status(500).json({ message: 'Error connecting with server' })
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to get section for' })
+    })
+    .catch(err => 
+    {
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
 router.get('/:id', (req, res) => {
     const id = req.params.id
     Courses.findById(id)
