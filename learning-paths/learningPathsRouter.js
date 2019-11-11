@@ -168,6 +168,27 @@ router.put('/:id', (req, res) => {
     }
 })
 
+router.put('/:id/yours', (req, res) => {
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user => {
+            if (user) {
+                Paths.togglePathCompletion(user.id, req.params.id)
+                    .then(response => {
+                        if (response.code === 404) res.status(404).json({ message: response.message })
+                        else res.status(200).json({ message: 'Learning path completion toggled' })
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: 'Could not toggle learning path completion' })
+                    })
+            }
+            else res.status(500).json({ message: 'Could not find user to toggle learning path completion for' })
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Could not find user to toggle learning path completion for' })
+        })
+})
+
 router.delete('/:id', (req, res) => {
 
     let email = req.user.email

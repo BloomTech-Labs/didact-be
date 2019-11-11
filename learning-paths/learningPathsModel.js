@@ -25,7 +25,8 @@ module.exports =
     findForOwner,
     updatePathOrder,
     findYourPathById,
-    togglePathItemCompletion
+    togglePathItemCompletion,
+    togglePathCompletion
 }
 
 function find() 
@@ -239,6 +240,38 @@ async function updatePathById(userId, pathId, changes)
     if(!path) return {message: 'No learning path found with that ID', code: 404}
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     await db('paths').where({id: pathId}).update(changes)
+    return {code: 200}
+}
+
+async function togglePathCompletion(userId, pathId)
+{
+    // First we update the path's manual completion
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+    if(!path) return {message: 'No learning path found with that ID', code: 404}
+    let curUserPath = await db('users_paths as up')
+        .where({'up.user_id': userId, 'up.path_id': pathId}).first()
+
+    await db('users_paths as up')
+        .where({'up.user_id': userId, 'up.path_id': pathId})
+        .update({...curUserPath, manually_completed: !curUserPath.manually_completed})
+
+    // Next, we update the path items in the path to be automatically completed
+    let pathItems = await findPathItemsForPath(pathId)
+    for(let i=0; i<pathItems.length; i++)
+    {
+        await db('users_path_items as ups')
+            .where({'ups.user_id': userId, 'ups.path_item_id': pathItems[i].id})
+            .update({automatically_completed: !curUserPath.manually_completed})
+    }
+
+    // Next we update the courses in the path to be automatically completed
+    let pathCourses = await findCoursesForPath(pathId)
+    for(let i=0; i<pathCourses.length; i++)
+    {
+        Courses.autoCourseCompleteToggle(userId, pathCourses[i].id)
+    }
+
     return {code: 200}
 }
 
