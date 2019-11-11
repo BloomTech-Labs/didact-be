@@ -219,6 +219,39 @@ router.get('/:id/sections', (req, res) => {
         })
 })
 
+router.get('/:id/yoursections', (req, res) => {
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user => {
+        if (user) {
+            Courses.findById(courseId)
+            .then(response => {
+                if (response.code === 200) {
+                    Courses.findYourCourseSectionsByCourseId(user.id, courseId)
+                        .then(sections => res.status(200).json({ sections }))
+                        .catch(err => {
+                            console.log('500 err from get sections', err)
+                            res.status(500).json(err)
+                        })
+                } else {
+                    res.status(404).json({ message: `could not find a course with an id of ${courseId}` })
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                res.status(500).json(err)
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to get section for' })
+    })
+    .catch(err => 
+    {
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
 router.post('/:id/sections', (req, res) => {
     const courseId = req.params.id
     let email = req.user.email

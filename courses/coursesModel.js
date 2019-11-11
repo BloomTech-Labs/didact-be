@@ -21,7 +21,8 @@ module.exports = {
     manualLessonCompleteToggle,
     manualSectionCompleteToggle,
     manualCourseCompleteToggle,
-    getLessonsWithUserCompletion
+    getLessonsWithUserCompletion,
+    findYourCourseSectionsByCourseId,
 }
 
 function find() {
@@ -414,3 +415,21 @@ async function getLessonsWithUserCompletion(userId, sectionId)
 }
 
 
+async function findYourCourseSectionsByCourseId(userId, courseId)
+{
+    let userSections = await findUserSectionsByCourseId(userId, courseId)
+    let sectionIds = userSections.map(el => el.section_id)
+    let sectionArr = []
+    for(let i = 0; i < sectionIds.length; i++)
+    {
+        let tempSection = await db('course_sections as cs')
+            .where({'cs.id': sectionIds[i]}).first()
+        
+        let tempUserSection = userSections.find(el => el.section_id === sectionIds[i])
+        tempSection.manually_completed = tempUserSection.manually_completed
+        tempSection.automatically_completed = tempUserSection.automatically_completed
+        sectionArr.push(tempSection)
+
+    }
+    return sectionArr
+}
