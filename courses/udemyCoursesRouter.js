@@ -8,6 +8,7 @@ const Users = require('../users/usersModel')
 router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
 {
     // First we make sure the user is valid.
+    let email = req.user.email
     Users.findBy({ email })
     .then(user =>
     {
@@ -43,12 +44,11 @@ router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
 
             // Then we go to the page, and get all of the results (sections, lessons)
             getPublicCurriculum(link, config2)
-            .then(resp =>
+            .then(results =>
             {
                 // If that worked, proceed
                 if(results)
                 {
-                    let results = resp
                     // Now we get instructors for the course.
                     getCoursesDetail(courseId)
                     .then(instructors =>
@@ -56,9 +56,10 @@ router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
                         if(instructors)
                         {
                             // Then, we send it to the model, for insertion into the DB, and send it to the user.
-                            Courses.addUdemyCourse(userId, results, instructors)
-                            .then(course => res.status(201).json(course))
-                            .catch(err => res.status(500).json({ message: 'internal error, could not add course' }))
+                            res.status(200).json(results)
+                            // Courses.addUdemyCourse(userId, results, instructors)
+                            // .then(course => res.status(201).json(course))
+                            // .catch(err => res.status(500).json({ message: 'internal error, could not add course' }))
                         }
                         else res.status(500).json({ message: 'error: could not retrieve instructors' })
                     })
@@ -97,6 +98,7 @@ async function getPublicCurriculum(link, config2)
             detResponse = await axios.get(`${link}?page=${i}&page_size=100`)
             results = results.concat(detResponse.data.results)
         }
+        console.log('results.length', results.length)
         return results
     }
     catch(err)
