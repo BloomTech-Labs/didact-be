@@ -434,6 +434,30 @@ router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
         })
 })
 
+router.put('/:id/path-items/:itemId/yours', verifyLearningPath, (req, res) => {
+    const pathId = req.params.id
+    const itemId = req.params.itemId
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user => {
+            if (user) {
+                Paths.togglePathItemCompletion(user.id, pathId, itemId)
+                    .then(response => {
+                        if (response.code === 403) res.status(403).json({ message: response.message })
+                        else if (response.code === 404) res.status(404).json({ message: response.message })
+                        else res.status(200).json({ message: response.message, id: response.id })
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: 'Could not complete learning path Item' })
+                    })
+            }
+            else res.status(500).json({ message: 'Could not find user to complete learning path Item for' })
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Could not find user to complete learning path Item for' })
+        })
+})
+
 router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     const pathId = req.params.id
     const itemId = req.params.itemId

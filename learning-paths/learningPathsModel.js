@@ -25,6 +25,7 @@ module.exports =
     findForOwner,
     updatePathOrder,
     findYourPathById,
+    togglePathItemCompletion
 }
 
 function find() 
@@ -105,7 +106,7 @@ async function findYourPathById(userId, pathId)
             pathCourses.push(completionCourse)
         }
         path.courses = pathCourses
-        path.pathItems = await findPathItemsForPath(pathId)
+        path.pathItems = await findYourPathItemsForPath(userId, pathId)
         path.creatorId = path.creator_id
         // if(creatorId) path.creatorId = creatorId
         return {path, code: 200}
@@ -162,6 +163,14 @@ function findPathItemsForPath(pathId)
     return db('path_items as pi').where({'pi.path_id': pathId})
 }
 
+function findYourPathItemsForPath(userId, pathId)
+{
+    return db('path_items as pi')
+        .join('users_path_items as upi', 'pi.id', '=', 'upi.path_item_id')
+        .select('pi.*', 'upi.manually_completed', 'upi.automatically_completed')
+        .where({'pi.path_id': pathId, 'upi.user_id': userId})
+}
+
 async function addPathItem(userId, pathId, item)
 {
     let pathObj = await findById(pathId)
@@ -183,6 +192,21 @@ async function updatePathItem(userId, pathId, itemId, changes)
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     await db('path_items').where({id: itemId}).update(changes)
     return {code: 200, message: `path item with id ${itemId} updated`, id: itemId }
+}
+
+async function togglePathItemCompletion(userId, pathId, itemId)
+{
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+    if(!path) return {message: 'No learning path found with that ID', code: 404}
+    let currentPathItem = await db('users_path_items as upi')
+        .where({'upi.user_id': userId, 'upi.path_item_id': itemId}).first()
+    console.log(`curpathit`, currentPathItem)
+    await db('users_path_items as upi')
+        .where({'upi.user_id': userId, 'upi.path_item_id': itemId})
+        .update({...currentPathItem, manually_completed: !currentPathItem.manually_completed})
+    
+    return {code: 200, message: `path item with id ${itemId} completion toggled`, id: itemId }
 }
 
 async function deletePathItem(userId, pathId, itemId)
