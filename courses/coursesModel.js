@@ -304,3 +304,80 @@ async function manualSectionCompleteToggle(userId, courseId, sectionId)
         return {code: 500, message: 'Internal Error: Could not toggle section completion'}
     }
 }
+
+async function findUserCoursesByPathId(userId, pathId)
+{
+    try 
+    {
+        return await db('paths as p')
+            .join('paths_courses as pc','pc.path_id', '=', 'p.id')
+            .join('users_courses as uc', 'uc.course_id', '=', 'pc.course_id')
+            .select('uc.*')
+            .where({'uc.user_id': userId, 'pc.path_id': pathId})
+    }
+    catch(error)
+    {
+        return 0
+    }
+}
+
+async function manualCourseCompleteToggle(userId, pathId, courseId)
+{
+    try
+    {
+        let userCourse = await db('users_courses').where({user_id: userId, course_id: courseId}).first()
+        userCourse.manually_completed = !userCourse.manually_completed
+        await db('users_sections').where({user_id: userId, section_id: sectionId}).update(userCourse)
+
+        // automatically complete sections below course for user
+        let usersSections = await db('courses as c')
+            .join('course_sections as cs', 'cs.course_id', '=', 'c.id')
+            .join('users_sections as us', 'us.section_id', '=', 'cs.id')
+            .select('us.*')
+            .where({'c.id': courseId, 'us.user_id': userId})
+
+        for(let i=0; i<usersSections.length; i++)
+        {
+            console.log('toggling sections in course', usersSections[i].section_id)
+            await db('users_sections').where({user_id: userId, section_id: usersSections[i].section_id})
+                .update({automatically_completed: !usersSections[i].automatically_completed})
+
+            // automatically complete lessons below each section for user
+            let sectionId = usersSections[i].section_id
+            let usersSectionDetails = await db('course_sections as cs')
+            .join('section_details as sd', 'sd.course_sections_id', '=', 'cs.id')
+            .join('users_section_details as usd', 'usd.section_detail_id', '=', 'sd.id')
+            .select('usd.*')
+            .where({'cs.id': sectionId, 'usd.user_id': userId})
+
+            for(let i=0; i<usersSectionDetails.length; i++)
+            {
+                console.log('toggling lessons in section', usersSectionDetails[i].section_detail_id)
+                await db('users_section_details').where({user_id: userId, section_detail_id: usersSectionDetails[i].section_detail_id})
+                    .update({automatically_completed: !usersSectionDetails[i].automatically_completed})
+            }
+        }
+
+        
+
+        //automatically complete path above course if all courses complete
+
+        //TODO: Make function to find all paths for the user, check each path for course IDs for match with param.
+        //TODO: Loop through each path which contains toggled course, if all toggled, complete path.
+
+        // let userCourses = await findUserCoursesByPathId(userId, pathId)
+        // console.log('blah', userCourses)
+        // let isComplete = userCourses.every(el => el.automatically_completed || el.manually_completed)
+        // if(isComplete) await db('users_paths as up')
+        //     .where({'up.path_id': pathId, 'uc.user_id': userId})
+        //     .update({automatically_completed: true})
+
+        return {code: 200, message: 'Course completion toggled'}
+    }
+    catch(error)
+    {
+        console.log(error)
+        return {code: 500, message: 'Internal Error: Could not toggle section completion'}
+    }
+}
+
