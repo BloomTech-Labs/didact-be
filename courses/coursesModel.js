@@ -446,8 +446,6 @@ async function findYoursById(userId, courseId)
         {
             lessonArr.push(el)
         })
-        
-        // let finalArr = lessonArr.concat(sectionLessons)
     }
     let total = lessonArr.length
     let completed = lessonArr.filter(el => (el.manually_completed || el.automatically_completed)).length

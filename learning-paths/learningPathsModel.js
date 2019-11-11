@@ -23,7 +23,8 @@ module.exports =
     updateContentOrder,
     findForNotUserId,
     findForOwner,
-    updatePathOrder
+    updatePathOrder,
+    findYourPathById,
 }
 
 function find() 
@@ -77,6 +78,34 @@ async function findById(id)
         path.tags = await getTagsForPath(id)
         path.courses = await findCoursesForPath(id)
         path.pathItems = await findPathItemsForPath(id)
+        path.creatorId = path.creator_id
+        // if(creatorId) path.creatorId = creatorId
+        return {path, code: 200}
+    }
+    catch(error)
+    {
+        console.log('error from findById', error)
+        return {message: error, code: 500}
+    }
+}
+
+async function findYourPathById(userId, pathId)
+{
+    try
+    {
+        let path = await db('paths').where({'id': pathId}).first()
+        
+        if(!path) return {message: 'No learning path found with that ID', code: 404}
+        path.tags = await getTagsForPath(pathId)
+        let tempCourses = await findCoursesForPath(pathId)
+        let pathCourses = []
+        for(let i = 0; i < tempCourses.length; i++)
+        {
+            let completionCourse = await Courses.findYoursById(userId, tempCourses[i].id)
+            pathCourses.push(completionCourse)
+        }
+        path.courses = pathCourses
+        path.pathItems = await findPathItemsForPath(pathId)
         path.creatorId = path.creator_id
         // if(creatorId) path.creatorId = creatorId
         return {path, code: 200}
