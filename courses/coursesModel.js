@@ -142,6 +142,7 @@ async function addCourseSection(userId, courseId, section) {
     if(course.creator_id !== userId) return {message: 'User is not permitted to add sections to this course', code: 403}
     let addreturn = await db('course_sections')
         .insert(section, 'id')
+    updateUsersSectionsOnSectionAdd(addreturn[0], courseId)
     return {code: 201, message: addreturn}
 }
 
@@ -182,7 +183,7 @@ async function addSectionDetails(userId, courseId, details) {
         let addreturn = await db('section_details')
         .insert(details, 'id')
         // console.log('addreturn', addreturn)
-        updateUsersLessonsOnUserAdd(addreturn[0], details.course_sections_id)
+        updateUsersLessonsOnLessonAdd(addreturn[0], details.course_sections_id)
         return {code: 200, message: addreturn}
     }
         
@@ -650,7 +651,7 @@ async function autoCourseCompleteToggle(userId, courseId, isPathCompleted)
     }
 }
 
-async function updateUsersLessonsOnUserAdd(lessonId, sectionId)
+async function updateUsersLessonsOnLessonAdd(lessonId, sectionId)
 {
     let sectionUsers = await db('course_sections as cs')
         .join('users_sections as us', 'us.section_id', '=', 'cs.id')
@@ -662,5 +663,20 @@ async function updateUsersLessonsOnUserAdd(lessonId, sectionId)
         await db('users_section_details')
             .insert({user_id: sectionUsersIds[i], section_detail_id: lessonId})
         await cascadeUp(sectionUsersIds[i], lessonId, 'lesson')
+    }
+} // 😈
+
+async function updateUsersSectionsOnSectionAdd(sectionId, courseId)
+{
+    let courseUsers = await db('courses as c')
+        .join('users_courses as uc', 'uc.course_id', '=', 'c.id')
+        .select('uc.user_id')
+        .where({'c.id': courseId})
+    let courseUsersIds = courseUsers.map(el => el.user_id)
+    for(let i=0; i < courseUsersIds.length; i++)
+    {
+        await db('users_sections')
+            .insert({user_id: courseUsersIds[i], section_id: sectionId})
+        await cascadeUp(courseUsersIds[i], sectionId, 'section')
     }
 }

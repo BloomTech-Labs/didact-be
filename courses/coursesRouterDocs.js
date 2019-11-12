@@ -981,3 +981,159 @@
  * @apiError (500) {Object} Find-Section-Error Could not delete detail from section
  * 
  */
+
+/**
+ * @api {put} /api/courses/:id/sections/:section_id/details/:detail_id/togglecomplete Toggle Lesson Completion
+ * @apiName ToggleLessonCompletion
+ * @apiGroup Details
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Updated message
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 Updated
+ * {
+ *     "message": "Lesson completion toggled"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to update lesson for
+ * HTTP/1.1 500 Internal-Error
+ * {
+ *     "message": "Could not find user to update lesson for"
+ * }
+ * 
+ * @apiError (500) {Object} Toggle-Lesson-Error Internal Error: Could not toggle lesson completion
+ * HTTP/1.1 500 Internal-Error
+ * {
+ *     "message": "Internal Error: Could not toggle lesson completion"
+ * }
+ * 
+ */
+
+/**
+ * @api {put} /api/courses/:id/sections/:section_id/togglecomplete Toggle Section Completion
+ * @apiName ToggleSectionCompletion
+ * @apiGroup Section
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Updated message
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 Updated
+ * {
+ *     "message": "Section completion toggled"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to update section for
+ * HTTP/1.1 500 Internal-Error
+ * {
+ *     "message": "Could not find user to update section for"
+ * }
+ * 
+ * @apiError (500) {Object} Toggle-Section-Error Internal Error: Could not toggle section completion
+ * HTTP/1.1 500 Internal-Error
+ * {
+ *     "message": "Internal Error: Could not toggle section completion"
+ * }
+ * 
+ */
+
+/**
+ * @api {put} /api/courses/:id/togglecomplete Toggle Course Completion
+ * @apiName ToggleCourseCompletion
+ * @apiGroup Course
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Updated message
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 Updated
+ * {
+ *     "message": "Course completion toggled"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to update course for
+ * HTTP/1.1 500 Internal-Error
+ * {
+ *     "message": "Could not find user to update course for"
+ * }
+ * 
+ * @apiError (500) {Object} Toggle-Course-Error Internal Error: Could not toggle course completion
+ * HTTP/1.1 500 Internal-Error
+ * {
+ *     "message": "Internal Error: Could not toggle course completion"
+ * }
+ * 
+ */

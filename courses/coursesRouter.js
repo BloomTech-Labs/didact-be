@@ -118,7 +118,6 @@ router.put('/:id', (req, res) => {
     }
 })
 
-//TODO: Docs for this
 router.put('/:id/togglecomplete', (req, res) => {
     const courseId = req.params.id
     let email = req.user.email
@@ -324,7 +323,7 @@ router.put('/:id/sections/:section_id', (req, res) => {
         })
         .catch(err => res.status(500).json({ message: 'Could not find user to update section for' }))
 })
-//TODO: Docs for this
+
 router.put('/:id/sections/:section_id/togglecomplete', (req, res) => {
     const sectionId = req.params.section_id
     const courseId = req.params.id
@@ -448,7 +447,7 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
 
 })
 
-//TODO: Docs for this
+
 router.put('/:id/sections/:section_id/details/:detail_id/togglecomplete', (req, res) => {
     const courseId = req.params.id
     const sectionId = req.params.section_id

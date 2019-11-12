@@ -184,9 +184,10 @@ async function addPathItem(userId, pathId, item)
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     item.path_id = Number(pathId)
     console.log(item)
-    let insertIds = await db('path_items').insert(item, 'id')
-    console.log(insertIds)
-    return {code: 201, message: `item added to path`, id: insertIds[0] }
+    let addReturn = await db('path_items').insert(item, 'id')
+    console.log(addReturn)
+    updateUsersPathItemsOnItemAdd(addReturn[0], pathId)
+    return {code: 201, message: `item added to path`, id: addReturn[0] }
 }
 
 async function updatePathItem(userId, pathId, itemId, changes)
@@ -466,8 +467,9 @@ async function addPathCourse(userId, pathId, courseId, path_order)
     if(!courseExists) return {message: 'Course not found', code: 404}
     else
     {
-        await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order })
+        let addReturn = await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order }, 'id')
         let pathCourses = await findCoursesForPath(pathId)
+        updateUsersCoursesOnCourseAdd(addReturn[0], pathId)
         return { message: 'Course added to path', code: 200, pathCourses }
     }
 }
@@ -562,3 +564,30 @@ async function updatePathOrder(userId, pathOrderArray)
     }
 }
 
+async function updateUsersCoursesOnCourseAdd(courseId, pathId)
+{
+    let pathUsers = await db('paths as p')
+        .join('users_paths as up', 'up.path_id', '=', 'p.id')
+        .select('up.user_id')
+        .where({'p.id': pathId})
+    let pathUsersIds = pathUsers.map(el => el.user_id)
+    for(let i=0; i < pathUsersIds.length; i++)
+    {
+        await db('users_courses')
+            .insert({user_id: pathUsersIds[i], course_id: courseId})
+    }
+}
+
+async function updateUsersPathItemsOnItemAdd(itemId, pathId)
+{
+    let pathUsers = await db('paths as p')
+        .join('users_paths as up', 'up.path_id', '=', 'p.id')
+        .select('up.user_id')
+        .where({'p.id': pathId})
+    let pathUsersIds = pathUsers.map(el => el.user_id)
+    for(let i=0; i < pathUsersIds.length; i++)
+    {
+        await db('users_path_items')
+            .insert({user_id: pathUsersIds[i], path_item_id: itemId})
+    }
+}

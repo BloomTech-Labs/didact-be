@@ -167,7 +167,7 @@ router.put('/:id', (req, res) => {
             })
     }
 })
-
+// TODO
 router.put('/:id/yours', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
@@ -464,9 +464,7 @@ router.put('/:id/path-items/:itemId/yours', verifyLearningPath, (req, res) => {
             if (user) {
                 Paths.togglePathItemCompletion(user.id, pathId, itemId)
                     .then(response => {
-                        if (response.code === 403) res.status(403).json({ message: response.message })
-                        else if (response.code === 404) res.status(404).json({ message: response.message })
-                        else res.status(200).json({ message: response.message, id: response.id })
+                        res.status(200).json({ message: 'Learning path item completion has been toggled' })
                     })
                     .catch(error => {
                         res.status(500).json({ message: 'Could not complete learning path Item' })

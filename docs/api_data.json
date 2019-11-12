@@ -350,6 +350,104 @@
     "name": ""
   },
   {
+    "type": "put",
+    "url": "/api/courses/:id/togglecomplete",
+    "title": "Toggle Course Completion",
+    "name": "ToggleCourseCompletion",
+    "group": "Course",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Course completion toggled\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to update course for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update course for&quot; }</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Course-Error",
+            "description": "<p>Internal Error: Could not toggle course completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle course completion&quot; }</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Course"
+  },
+  {
     "type": "delete",
     "url": "/api/courses/:id",
     "title": "Delete Course",
@@ -1814,6 +1912,104 @@
     "groupTitle": "Details"
   },
   {
+    "type": "put",
+    "url": "/api/courses/:id/sections/:section_id/details/:detail_id/togglecomplete",
+    "title": "Toggle Lesson Completion",
+    "name": "ToggleLessonCompletion",
+    "group": "Details",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Lesson completion toggled\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to update lesson for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update lesson for&quot; }</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Lesson-Error",
+            "description": "<p>Internal Error: Could not toggle lesson completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle lesson completion&quot; }</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Details"
+  },
+  {
     "type": "delete",
     "url": "/api/learning-paths/:id/path-items/:itemId",
     "title": "Delete Learning Path Item",
@@ -2151,6 +2347,114 @@
         {
           "title": "500-Learning-Path-Add-Error:",
           "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not add Learning Path Item\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
+    "groupTitle": "Learning_Path_Items"
+  },
+  {
+    "type": "put",
+    "url": "/api/learning-paths/:id/path-items/:itemId/yours",
+    "title": "Toggle Learning Path Item Completion",
+    "name": "ToggleLearningPathItemCompletion",
+    "group": "Learning_Path_Items",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>A message that the learning path item completion has been toggled</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Learning path item completion has been toggled\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to complete learning path Item for</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Complete-Learning-Path-Item-Error",
+            "description": "<p>Could not complete learning path Item</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-User-Not-Found:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to complete learning path Item for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Complete-Learning-Path-Item-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not complete learning path Item\"\n}",
           "type": "json"
         }
       ]
@@ -4120,6 +4424,114 @@
   },
   {
     "type": "put",
+    "url": "/api/learning-paths/:id/yours",
+    "title": "Toggle Learning Path Completion",
+    "name": "ToggleLearningPathCompletion",
+    "group": "Learning_Paths",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Success",
+            "description": "<p>A message that the Learning Path was toggled</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n {\n    \"message\": \"Learning path completion toggled\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to toggle learning path completion for</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Learning-Path-Completion-Error",
+            "description": "<p>Could not toggle learning path completion</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-User-Not-Found:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to toggle learning path completion for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Learning Path-Edit-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not toggle learning path completion\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
+    "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "put",
     "url": "/api/learning-paths/:id/order",
     "title": "Update Content Order In Learning Path",
     "name": "UpdateContentOrderInLearningPath",
@@ -4285,6 +4697,104 @@
     "version": "0.0.0",
     "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "put",
+    "url": "/api/courses/:id/sections/:section_id/togglecomplete",
+    "title": "Toggle Section Completion",
+    "name": "ToggleSectionCompletion",
+    "group": "Section",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Section completion toggled\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to update section for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update section for&quot; }</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Section-Error",
+            "description": "<p>Internal Error: Could not toggle section completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle section completion&quot; }</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Section"
   },
   {
     "type": "delete",
