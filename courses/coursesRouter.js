@@ -429,7 +429,7 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
-            console.log(user)
+            // console.log(user)
             if (user) {
                 if (!req.body.changes) res.status(400).json({ message: 'Could not find changes in body' })
                 else {
@@ -456,7 +456,7 @@ router.put('/:id/sections/:section_id/details/:detail_id/togglecomplete', (req, 
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
-            console.log(user)
+            // console.log(user)
             if (user) {
                 Courses.manualLessonCompleteToggle(user.id, courseId, sectionId, detailId)
                     .then(updateRes => {

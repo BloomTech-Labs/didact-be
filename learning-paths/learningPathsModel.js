@@ -26,8 +26,12 @@ module.exports =
     updatePathOrder,
     findYourPathById,
     togglePathItemCompletion,
-    togglePathCompletion
+    togglePathCompletion,
+    findYourPathItemsForPath,
+    printsA
 }
+
+function printsA() {console.log('The letter A')}
 
 function find() 
 {
@@ -166,8 +170,8 @@ function findPathItemsForPath(pathId)
 
 function findYourPathItemsForPath(userId, pathId)
 {
-    return db('path_items as pi')
-        .join('users_path_items as upi', 'pi.id', '=', 'upi.path_item_id')
+    return  db('path_items as pi')
+        .join('users_path_items as upi', 'upi.path_item_id', '=', 'pi.id')
         .select('pi.*', 'upi.manually_completed', 'upi.automatically_completed')
         .where({'pi.path_id': pathId, 'upi.user_id': userId})
 }
@@ -197,17 +201,21 @@ async function updatePathItem(userId, pathId, itemId, changes)
 
 async function togglePathItemCompletion(userId, pathId, itemId)
 {
-    let pathObj = await findById(pathId)
-    let path = pathObj.path
-    if(!path) return {message: 'No learning path found with that ID', code: 404}
-    let currentPathItem = await db('users_path_items as upi')
-        .where({'upi.user_id': userId, 'upi.path_item_id': itemId}).first()
-    console.log(`curpathit`, currentPathItem)
-    await db('users_path_items as upi')
-        .where({'upi.user_id': userId, 'upi.path_item_id': itemId})
-        .update({...currentPathItem, manually_completed: !currentPathItem.manually_completed})
-    
-    return {code: 200, message: `path item with id ${itemId} completion toggled`, id: itemId }
+    try 
+    {
+        let currentPathItem = await db('users_path_items as upi')
+            .where({'upi.user_id': userId, 'upi.path_item_id': itemId}).first()
+        console.log(`curpathit`, currentPathItem)
+        await db('users_path_items as upi')
+            .where({'upi.user_id': userId, 'upi.path_item_id': itemId})
+            .update({...currentPathItem, manually_completed: !currentPathItem.manually_completed})
+        Courses.cascadeUp(userId, itemId, 'pathItem')
+        return 1
+    }
+    catch(error)
+    {
+        return 0
+    }
 }
 
 async function deletePathItem(userId, pathId, itemId)
@@ -252,6 +260,8 @@ async function togglePathCompletion(userId, pathId)
     let curUserPath = await db('users_paths as up')
         .where({'up.user_id': userId, 'up.path_id': pathId}).first()
 
+    let isCompleted = !curUserPath.manually_completed
+
     await db('users_paths as up')
         .where({'up.user_id': userId, 'up.path_id': pathId})
         .update({...curUserPath, manually_completed: !curUserPath.manually_completed})
@@ -269,7 +279,7 @@ async function togglePathCompletion(userId, pathId)
     let pathCourses = await findCoursesForPath(pathId)
     for(let i=0; i<pathCourses.length; i++)
     {
-        Courses.autoCourseCompleteToggle(userId, pathCourses[i].id)
+        Courses.autoCourseCompleteToggle(userId, pathCourses[i].id, isCompleted)
     }
 
     return {code: 200}
