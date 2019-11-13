@@ -42,7 +42,6 @@ router.get('/:id/yours', (req, res) => {
         if (user) {
             Courses.findYoursById(user.id, id)
             .then(response => {
-                console.log('response', response)
                 if (response.code === 404) res.status(404).json({ message: response.message })
                 else res.status(200).json(response)
             })
