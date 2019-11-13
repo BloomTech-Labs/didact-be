@@ -478,6 +478,8 @@ async function manualCourseCompleteToggle(userId, courseId)
     {
         let userCourse = await db('users_courses').where({user_id: userId, course_id: courseId}).first()
         userCourse.manually_completed = !userCourse.manually_completed
+        if(!userCourse.manually_completed) userCourse.automatically_completed = userCourse.manually_completed
+
         await db('users_courses').where({user_id: userId, course_id: courseId}).update(userCourse)
 
         // automatically complete sections below course for user
