@@ -503,9 +503,10 @@ async function manualCourseCompleteToggle(userId, courseId)
 
             for(let j=0; j<usersSectionDetails.length; j++)
             {
+                let lessonAutComp = (usersSections[i].manually_completed || userCourse.manually_completed)
                 // console.log('toggling lessons in section. Lesson ID:', usersSectionDetails[j].section_detail_id)
                 await db('users_section_details').where({user_id: userId, section_detail_id: usersSectionDetails[j].section_detail_id})
-                    .update({automatically_completed: userSection[i].manually_completed})
+                    .update({automatically_completed: lessonAutComp})
             }
         }
 
@@ -588,8 +589,9 @@ async function findYoursById(userId, courseId)
         .select('uc.manually_completed', 'uc.automatically_completed')
         .where({'uc.course_id': courseId, 'uc.user_id': userId}).first()
 
-    retCourse.course.manually_completed = manAutComp.manually_completed
-    retCourse.course.automatically_completed = manAutComp.automatically_completed
+    retCourse.manually_completed = manAutComp.manually_completed
+    retCourse.automatically_completed = manAutComp.automatically_completed
+    
     return retCourse.course
 }
 
