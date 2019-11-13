@@ -505,7 +505,7 @@ async function manualCourseCompleteToggle(userId, courseId)
             {
                 // console.log('toggling lessons in section. Lesson ID:', usersSectionDetails[j].section_detail_id)
                 await db('users_section_details').where({user_id: userId, section_detail_id: usersSectionDetails[j].section_detail_id})
-                    .update({automatically_completed: userCourse.manually_completed})
+                    .update({automatically_completed: userSection[i].manually_completed})
             }
         }
 
