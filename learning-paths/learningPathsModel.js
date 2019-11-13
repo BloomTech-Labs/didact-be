@@ -23,8 +23,15 @@ module.exports =
     updateContentOrder,
     findForNotUserId,
     findForOwner,
-    updatePathOrder
+    updatePathOrder,
+    findYourPathById,
+    togglePathItemCompletion,
+    togglePathCompletion,
+    findYourPathItemsForPath,
+    printsA
 }
+
+function printsA() {console.log('The letter A')}
 
 function find() 
 {
@@ -88,6 +95,34 @@ async function findById(id)
     }
 }
 
+async function findYourPathById(userId, pathId)
+{
+    try
+    {
+        let path = await db('paths').where({'id': pathId}).first()
+        
+        if(!path) return {message: 'No learning path found with that ID', code: 404}
+        path.tags = await getTagsForPath(pathId)
+        let tempCourses = await findCoursesForPath(pathId)
+        let pathCourses = []
+        for(let i = 0; i < tempCourses.length; i++)
+        {
+            let completionCourse = await Courses.findYoursById(userId, tempCourses[i].id)
+            pathCourses.push(completionCourse)
+        }
+        path.courses = pathCourses
+        path.pathItems = await findYourPathItemsForPath(userId, pathId)
+        path.creatorId = path.creator_id
+        // if(creatorId) path.creatorId = creatorId
+        return {path, code: 200}
+    }
+    catch(error)
+    {
+        console.log('error from findById', error)
+        return {message: error, code: 500}
+    }
+}
+
 async function getTagsForPath(pathId) 
 {
     let tagList = await db('paths as p')
@@ -133,6 +168,14 @@ function findPathItemsForPath(pathId)
     return db('path_items as pi').where({'pi.path_id': pathId})
 }
 
+function findYourPathItemsForPath(userId, pathId)
+{
+    return  db('path_items as pi')
+        .join('users_path_items as upi', 'upi.path_item_id', '=', 'pi.id')
+        .select('pi.*', 'upi.manually_completed', 'upi.automatically_completed')
+        .where({'pi.path_id': pathId, 'upi.user_id': userId})
+}
+
 async function addPathItem(userId, pathId, item)
 {
     let pathObj = await findById(pathId)
@@ -141,9 +184,10 @@ async function addPathItem(userId, pathId, item)
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     item.path_id = Number(pathId)
     console.log(item)
-    let insertIds = await db('path_items').insert(item, 'id')
-    console.log(insertIds)
-    return {code: 201, message: `item added to path`, id: insertIds[0] }
+    let addReturn = await db('path_items').insert(item, 'id')
+    console.log(addReturn)
+    updateUsersPathItemsOnItemAdd(addReturn[0], pathId)
+    return {code: 201, message: `item added to path`, id: addReturn[0] }
 }
 
 async function updatePathItem(userId, pathId, itemId, changes)
@@ -154,6 +198,25 @@ async function updatePathItem(userId, pathId, itemId, changes)
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     await db('path_items').where({id: itemId}).update(changes)
     return {code: 200, message: `path item with id ${itemId} updated`, id: itemId }
+}
+
+async function togglePathItemCompletion(userId, pathId, itemId)
+{
+    try 
+    {
+        let currentPathItem = await db('users_path_items as upi')
+            .where({'upi.user_id': userId, 'upi.path_item_id': itemId}).first()
+        console.log(`curpathit`, currentPathItem)
+        await db('users_path_items as upi')
+            .where({'upi.user_id': userId, 'upi.path_item_id': itemId})
+            .update({...currentPathItem, manually_completed: !currentPathItem.manually_completed})
+        Courses.cascadeUp(userId, itemId, 'pathItem')
+        return 1
+    }
+    catch(error)
+    {
+        return 0
+    }
 }
 
 async function deletePathItem(userId, pathId, itemId)
@@ -186,6 +249,40 @@ async function updatePathById(userId, pathId, changes)
     if(!path) return {message: 'No learning path found with that ID', code: 404}
     if(path.creatorId !== userId) return {message: 'User is not permitted to change this path', code: 403}
     await db('paths').where({id: pathId}).update(changes)
+    return {code: 200}
+}
+
+async function togglePathCompletion(userId, pathId)
+{
+    // First we update the path's manual completion
+    let pathObj = await findById(pathId)
+    let path = pathObj.path
+    if(!path) return {message: 'No learning path found with that ID', code: 404}
+    let curUserPath = await db('users_paths as up')
+        .where({'up.user_id': userId, 'up.path_id': pathId}).first()
+
+    let isCompleted = !curUserPath.manually_completed
+
+    await db('users_paths as up')
+        .where({'up.user_id': userId, 'up.path_id': pathId})
+        .update({...curUserPath, manually_completed: !curUserPath.manually_completed})
+
+    // Next, we update the path items in the path to be automatically completed
+    let pathItems = await findPathItemsForPath(pathId)
+    for(let i=0; i<pathItems.length; i++)
+    {
+        await db('users_path_items as ups')
+            .where({'ups.user_id': userId, 'ups.path_item_id': pathItems[i].id})
+            .update({automatically_completed: !curUserPath.manually_completed})
+    }
+
+    // Next we update the courses in the path to be automatically completed
+    let pathCourses = await findCoursesForPath(pathId)
+    for(let i=0; i<pathCourses.length; i++)
+    {
+        Courses.autoCourseCompleteToggle(userId, pathCourses[i].id, isCompleted)
+    }
+
     return {code: 200}
 }
 
@@ -370,8 +467,9 @@ async function addPathCourse(userId, pathId, courseId, path_order)
     if(!courseExists) return {message: 'Course not found', code: 404}
     else
     {
-        await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order })
+        let addReturn = await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order }, 'id')
         let pathCourses = await findCoursesForPath(pathId)
+        updateUsersCoursesOnCourseAdd(addReturn[0], pathId)
         return { message: 'Course added to path', code: 200, pathCourses }
     }
 }
@@ -466,3 +564,30 @@ async function updatePathOrder(userId, pathOrderArray)
     }
 }
 
+async function updateUsersCoursesOnCourseAdd(courseId, pathId)
+{
+    let pathUsers = await db('paths as p')
+        .join('users_paths as up', 'up.path_id', '=', 'p.id')
+        .select('up.user_id')
+        .where({'p.id': pathId})
+    let pathUsersIds = pathUsers.map(el => el.user_id)
+    for(let i=0; i < pathUsersIds.length; i++)
+    {
+        await db('users_courses')
+            .insert({user_id: pathUsersIds[i], course_id: courseId})
+    }
+}
+
+async function updateUsersPathItemsOnItemAdd(itemId, pathId)
+{
+    let pathUsers = await db('paths as p')
+        .join('users_paths as up', 'up.path_id', '=', 'p.id')
+        .select('up.user_id')
+        .where({'p.id': pathId})
+    let pathUsersIds = pathUsers.map(el => el.user_id)
+    for(let i=0; i < pathUsersIds.length; i++)
+    {
+        await db('users_path_items')
+            .insert({user_id: pathUsersIds[i], path_item_id: itemId})
+    }
+}

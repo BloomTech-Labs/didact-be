@@ -1330,3 +1330,115 @@
  * }
  * 
  */
+
+/**
+ * @api {put} /api/learning-paths/:id/path-items/:itemId/yours Toggle Learning Path Item Completion
+ * @apiName ToggleLearningPathItemCompletion
+ * @apiGroup Learning Path Items
+ *  
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {String} message A message that the learning path item completion has been toggled
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Learning path item completion has been toggled",
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to complete learning path Item for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to complete learning path Item for"
+ * }
+ * 
+ * @apiError (500) {Object} Complete-Learning-Path-Item-Error Could not complete learning path Item
+ * 
+ * @apiErrorExample 500-Complete-Learning-Path-Item-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not complete learning path Item"
+ * }
+ * 
+ */
+
+/**
+ * @api {put} /api/learning-paths/:id/yours Toggle Learning Path Completion
+ * @apiName ToggleLearningPathCompletion
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Object} Success A message that the Learning Path was toggled
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *     "message": "Learning path completion toggled"
+ *  }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} Find-User-Error Could not find user to toggle learning path completion for
+ * 
+ * @apiErrorExample 500-User-Not-Found:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to toggle learning path completion for"
+ * }
+ * 
+ * @apiError (500) {Object} Toggle-Learning-Path-Completion-Error Could not toggle learning path completion
+ * 
+ * @apiErrorExample 500-Learning Path-Edit-Error:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not toggle learning path completion"
+ * }
+ * 
+ */

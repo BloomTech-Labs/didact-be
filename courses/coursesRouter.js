@@ -34,6 +34,30 @@ router.get('/', (req, res) => {
         })
 })
 
+router.get('/:id/yours', (req, res) => {
+    const id = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user => {
+        if (user) {
+            Courses.findYoursById(user.id, id)
+            .then(response => {
+                if (response.code === 404) res.status(404).json({ message: response.message })
+                else res.status(200).json(response.course)
+            })
+            .catch(error => {
+                res.status(500).json({ message: 'Error connecting with server' })
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to get section for' })
+    })
+    .catch(err => 
+    {
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
 router.get('/:id', (req, res) => {
     const id = req.params.id
     Courses.findById(id)
@@ -94,7 +118,6 @@ router.put('/:id', (req, res) => {
     }
 })
 
-//TODO: Docs for this
 router.put('/:id/togglecomplete', (req, res) => {
     const courseId = req.params.id
     let email = req.user.email
@@ -219,6 +242,39 @@ router.get('/:id/sections', (req, res) => {
         })
 })
 
+router.get('/:id/yoursections', (req, res) => {
+    const courseId = req.params.id
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user => {
+        if (user) {
+            Courses.findById(courseId)
+            .then(response => {
+                if (response.code === 200) {
+                    Courses.findYourCourseSectionsByCourseId(user.id, courseId)
+                        .then(sections => res.status(200).json({ sections }))
+                        .catch(err => {
+                            console.log('500 err from get sections', err)
+                            res.status(500).json(err)
+                        })
+                } else {
+                    res.status(404).json({ message: `could not find a course with an id of ${courseId}` })
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                res.status(500).json(err)
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to get section for' })
+    })
+    .catch(err => 
+    {
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
 router.post('/:id/sections', (req, res) => {
     const courseId = req.params.id
     let email = req.user.email
@@ -267,7 +323,7 @@ router.put('/:id/sections/:section_id', (req, res) => {
         })
         .catch(err => res.status(500).json({ message: 'Could not find user to update section for' }))
 })
-//TODO: Docs for this
+
 router.put('/:id/sections/:section_id/togglecomplete', (req, res) => {
     const sectionId = req.params.section_id
     const courseId = req.params.id
@@ -372,7 +428,7 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
-            console.log(user)
+            // console.log(user)
             if (user) {
                 if (!req.body.changes) res.status(400).json({ message: 'Could not find changes in body' })
                 else {
@@ -391,7 +447,7 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
 
 })
 
-//TODO: Docs for this
+
 router.put('/:id/sections/:section_id/details/:detail_id/togglecomplete', (req, res) => {
     const courseId = req.params.id
     const sectionId = req.params.section_id
@@ -399,7 +455,7 @@ router.put('/:id/sections/:section_id/details/:detail_id/togglecomplete', (req, 
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
-            console.log(user)
+            // console.log(user)
             if (user) {
                 Courses.manualLessonCompleteToggle(user.id, courseId, sectionId, detailId)
                     .then(updateRes => {
