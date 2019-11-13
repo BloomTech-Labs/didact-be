@@ -588,9 +588,8 @@ async function findYoursById(userId, courseId)
         .select('uc.manually_completed', 'uc.automatically_completed')
         .where({'uc.course_id': courseId, 'uc.user_id': userId}).first()
 
-    retCourse.manually_completed = manAutComp.manually_completed
-    retCourse.automatically_completed = manAutComp.automatically_completed
-    
+    retCourse.course.manually_completed = manAutComp.manually_completed
+    retCourse.course.automatically_completed = manAutComp.automatically_completed
     return retCourse.course
 }
 
