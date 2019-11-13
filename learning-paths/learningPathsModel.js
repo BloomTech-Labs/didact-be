@@ -31,8 +31,6 @@ module.exports =
     printsA
 }
 
-function printsA() {console.log('The letter A')}
-
 function find() 
 {
     return db('paths')
