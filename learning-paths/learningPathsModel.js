@@ -31,11 +31,14 @@ module.exports =
     
 }
 
-function getUsernameByUserId(userId)
+async function getUsernameByUserId(userId)
 {
-    return db('users as u')
+    let nameObj = await db('users as u')
         .select('u.first_name', 'u.last_name')
         .where({'u.id': userId}).first()
+
+
+    return nameObj
 }
 
 function find() 
@@ -125,7 +128,7 @@ async function findYourPathById(userId, pathId)
         path.courses = pathCourses
         path.pathItems = await findYourPathItemsForPath(userId, pathId)
         path.creatorId = path.creator_id
-        path.creator = getUsernameByUserId(path.creator_id)
+        path.creator = await getUsernameByUserId(path.creatorId)
         // if(creatorId) path.creatorId = creatorId
         return {path, code: 200}
     }
