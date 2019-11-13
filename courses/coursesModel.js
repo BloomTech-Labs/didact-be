@@ -584,7 +584,14 @@ async function findYoursById(userId, courseId)
     let retCourse = await findById(courseId)
     retCourse.course.total = total
     retCourse.course.completed = completed
-    return retCourse
+    let manAutComp = await db('users_courses as uc')
+        .select('uc.manually_completed', 'uc.automatically_completed')
+        .where({'uc.course_id': courseId, 'uc.user_id': userId}).first()
+
+    retCourse.manually_completed = manAutComp.manually_completed
+    retCourse.automatically_completed = manAutComp.automatically_completed
+    
+    return retCourse.course
 }
 
 async function autoCourseCompleteToggle(userId, courseId, isPathCompleted)
