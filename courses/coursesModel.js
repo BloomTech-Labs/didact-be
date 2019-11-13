@@ -27,7 +27,8 @@ module.exports = {
     findYoursById,
     autoCourseCompleteToggle,
     itemCascadeUp,
-    cascadeUp
+    cascadeUp,
+    generateUdemyCourse
 }
 
 function find() {
@@ -213,11 +214,6 @@ async function deleteSectionDetails(userId, courseId, sectionId, detailId) {
         .where({id: detailId, course_sections_id: sectionId})
         .del()
     return {code: 200, message: 'delete successful'}
-}
-
-async function generateUdemyCourse(userId, title, courseId, courseArray)
-{
-    
 }
 
 async function lessonCascadeUp(userId, contentId)
@@ -685,4 +681,91 @@ async function updateUsersSectionsOnSectionAdd(sectionId, courseId)
             .insert({user_id: courseUsersIds[i], section_id: sectionId})
         await cascadeUp(courseUsersIds[i], sectionId, 'section')
     }
+}
+
+async function generateUdemyCourse(userId, link, results, details)
+{
+    let name = details.courseTitle
+    let foreign_instructors = ''
+    details.instructors.forEach((el, index) => 
+    {
+        if(details.instructors.length > 1 && index != details.instructors.length - 1)
+        {
+            foreign_instructors += el + ', '
+        }
+        else foreign_instructors += el
+    })
+
+    console.log('foreign_instructors', foreign_instructors)
+    console.log('name', name)
+
+    let courseObj =
+    {
+        name,
+        foreign_instructors,
+        link,
+        creator_id: userId
+    }
+
+    let courseId = await add(userId, courseObj)
+    courseId = courseId[0]
+
+    let sectionId
+    let sectionOrder = 1
+    let lessonOrder = 1
+
+    for(let i=0; i<results.length; i++)
+    {
+        if(results[i]._class === "chapter")
+        {
+            let section =
+            {
+                name: results[i].title,
+                description: results[i].description,
+                order: sectionOrder,
+            }
+            sectionOrder++,
+            lessonOrder = 1
+            sectionId = await addCourseSection(userId, courseId, section)
+            sectionId = sectionId.message[0]
+        }
+        else if (results[i]._class === "lecture")
+        {
+            let asset_type = ""
+            if (results[i].asset && results[i].asset.asset_type) asset_type = results[i].asset.asset_type
+
+            let lesson =
+            {
+                name: results[i].title,
+                description: results[i].description,
+                course_sections_id: sectionId,
+                order: lessonOrder,
+                link: `${link}learn/lecture/${results[i].id}`,
+                type: asset_type
+            }
+            lessonOrder++
+            lessonId = await addSectionDetails(userId, courseId, lesson)
+            lessonId = lessonId.message[0]
+        }
+        else if (results[i]._class === "quiz")
+        {
+
+            let lesson =
+            {
+                name: results[i].title,
+                description: results[i].description,
+                course_sections_id: sectionId,
+                order: lessonOrder,
+                link: `${link}learn/quiz/${results[i].id}`,
+                type: "quiz"
+            }
+            lessonOrder++
+            lessonId = await addSectionDetails(userId, courseId, lesson)
+            lessonId = lessonId[0]
+        }
+        // https://www.udemy.com/course/complete-react-developer-zero-to-mastery/learn/lecture/15081792#overview
+        // https://www.udemy.com/course/complete-react-developer-zero-to-mastery/
+    }
+
+    return db('courses').where({id: courseId}).first()
 }
