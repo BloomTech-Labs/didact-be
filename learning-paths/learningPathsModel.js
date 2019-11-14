@@ -480,6 +480,7 @@ async function addPathCourse(userId, pathId, courseId, path_order)
     if(!path) return {message: 'No path found with that ID', code: 404}
     if(path.creatorId !== userId) return {message: 'User is not permitted to add course to this path', code: 403}
     let courseExists = await findCourseById(courseId)
+    // console.log('a', courseExists)
     if(!courseExists) return {message: 'Course not found', code: 404}
     else
     {
@@ -587,10 +588,33 @@ async function updateUsersCoursesOnCourseAdd(courseId, pathId)
         .select('up.user_id')
         .where({'p.id': pathId})
     let pathUsersIds = pathUsers.map(el => el.user_id)
+
+    let courseUsers = await db('courses as c')
+        .join('users_courses as uc', 'uc.course_id',  '=', 'c.id')
+        .select('uc.user_id')
+        .where({'c.id': courseId})
+    
+    let courseUsersIds = courseUsers.map(el => el.user_id)
+
+    console.log('courseUserIds', courseUsersIds)
+    console.log('pathUsersIds', pathUsersIds)
+    
+    pathUsersIds = pathUsersIds.filter(el => !courseUsersIds.includes(el))
+    
+    console.log('filtered pathUsersIds', pathUsersIds)
+
     for(let i=0; i < pathUsersIds.length; i++)
     {
-        await db('users_courses')
-            .insert({user_id: pathUsersIds[i], course_id: courseId})
+
+        try
+        {
+            await db('users_courses')
+                .insert({user_id: pathUsersIds[i], course_id: courseId})
+        }
+        catch(error)
+        {
+
+        }
     }
 }
 
