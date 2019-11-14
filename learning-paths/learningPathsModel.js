@@ -58,6 +58,7 @@ async function findForUserId(userId)
     {
         console.log('userPaths', usersPaths[i].id)
         let yourPath = await findYourPathById(userId, usersPaths[i].id)
+        yourPath = yourPath.path
         let total = 0
         let completed = 0
         yourPath.path.courses.forEach(el => 
