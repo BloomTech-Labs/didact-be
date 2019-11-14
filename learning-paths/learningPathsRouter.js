@@ -46,7 +46,7 @@ router.get('/yours', (req, res) => {
                         res.status(200).json(response)
                     })
                     .catch(err => {
-                        res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+                        res.status(500).json({ message: 'Error, could not get learning paths' })
                     })
             }
             else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
