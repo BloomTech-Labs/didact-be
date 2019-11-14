@@ -204,12 +204,14 @@ function findPathItemsForPath(pathId)
     return db('path_items as pi').where({'pi.path_id': pathId})
 }
 
-function findYourPathItemsForPath(userId, pathId)
+async function findYourPathItemsForPath(userId, pathId)
 {
-    return  db('path_items as pi')
+    let retItems = await db('path_items as pi')
         .join('users_path_items as upi', 'upi.path_item_id', '=', 'pi.id')
         .select('pi.*', 'upi.manually_completed', 'upi.automatically_completed')
         .where({'pi.path_id': pathId, 'upi.user_id': userId})
+
+    return retItems
 }
 
 async function addPathItem(userId, pathId, item)
@@ -316,7 +318,7 @@ async function togglePathCompletion(userId, pathId)
     let pathCourses = await findCoursesForPath(pathId)
     for(let i=0; i<pathCourses.length; i++)
     {
-        Courses.autoCourseCompleteToggle(userId, pathCourses[i].id, isCompleted)
+        await Courses.autoCourseCompleteToggle(userId, pathCourses[i].id, isCompleted)
     }
 
     return {code: 200}

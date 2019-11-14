@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const hashCount = require('../utils/hashCount')
 const duplicateUser = require('../utils/duplicateUser')
+const restricted = require('../utils/restricted')
+const nodemailer = require('nodemailer')
 
 const secrets = require('../config/secret')
 
@@ -83,6 +85,64 @@ router.post('/', (req, res) => {
     }
 })
 
+router.post('/contactmessage', restricted, (req, res) => 
+{
+    if(!req.body.message || !req.body.email || !req.body.name) res.status(400).json({ message: 'body must include name, email, and message' })
+    else
+    {
+        let name = req.body.name
+        let email = req.body.email
+        let message = req.body.message
+
+        let emailMessage = 
+        {
+            from: `${process.env.EMAIL}`,
+            to: `${process.env.EMAIL}`,
+            subject: `Contact Us Message from ${name} at ${email}`,
+            text: `${message}`,
+            html: `<p>${message}</p>`
+        }
+
+        sendEmail(emailMessage)
+        .then(yay => res.status(201).json({ message: "You sent the message" }))
+        .catch(nay => res.status(500).json({ message: "Error! No message sent. Who knows?" }))
+
+    }
+})
+
+async function sendEmail(emailMessage)
+{
+    try
+    {
+        console.log('a')
+        // let testAccount = await nodemailer.createTestAccount();
+        console.log('b')
+        
+        let transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PASSWORD
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        })
+        console.log('c', transporter.options.auth)
+        
+        let info = await transporter.sendMail(emailMessage);
+        console.log('d')
+        console.log('info', info)
+        return 1
+    }
+    catch(err) {
+        console.log('err', err)
+        return 0
+    }
+}
+    
 function generateToken(user) {
     const payload = {
         email: user.email
