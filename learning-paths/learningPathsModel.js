@@ -53,12 +53,29 @@ async function findForUserId(userId)
         .select('p.id', 'p.name', 'p.description', 'p.category', 'p.creator_id', 'up.user_path_order')
         .where({'up.user_id': userId})
 
+    let yourPaths = []
     for(let i=0; i<usersPaths.length; i++)
     {
-        usersPaths[i].creator = await getUsernameByUserId(usersPaths[i].creator_id)
-
+        console.log('userPaths', usersPaths[i].id)
+        let yourPath = await findYourPathById(userId, usersPaths[i].id)
+        let total = 0
+        let completed = 0
+        yourPath.path.courses.forEach(el => 
+        {
+            total += el.total
+            completed += el.completed
+        })
+        yourPath.path.pathItems.forEach(el =>
+        {
+            total += 1
+            if(el.manually_completed || el.automatically_completed) completed++
+        })
+        yourPath.path.total = total
+        yourPath.path.completed = completed
+        yourPaths.push(yourPath)
     }
-    return usersPaths
+    return yourPaths
+    // return 1
 }
 
 async function findForOwner(userId)
