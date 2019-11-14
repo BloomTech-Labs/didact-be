@@ -484,7 +484,7 @@ async function addPathCourse(userId, pathId, courseId, path_order)
     if(!courseExists) return {message: 'Course not found', code: 404}
     else
     {
-        let addReturn = await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order }, 'id')
+        let addReturn = await db('paths_courses').insert({ course_id: courseId, path_id: pathId, path_order }, 'course_id')
         let pathCourses = await findCoursesForPath(pathId)
         updateUsersCoursesOnCourseAdd(addReturn[0], pathId)
         return { message: 'Course added to path', code: 200, pathCourses }
