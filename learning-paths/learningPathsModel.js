@@ -59,20 +59,21 @@ async function findForUserId(userId)
         console.log('userPaths', usersPaths[i].id)
         let yourPath = await findYourPathById(userId, usersPaths[i].id)
         yourPath = yourPath.path
+        console.log('c', yourPath)
         let total = 0
         let completed = 0
-        yourPath.path.courses.forEach(el => 
+        yourPath.courses.forEach(el => 
         {
             total += el.total
             completed += el.completed
         })
-        yourPath.path.pathItems.forEach(el =>
+        yourPath.pathItems.forEach(el =>
         {
             total += 1
             if(el.manually_completed || el.automatically_completed) completed++
         })
-        yourPath.path.total = total
-        yourPath.path.completed = completed
+        yourPath.total = total
+        yourPath.completed = completed
         yourPaths.push(yourPath)
     }
     return yourPaths
@@ -100,9 +101,10 @@ async function findForNotUserId(userId)
 {
     let allPaths = await find()
     let usersPaths = await findForUserId(userId)
+    console.log('usersPaths', usersPaths)
     usersPaths = usersPaths.map(el => el.id)
     let notUsersPaths = allPaths.filter(el => !usersPaths.includes(el.id) )
-    
+    console.log('notUsersPaths', notUsersPaths)
     return notUsersPaths
 }
 
