@@ -28,7 +28,17 @@ module.exports =
     togglePathItemCompletion,
     togglePathCompletion,
     findYourPathItemsForPath,
-    printsA
+    
+}
+
+async function getUsernameByUserId(userId)
+{
+    let nameObj = await db('users as u')
+        .select('u.first_name', 'u.last_name')
+        .where({'u.id': userId}).first()
+
+
+    return nameObj
 }
 
 function find() 
@@ -40,8 +50,14 @@ async function findForUserId(userId)
 {
     let usersPaths = await db('paths as p')
         .join('users_paths as up', 'up.path_id', '=', 'p.id')
-        .select('p.id', 'p.name', 'p.description', 'p.category', 'up.user_path_order')
+        .select('p.id', 'p.name', 'p.description', 'p.category', 'p.creator_id', 'up.user_path_order')
         .where({'up.user_id': userId})
+
+    for(let i=0; i<usersPaths.length; i++)
+    {
+        usersPaths[i].creator = await getUsernameByUserId(usersPaths[i].creator_id)
+
+    }
     return usersPaths
 }
 
@@ -106,11 +122,13 @@ async function findYourPathById(userId, pathId)
         for(let i = 0; i < tempCourses.length; i++)
         {
             let completionCourse = await Courses.findYoursById(userId, tempCourses[i].id)
+            completionCourse.path_order = tempCourses[i].path_order
             pathCourses.push(completionCourse)
         }
         path.courses = pathCourses
         path.pathItems = await findYourPathItemsForPath(userId, pathId)
         path.creatorId = path.creator_id
+        path.creator = await getUsernameByUserId(path.creatorId)
         // if(creatorId) path.creatorId = creatorId
         return {path, code: 200}
     }
