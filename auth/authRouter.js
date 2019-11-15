@@ -104,40 +104,64 @@ router.post('/contactmessage', restricted, (req, res) =>
         }
 
         sendEmail(emailMessage)
-        .then(yay => 
+        .then(info => 
         {
-            yay === 1 ? res.status(201).json({ message: "You sent the message" }) :
-                        res.status(500).json({ message: "Error! No message sent. Who knows?" })  
+            res.status(201).json({ message: "You sent the message" })
         })
-        .catch(nay => res.status(500).json({ message: "Error! No message sent. Who knows?" }))
+        .catch(error => res.status(500).json({ message: "Error! No message sent. Who knows?" }))
 
     }
 })
 
 async function sendEmail(emailMessage)
 {
-
-    console.log('email message', emailMessage)
-
-    let transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-        user: `${process.env.EMAIL}`,
-        pass: `${process.env.EMAIL_PASSWORD}`
+    try
+    {
+        let testAccount = await nodemailer.createTestAccount();
+    
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            // port: 587,
+            // secure: false, // true for 465, false for other ports
+            auth: {
+                user: testAccount.user, // generated ethereal user
+                pass: testAccount.pass // generated ethereal password
+            }
+        });
+    
+        // send mail with defined transport object
+        let info = await transporter.sendMail(emailMessage);
+        console.log(info)
+        return info
     }
-    });
 
-    let mailOptions = emailMessage
-    let retVal = 1
-    transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-            retVal = 0
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
-    return retVal
+    catch(error)
+    {
+        console.log(error)
+        return error
+    }
+    // console.log('email message', emailMessage)
+
+    // let transporter = nodemailer.createTransport({
+    // service: 'Gmail',
+    // auth: {
+    //     user: `${process.env.EMAIL}`,
+    //     pass: `${process.env.EMAIL_PASSWORD}`
+    // }
+    // });
+
+    // let mailOptions = emailMessage
+    // let retVal = 1
+    // transporter.sendMail(mailOptions, function(error, info){
+    //     if (error) {
+    //         retVal = 0
+    //         console.log(error);
+    //     } else {
+    //         console.log('Email sent: ' + info.response);
+    //     }
+    // });
+    // return retVal
 }
     
 function generateToken(user) {
