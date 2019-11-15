@@ -104,7 +104,11 @@ router.post('/contactmessage', restricted, (req, res) =>
         }
 
         sendEmail(emailMessage)
-        .then(yay => res.status(201).json({ message: "You sent the message" }))
+        .then(yay => 
+        {
+            yay === 1 ? res.status(201).json({ message: "You sent the message" }) :
+                        res.status(500).json({ message: "Error! No message sent. Who knows?" })  
+        })
         .catch(nay => res.status(500).json({ message: "Error! No message sent. Who knows?" }))
 
     }
@@ -112,9 +116,6 @@ router.post('/contactmessage', restricted, (req, res) =>
 
 async function sendEmail(emailMessage)
 {
-
-    // console.log('email', emailMessage)
-
     let transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -123,46 +124,17 @@ async function sendEmail(emailMessage)
     }
     });
 
-    // console.log('c', transporter.options.auth)
-
     let mailOptions = emailMessage
-
+    let retVal = 1
     transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-        console.log(error);
-        return 0
-    } else {
-        console.log('Email sent: ' + info.response);
-        return 1
-    }
+        if (error) {
+            retVal = 0
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
     });
-
-    // try
-    // {
-        
-    //     let transporter = nodemailer.createTransport({
-    //         service: 'Gmail',
-    //         port: 587,
-    //         secure: false,
-    //         auth: {
-    //             user: process.env.EMAIL,
-    //             pass: process.env.EMAIL_PASSWORD
-    //         },
-    //         tls: {
-    //             rejectUnauthorized: false
-    //         }
-    //     })
-    //     // console.log('c', transporter.options.auth)
-        
-    //     let info = await transporter.sendMail(emailMessage);
-    //     console.log('d')
-    //     console.log('info', info)
-    //     return 1
-    // }
-    // catch(err) {
-    //     console.log('err', err)
-    //     return 0
-    // }
+    return retVal
 }
     
 function generateToken(user) {
