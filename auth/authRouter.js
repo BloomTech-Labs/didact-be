@@ -116,6 +116,9 @@ router.post('/contactmessage', restricted, (req, res) =>
 
 async function sendEmail(emailMessage)
 {
+
+    console.log('email message', emailMessage)
+
     let transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
