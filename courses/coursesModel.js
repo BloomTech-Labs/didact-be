@@ -219,7 +219,7 @@ async function addSectionDetails(userId, courseId, details) {
         let addreturn = await db('section_details')
         .insert(details, 'id')
         // console.log('addreturn', addreturn)
-        updateUsersLessonsOnLessonAdd(addreturn[0], details.course_sections_id)
+        await updateUsersLessonsOnLessonAdd(addreturn[0], details.course_sections_id)
         return {code: 200, message: addreturn}
     }
         
