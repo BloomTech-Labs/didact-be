@@ -28,7 +28,8 @@ module.exports = {
     autoCourseCompleteToggle,
     itemCascadeUp,
     cascadeUp,
-    generateUdemyCourse
+    generateUdemyCourse,
+    findAllCoursesForUser
 }
 
 function find() {
@@ -42,6 +43,36 @@ async function findById(id)
     if(!course) return {message: 'No course found with that ID', code: 404}
     course.tags = await getTagsForCourse(id)
     return {course, code: 200}
+}
+
+async function findAllCoursesForUser(userId)
+{
+
+    let usersPaths = await db('users_paths as up').select('up.path_id').where({'up.user_id': userId})
+    usersPaths = usersPaths.map(el => el.path_id)
+
+    let courses = []
+    for(let i=0; i<usersPaths.length; i++)
+    {
+        let tempPathCourses = await db('paths_courses as pc')
+            .join('courses as c', 'pc.course_id', '=', 'c.id')
+            .join('users_courses as uc', 'uc.course_id', '=', 'c.id')
+            .select('c.*', 'uc.manually_completed', 'uc.automatically_completed')
+            .where({'pc.path_id': usersPaths[i], 'uc.user_id': userId})
+
+        tempPathCourses.forEach(el =>
+        {
+            let curCourseIds = courses.map(elem => elem.id)
+            if(!curCourseIds.includes(el.id)) courses.push(el)
+        })
+    }
+        
+    // let courses = await db('users_courses as uc')
+    //     .join('courses as c', 'uc.course_id', '=', 'c.id')
+    //     .select('c.*', 'uc.automatically_completed', 'uc.manually_completed')
+    //     .where({'uc.user_id': userId})
+
+    return courses
 }
 
 async function add(userId, courseObj)
