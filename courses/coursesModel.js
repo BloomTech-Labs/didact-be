@@ -29,7 +29,8 @@ module.exports = {
     itemCascadeUp,
     cascadeUp,
     generateUdemyCourse,
-    findAllCoursesForUser
+    findAllCoursesForUser,
+    checkDbForCourseUrl
 }
 
 function find() {
@@ -222,7 +223,6 @@ async function addSectionDetails(userId, courseId, details) {
         await updateUsersLessonsOnLessonAdd(addreturn[0], details.course_sections_id)
         return {code: 200, message: addreturn}
     }
-        
 }
 
 async function updateSectionDetails(userId, courseId, sectionId, detailId, changes) {
@@ -811,4 +811,13 @@ async function generateUdemyCourse(userId, link, results, details)
     }
 
     return db('courses').where({id: courseId}).first()
+}
+
+async function checkDbForCourseUrl(link)
+{
+    let course = await db('courses as c')
+        .where({link}).first()
+
+    if(!course) return {courseFound: false, id: -1}
+    else return {courseFound: true, id: course.id}
 }

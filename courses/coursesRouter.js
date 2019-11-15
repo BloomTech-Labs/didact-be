@@ -58,6 +58,35 @@ router.get('/allyours', (req, res) => {
     })
 })
 
+router.get('/checkdb', (req, res) =>
+{
+    let email = req.user.email
+    if(!req.body.link) res.status(400).json({ message: 'link is required' })
+    else
+    {
+        Users.findBy({ email })
+        .then(user => {
+            if (user) {
+                Courses.checkDbForCourseUrl(req.body.link)
+                .then(response => {
+                    res.status(200).json({ courseFound: response.courseFound, id: response.id })
+                })
+                .catch(error => {
+                    console.log(error)
+                    res.status(500).json({ message: 'Could not get courses' })
+                })
+            }
+            else res.status(500).json({ message: 'Could not find user to get courses for' })
+        })
+        .catch(err => 
+        {
+            console.log(err)
+            res.status(500).json({ message: 'Could not find user' })
+        })
+
+    }
+})
+
 router.get('/:id/yours', (req, res) => {
     const id = req.params.id
     let email = req.user.email
