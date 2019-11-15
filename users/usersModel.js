@@ -63,6 +63,7 @@ async function FBfindOrCreate(userObj) {
         let newUser = await db('users')
             .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID, photo: userObj.photo }, 'id')
         console.log(newUser)
+        await learningPath.joinLearningPath(newUser[0], 1, 1)
         return db('users').where({ id: newUser[0] }).first()
     }
     else {
@@ -93,6 +94,7 @@ async function GGLfindOrCreate(userObj) {
         let newUser = await db('users')
             .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, googleID: userObj.googleID, photo: userObj.photo }, 'id')
         console.log(newUser)
+        await learningPath.joinLearningPath(newUser[0], 1, 1)
         return db('users').where({ id: newUser[0] }).first()
     }
     else {
