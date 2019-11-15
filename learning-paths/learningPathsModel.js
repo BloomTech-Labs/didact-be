@@ -54,11 +54,12 @@ async function findForUserId(userId)
         .where({'up.user_id': userId})
 
     let yourPaths = []
+    console.log(usersPaths)
     for(let i=0; i<usersPaths.length; i++)
     {
-        console.log('userPaths', usersPaths[i].id)
         let yourPath = await findYourPathById(userId, usersPaths[i].id)
         yourPath = yourPath.path
+        yourPath.user_path_order = usersPaths[i].user_path_order
         console.log('c', yourPath)
         let total = 0
         let completed = 0
@@ -76,6 +77,7 @@ async function findForUserId(userId)
         yourPath.completed = completed
         yourPaths.push(yourPath)
     }
+    // console.log(yourPaths)
     return yourPaths
     // return 1
 }
