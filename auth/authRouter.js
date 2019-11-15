@@ -100,7 +100,7 @@ router.post('/contactmessage', restricted, (req, res) =>
             to: `${process.env.EMAIL}`,
             subject: `Contact Us Message from ${name} at ${email}`,
             text: `${message}`,
-            html: `<p>${message}</p>`
+            // html: `<p>${message}</p>`
         }
 
         sendEmail(emailMessage)
@@ -112,35 +112,57 @@ router.post('/contactmessage', restricted, (req, res) =>
 
 async function sendEmail(emailMessage)
 {
-    try
-    {
-        console.log('a')
-        // let testAccount = await nodemailer.createTestAccount();
-        console.log('b')
-        
-        let transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            port: 587,
-            secure: false,
-            auth: {
-                user: process.env.EMAIL,
-                pass: process.env.EMAIL_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        })
-        console.log('c', transporter.options.auth)
-        
-        let info = await transporter.sendMail(emailMessage);
-        console.log('d')
-        console.log('info', info)
+
+    // console.log('email', emailMessage)
+
+    let transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: `${process.env.EMAIL}`,
+        pass: `${process.env.EMAIL_PASSWORD}`
+    }
+    });
+
+    // console.log('c', transporter.options.auth)
+
+    let mailOptions = emailMessage
+
+    transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+        console.log(error);
+        return 0
+    } else {
+        console.log('Email sent: ' + info.response);
         return 1
     }
-    catch(err) {
-        console.log('err', err)
-        return 0
-    }
+    });
+
+    // try
+    // {
+        
+    //     let transporter = nodemailer.createTransport({
+    //         service: 'Gmail',
+    //         port: 587,
+    //         secure: false,
+    //         auth: {
+    //             user: process.env.EMAIL,
+    //             pass: process.env.EMAIL_PASSWORD
+    //         },
+    //         tls: {
+    //             rejectUnauthorized: false
+    //         }
+    //     })
+    //     // console.log('c', transporter.options.auth)
+        
+    //     let info = await transporter.sendMail(emailMessage);
+    //     console.log('d')
+    //     console.log('info', info)
+    //     return 1
+    // }
+    // catch(err) {
+    //     console.log('err', err)
+    //     return 0
+    // }
 }
     
 function generateToken(user) {
