@@ -141,10 +141,11 @@ async function addCourseSection(userId, courseId, section) {
     let course = courseObj.course
     if(!course) return {message: 'No course found with that ID', code: 404}
     if(course.creator_id !== userId) return {message: 'User is not permitted to add sections to this course', code: 403}
-    let addreturn = await db('course_sections')
+    section.course_id = courseId
+    let addReturn = await db('course_sections')
         .insert(section, 'id')
-    updateUsersSectionsOnSectionAdd(addreturn[0], courseId)
-    return {code: 201, message: addreturn}
+    await updateUsersSectionsOnSectionAdd(addReturn[0], courseId)
+    return {code: 201, message: addReturn}
 }
 
 async function updateCourseSection(userId, courseId, sectionId, changes) {
@@ -700,8 +701,8 @@ async function generateUdemyCourse(userId, link, results, details)
         else foreign_instructors += el
     })
 
-    console.log('foreign_instructors', foreign_instructors)
-    console.log('name', name)
+    // console.log('foreign_instructors', foreign_instructors)
+    // console.log('name', name)
 
     let courseObj =
     {
@@ -713,6 +714,7 @@ async function generateUdemyCourse(userId, link, results, details)
 
     let courseId = await add(userId, courseObj)
     courseId = courseId[0]
+    // console.log('courseId', courseId)
 
     let sectionId
     let sectionOrder = 1
@@ -722,16 +724,19 @@ async function generateUdemyCourse(userId, link, results, details)
     {
         if(results[i]._class === "chapter")
         {
+            console.log('section title', results[i].title)
             let section =
             {
                 name: results[i].title,
                 description: results[i].description,
                 order: sectionOrder,
             }
+            // console.log('section', section)
             sectionOrder++,
             lessonOrder = 1
             sectionId = await addCourseSection(userId, courseId, section)
             sectionId = sectionId.message[0]
+            console.log('sectionId', sectionId)
         }
         else if (results[i]._class === "lecture")
         {

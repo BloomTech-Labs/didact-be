@@ -27,7 +27,7 @@ router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
         .then(response =>
         {
             let courseId = (response.data.match(/course-id=\"(\d+)/))[1]
-            console.log(courseId)
+            // console.log(courseId)
             
             const config2 = 
             {
@@ -84,7 +84,7 @@ router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
 
 async function getPublicCurriculum(link, config2)
 {
-    console.log(`${link}?page=1&page_size=1`)
+    // console.log(`${link}?page=1&page_size=1`)
     try
     {
         let response = await axios.get(`${link}?page=1&page_size=1`)
@@ -99,7 +99,7 @@ async function getPublicCurriculum(link, config2)
             detResponse = await axios.get(`${link}?page=${i}&page_size=100`)
             results = results.concat(detResponse.data.results)
         }
-        console.log('results.length', results.length)
+        // console.log('results.length', results.length)
         return results
     }
     catch(err)
@@ -113,7 +113,7 @@ async function getPublicCurriculum(link, config2)
 
 async function getCoursesDetail(id)
 {
-    console.log(`https://www.udemy.com/api-2.0/courses/${id}`)
+    // console.log(`https://www.udemy.com/api-2.0/courses/${id}`)
     try
     {
         let response = await axios.get(`https://www.udemy.com/api-2.0/courses/${id}`)
