@@ -44,10 +44,13 @@ async function findById(id)
     return {course, code: 200}
 }
 
-function add(userId, courseObj)
+async function add(userId, courseObj)
 {
     courseObj.creator_id = userId
-    return db('courses').insert(courseObj, 'id')
+    let ids = await db('courses').insert(courseObj, 'id')
+    let courseId = ids[0]
+    await db('users_courses').insert({user_id: userId, course_id: courseId, manually_completed: false, automatically_completed: false})
+    return ids
 }
 
 async function updateCourseById(userId, courseId, changes)
