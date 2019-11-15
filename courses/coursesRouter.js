@@ -34,6 +34,30 @@ router.get('/', (req, res) => {
         })
 })
 
+router.get('/allyours', (req, res) => {
+    let email = req.user.email
+    Users.findBy({ email })
+    .then(user => {
+        if (user) {
+            Courses.findAllCoursesForUser(user.id)
+            .then(response => {
+                if (response.code === 404) res.status(404).json({ message: response.message })
+                else res.status(200).json(response)
+            })
+            .catch(error => {
+                console.log(error)
+                res.status(500).json({ message: 'Could not get all courses' })
+            })
+        }
+        else res.status(500).json({ message: 'Could not find user to get all courses for' })
+    })
+    .catch(err => 
+    {
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
 router.get('/:id/yours', (req, res) => {
     const id = req.params.id
     let email = req.user.email
@@ -50,7 +74,7 @@ router.get('/:id/yours', (req, res) => {
                 res.status(500).json({ message: 'Error connecting with server' })
             })
         }
-        else res.status(500).json({ message: 'Could not find user to get section for' })
+        else res.status(500).json({ message: 'Could not find user to get course for' })
     })
     .catch(err => 
     {
