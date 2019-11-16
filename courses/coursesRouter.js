@@ -58,16 +58,16 @@ router.get('/allyours', (req, res) => {
     })
 })
 
-router.get('/checkdb', (req, res) =>
+router.post('/checkdb', (req, res) =>
 {
     let email = req.user.email
-    if(!req.body.params.link) res.status(400).json({ message: 'link is required' })
+    if(!req.body.link) res.status(400).json({ message: 'link is required' })
     else
     {
         Users.findBy({ email })
         .then(user => {
             if (user) {
-                Courses.checkDbForCourseUrl(req.body.params.link)
+                Courses.checkDbForCourseUrl(req.body.link)
                 .then(response => {
                     res.status(200).json({ courseFound: response.courseFound, id: response.id })
                 })
