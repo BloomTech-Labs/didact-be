@@ -265,10 +265,17 @@ exports.up = function(knex) {
         tbl.primary(['user_id', 'section_detail_id'])
     })
     
+    .createTable('email_list', tbl =>
+    {
+        tbl.increments()
+        tbl.string('email', 500).unique().notNullable()
+    })
+
 };
 
 exports.down = function(knex) {
     return knex.schema
+        .dropTableIfExists('email_list')
         .dropTableIfExists('users_section_details')
         .dropTableIfExists('users_sections')
         .dropTableIfExists('users_courses')

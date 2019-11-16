@@ -10,7 +10,26 @@ const secrets = require('../config/secret')
 
 const Users = require('../users/usersModel')
 
+router.post('/emaillist', (req, res) =>
+{
+    if(!req.body.email) res.status(400).json({ message: 'Must send email' })
+    else
+    {
+        let email = req.body.email
+        Users.addToEmailList(email)
+        .then(response => res.status(201).json({ message: 'Email has been added to list' }))
+        .catch(err => res.status(500).json({ message: 'Internal Error: Could not add email' }))
+    }
+})
 
+//TODO make admin account, admin middleware, put it on this endpoint
+// Avoid email get for any random person. Only admin.
+// router.get('/emaillist', (req, res) =>
+// {
+//     Users.getEmailList()
+//     .then(response => res.status(200).json(response))
+//     .catch(err => res.status(500).json({ message: 'Internal Error: Could not get emails' }))
+// })
 
 router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
     let user = req.body

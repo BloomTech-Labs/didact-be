@@ -7,7 +7,9 @@ module.exports = {
     findById,
     findAll,
     FBfindOrCreate,
-    GGLfindOrCreate
+    GGLfindOrCreate,
+    addToEmailList,
+    getEmailList
 };
 
 function findBy(filter) {
@@ -101,3 +103,10 @@ async function GGLfindOrCreate(userObj) {
         return user[0]
     }
 }
+
+function addToEmailList(email)
+{
+    return db('email_list').insert({email})
+}
+
+function getEmailList() { return db('email_list') }
