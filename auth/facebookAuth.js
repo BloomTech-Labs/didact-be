@@ -48,10 +48,8 @@ router.get('/callback',
     // console.log({ token, id: req.user.id, email: req.user.email})
     // res.status(200).json({ token, id: req.user.id, email: req.user.email});
     // res.json(req.user)
-
-
-    // res.redirect(`https://staging-didact-fe.netlify.com/auth?token=${token}`)
-    res.redirect(`https://didactlms.com/auth?token=${token}`)
+    const redirectUrl = process.env.REDIRECT_URL
+    res.redirect(`${redirectUrl}/auth?token=${token}`)
   });
 
 function generateToken(user) {

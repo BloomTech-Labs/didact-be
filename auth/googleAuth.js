@@ -42,8 +42,9 @@ router.get('/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     function (req, res) {
         const token = generateToken(req.user)
-        // res.redirect(`https://staging-didact-fe.netlify.com/auth?token=${token}`)
-        res.redirect(`https://didactlms.com/auth?token=${token}`)
+        
+        const redirectUrl = process.env.REDIRECT_URL
+        res.redirect(`${redirectUrl}/auth?token=${token}`)
     });
 
 function generateToken(user) {

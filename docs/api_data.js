@@ -47,7 +47,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"User Created\",\n  \"token\": \"fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf\",\n  \"email\": \"doctest@example.com\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"fn9837f987fnh3987fn48fng98h\",\n  \"id\": 3,\n  \"email\": \"doctest@example.com\",\n  \"first_name\": \"Doc\",\n  \"last_name\": \"Test\"\n}",
           "type": "json"
         }
       ]
@@ -87,7 +87,119 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./auth/authRouter.js",
+    "filename": "./auth/authRouterDocs.js",
+    "groupTitle": "Authentication"
+  },
+  {
+    "type": "post",
+    "url": "/api/auth/",
+    "title": "Post Token For Verification",
+    "name": "PostTokenForVerification",
+    "group": "Authentication",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>The user's token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n  \"token\": \"1f1n3h87fh1938rfng9387fn\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "user",
+            "description": "<p>An object with the user id and username and token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"email\": \"doctest@example.com\",\n  \"id\": 3,\n  \"photo\": null,\n  \"first_name\": \"Doc\",\n  \"last_name\": \"Test\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The token is missing.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "Verify-Error",
+            "description": "<p>Token does not exist</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "User-Not-Found",
+            "description": "<p>The User Wasn't Found for the Token.</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not retrieve user.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"No token provided\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Verify-Error:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Token does not exist\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-User-Not-Found:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"No such user found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"message\": \"Internal server error, could not retrieve user\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./auth/authRouterDocs.js",
     "groupTitle": "Authentication"
   },
   {
@@ -152,7 +264,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 Created\n{\n  \"token\": \"fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf\",\n  \"id\": 3,\n  \"email\": \"doctest@example.com\"\n}",
+          "content": "HTTP/1.1 201 Created\n{\n  \"token\": \"fn9837f987fnh3987fn48fng98h\",\n  \"id\": 3,\n  \"email\": \"doctest@example.com\",\n  \"first_name\": \"Doc\",\n  \"last_name\": \"Test\"\n}",
           "type": "json"
         }
       ]
@@ -206,7 +318,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./auth/authRouter.js",
+    "filename": "./auth/authRouterDocs.js",
     "groupTitle": "Authentication"
   },
   {
@@ -236,6 +348,104 @@ define({ "api": [
     "group": "C__Users_Kaw_Documents_Labs_didact_be_docs_main_js",
     "groupTitle": "C__Users_Kaw_Documents_Labs_didact_be_docs_main_js",
     "name": ""
+  },
+  {
+    "type": "put",
+    "url": "/api/courses/:id/togglecomplete",
+    "title": "Toggle Course Completion",
+    "name": "ToggleCourseCompletion",
+    "group": "Course",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Course completion toggled\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to update course for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update course for&quot; }</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Course-Error",
+            "description": "<p>Internal Error: Could not toggle course completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle course completion&quot; }</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Course"
   },
   {
     "type": "delete",
@@ -370,7 +580,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -552,7 +762,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -702,7 +912,103 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Courses"
+  },
+  {
+    "type": "get",
+    "url": "/api/courses/allyours",
+    "title": "Get All Courses That User Is Signed Up For",
+    "name": "GetAllCoursesForUser",
+    "group": "Courses",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Array",
+            "optional": false,
+            "field": "Courses",
+            "description": "<p>An array of the courses for the user on the website</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n[\n  {\n    \"id\": 1,\n    \"name\": \"Learning How to Learn\",\n    \"link\": \"https://www.coursera.org/learn/learning-how-to-learn\",\n    \"description\": \"This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\\n\\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.\",\n    \"category\": null,\n    \"creator_id\": 1,\n    \"foreign_rating\": \"4.8 stars\",\n    \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski\",\n    \"manually_completed\": 0,\n    \"automatically_completed\": 0\n  },\n  {\n    \"id\": 2,\n    \"name\": \"Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential\",\n    \"link\": \"https://www.coursera.org/learn/mindshift\",\n    \"description\": \"Mindshift is designed to help boost your career and life in today’s fast-paced learning environment. Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs, how to seek out and work with mentors, the secrets to avoiding career ruts (and catastrophes) and general ruts in life, and insights such as the value of selective ignorance over general competence.  We’ll provide practical insights from science about how to learn and change effectively even in maturity, and we’ll build on what you already know to take your life’s learning in fantastic new directions.  This course is designed to show you how to look at what you’re learning, and your place in what’s unfolding in the society around you, so you can be what you want to be, given the real world constraints that life puts on us all. You’ll see that by using certain mental tools and insights, you can learn and do more—far more—than you might have ever dreamed! This course can be taken independent of, concurrent with, or subsequent to, its companion course, Learning How to Learn. (Mindshift is more career focused, and Learning How to Learn is more learning focused.)\",\n    \"category\": null,\n    \"creator_id\": 1,\n    \"foreign_rating\": \"4.8 stars\",\n    \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo\",\n    \"manually_completed\": 0,\n    \"automatically_completed\": 0\n  }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not retrieve courses</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not get all courses\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -812,7 +1118,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -940,7 +1246,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -1108,7 +1414,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -1278,7 +1584,199 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Courses"
+  },
+  {
+    "type": "post",
+    "url": "/api/udemy",
+    "title": "Post Udemy Course",
+    "name": "PostUdemyCourse",
+    "group": "Courses",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "link",
+            "description": "<p>The link of the course you want to create</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Course-Post-Example:",
+          "content": "{\n\t \"link\": \"https://www.udemy.com/course/complete-react-developer-zero-to-mastery/\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Course",
+            "description": "<p>The course generated by the posted link, along with a message that the course already exists</p>"
+          }
+        ],
+        "201": [
+          {
+            "group": "201",
+            "type": "Object",
+            "optional": false,
+            "field": "Course",
+            "description": "<p>The course generated by the posted link</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 201 Created\n{\n  \"id\": 4,\n  \"name\": \"JavaScript Animations with GreenSock (GSAP)\",\n  \"link\": \"https://www.udemy.com/course/javascript-animations-using-greensock/\",\n  \"description\": null,\n  \"category\": null,\n  \"creator_id\": 2,\n  \"foreign_rating\": null,\n  \"foreign_instructors\": \"David Sharkey\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Course already exists in Database\",\n  \"course\": {\n    \"id\": 4,\n    \"name\": \"JavaScript Animations with GreenSock (GSAP)\",\n    \"link\": \"https://www.udemy.com/course/javascript-animations-using-greensock/\",\n    \"description\": null,\n    \"category\": null,\n    \"creator_id\": 2,\n    \"foreign_rating\": null,\n    \"foreign_instructors\": \"David Sharkey\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "Missing-Link",
+            "description": "<p>The course link is absent</p>"
+          },
+          {
+            "group": "400",
+            "type": "String",
+            "optional": false,
+            "field": "Not-Udemy",
+            "description": "<p>The course link is not from Udemy</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Retrieve-Details-Error",
+            "description": "<p>Could not retrieve course details</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Add-Course-Error",
+            "description": "<p>Could not add course</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Retrieve-Course-Error",
+            "description": "<p>could not retrieve course</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to add course for</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Course-Missing:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"message\": \"No link present in post body\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "400-Not-Udemy:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"message\": \"Not a Udemy Link\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Retrieve-Details-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"error: could not retrieve course details\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Add-Course-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"internal error, could not add course\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Retrieve-Course-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"error: could not retrieve course\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Find-User-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to add Udemy course for\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/udemyCourseRouterDocs.js",
     "groupTitle": "Courses"
   },
   {
@@ -1383,7 +1881,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
   },
   {
@@ -1434,7 +1932,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n    \n  {\n      \"courseSection\": [\n          {\n              \"id\": 59,\n              \"name\": \"How to Become a Better Learner\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/f839b/how-to-become-a-better-learner\",\n              \"type\": \"video\",\n              \"order\": 1\n          },\n          {\n              \"id\": 60,\n              \"name\": \"Introduction to Renaissance Learning and Unlocking Your Potential\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/SIck3/introduction-to-renaissance-learning-and-unlocking-your-potential\",\n              \"type\": \"video\",\n              \"order\": 2\n          }\n      ]\n }\n}",
+          "content": "HTTP/1.1 200 OK   \n  {\n      \"courseSection\": [\n          {\n              \"id\": 59,\n              \"name\": \"How to Become a Better Learner\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/f839b/how-to-become-a-better-learner\",\n              \"type\": \"video\",\n              \"order\": 1\n          },\n          {\n              \"id\": 60,\n              \"name\": \"Introduction to Renaissance Learning and Unlocking Your Potential\",\n              \"course_sections_id\": 4,\n              \"description\": \"\",\n              \"link\": \"https://www.coursera.org/learn/learning-how-to-learn/lecture/SIck3/introduction-to-renaissance-learning-and-unlocking-your-potential\",\n              \"type\": \"video\",\n              \"order\": 2\n          }\n      ]\n }",
           "type": "json"
         }
       ]
@@ -1488,7 +1986,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
   },
   {
@@ -1579,7 +2077,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
   },
   {
@@ -1698,7 +2196,105 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Details"
+  },
+  {
+    "type": "put",
+    "url": "/api/courses/:id/sections/:section_id/details/:detail_id/togglecomplete",
+    "title": "Toggle Lesson Completion",
+    "name": "ToggleLessonCompletion",
+    "group": "Details",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Lesson completion toggled\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to update lesson for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update lesson for&quot; }</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Lesson-Error",
+            "description": "<p>Internal Error: Could not toggle lesson completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle lesson completion&quot; }</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
   },
   {
@@ -1834,7 +2430,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Path_Items"
   },
   {
@@ -2044,7 +2640,115 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
+    "groupTitle": "Learning_Path_Items"
+  },
+  {
+    "type": "put",
+    "url": "/api/learning-paths/:id/path-items/:itemId/yours",
+    "title": "Toggle Learning Path Item Completion",
+    "name": "ToggleLearningPathItemCompletion",
+    "group": "Learning_Path_Items",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>A message that the learning path item completion has been toggled</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Learning path item completion has been toggled\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to complete learning path Item for</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Complete-Learning-Path-Item-Error",
+            "description": "<p>Could not complete learning path Item</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-User-Not-Found:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to complete learning path Item for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Complete-Learning-Path-Item-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not complete learning path Item\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Path_Items"
   },
   {
@@ -2221,7 +2925,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Path_Items"
   },
   {
@@ -2357,7 +3061,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -2539,7 +3243,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -2689,7 +3393,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -2799,7 +3503,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -2915,7 +3619,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3011,7 +3715,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3099,7 +3803,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3267,7 +3971,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3435,7 +4139,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3605,7 +4309,149 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
+    "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "put",
+    "url": "/api/learning-paths",
+    "title": "Put Learning Paths Order For User",
+    "name": "PutLearningPathsOrderForUser",
+    "group": "Learning_Paths",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "pathOrderArray",
+            "description": "<p>An array of the path orders for the user.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Get Learning Paths By Tag",
+          "content": "{\n\t\"pathOrderArray\": \n\t[\n\t\t{\n\t\t\t\"pathId\": 1,\n\t\t\t\"userPathOrder\": 1\n\t\t},\n\t\t{\n\t\t\t\"pathId\": 2,\n\t\t\t\"userPathOrder\": 0\n\t\t}\n\t]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>A message confirming that the user's path orders were updated</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n{\n  \"message\": \"User's path order updated\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>The user must send a pathOrderArray</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Couldn",
+            "description": "<p>'t-Find-User Could not find the user to update for</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Update-Error",
+            "description": "<p>Could not update the learning path order</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"message\": \"must send pathOrderArray\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Couldn't-Find-User:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to update learning path order for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Update-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Internal error: Could not update learning path order\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3713,7 +4559,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -3861,7 +4707,115 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
+    "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "put",
+    "url": "/api/learning-paths/:id/yours",
+    "title": "Toggle Learning Path Completion",
+    "name": "ToggleLearningPathCompletion",
+    "group": "Learning_Paths",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Success",
+            "description": "<p>A message that the Learning Path was toggled</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n {\n    \"message\": \"Learning path completion toggled\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to toggle learning path completion for</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Learning-Path-Completion-Error",
+            "description": "<p>Could not toggle learning path completion</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-User-Not-Found:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to toggle learning path completion for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Learning Path-Edit-Error:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not toggle learning path completion\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
   },
   {
@@ -4029,8 +4983,106 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./learning-paths/learningPathsRouter.js",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
     "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "put",
+    "url": "/api/courses/:id/sections/:section_id/togglecomplete",
+    "title": "Toggle Section Completion",
+    "name": "ToggleSectionCompletion",
+    "group": "Section",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Section completion toggled\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to update section for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update section for&quot; }</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Section-Error",
+            "description": "<p>Internal Error: Could not toggle section completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle section completion&quot; }</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Section"
   },
   {
     "type": "delete",
@@ -4134,7 +5186,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Sections"
   },
   {
@@ -4239,7 +5291,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Sections"
   },
   {
@@ -4330,7 +5382,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Sections"
   },
   {
@@ -4449,7 +5501,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./courses/coursesRouter.js",
+    "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Sections"
   },
   {

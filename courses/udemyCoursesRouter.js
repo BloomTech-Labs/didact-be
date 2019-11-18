@@ -8,6 +8,7 @@ const Users = require('../users/usersModel')
 router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
 {
     // First we make sure the user is valid.
+    let email = req.user.email
     Users.findBy({ email })
     .then(user =>
     {
@@ -26,7 +27,7 @@ router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
         .then(response =>
         {
             let courseId = (response.data.match(/course-id=\"(\d+)/))[1]
-            console.log(courseId)
+            // console.log(courseId)
             
             const config2 = 
             {
@@ -39,28 +40,29 @@ router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
             }
 
             // let link = `https://www.udemy.com/api-2.0/courses/${courseId}/public-curriculum-items/?page=${page}&page_size=100`
-            let link = `https://www.udemy.com/api-2.0/courses/${courseId}/public-curriculum-items/`
+            let pubCurlink = `https://www.udemy.com/api-2.0/courses/${courseId}/public-curriculum-items/`
 
             // Then we go to the page, and get all of the results (sections, lessons)
-            getPublicCurriculum(link, config2)
-            .then(resp =>
+            getPublicCurriculum(pubCurlink, config2)
+            .then(results =>
             {
                 // If that worked, proceed
                 if(results)
                 {
-                    let results = resp
-                    // Now we get instructors for the course.
+                    // Now we get instructors and title for the course.
                     getCoursesDetail(courseId)
-                    .then(instructors =>
+                    .then(details =>
                     {
-                        if(instructors)
+                        if(details)
                         {
                             // Then, we send it to the model, for insertion into the DB, and send it to the user.
-                            Courses.addUdemyCourse(userId, results, instructors)
-                            .then(course => res.status(201).json(course))
+                            // res.status(200).json(results)
+                            Courses.generateUdemyCourse(userId, link, results, details)
+                            .then(course => res.status(200).json(course))
+                            // .then(course => res.status(201).json(course))
                             .catch(err => res.status(500).json({ message: 'internal error, could not add course' }))
                         }
-                        else res.status(500).json({ message: 'error: could not retrieve instructors' })
+                        else res.status(500).json({ message: 'error: could not retrieve course details' })
                     })
                 }
                 else res.status(500).json({ message: 'error: could not retrieve course' })
@@ -82,12 +84,12 @@ router.post('/', linkPresent, checkDbForLink, checkForUdemyLink, (req, res) =>
 
 async function getPublicCurriculum(link, config2)
 {
-    console.log(`${link}?page=1&page_size=1`)
+    // console.log(`${link}?page=1&page_size=1`)
     try
     {
         let response = await axios.get(`${link}?page=1&page_size=1`)
-        console.log('count', response.data.count)
-        console.log('Math.ceil(response.data.count/100)', Math.ceil(response.data.count/100))
+        // console.log('count', response.data.count)
+        // console.log('Math.ceil(response.data.count/100)', Math.ceil(response.data.count/100))
         // console.log('Math.Ceil(overview.count)', overview.count)
         let maxPages = Math.min(10, Math.ceil(response.data.count/100))
         let results = []
@@ -97,6 +99,7 @@ async function getPublicCurriculum(link, config2)
             detResponse = await axios.get(`${link}?page=${i}&page_size=100`)
             results = results.concat(detResponse.data.results)
         }
+        // console.log('results.length', results.length)
         return results
     }
     catch(err)
@@ -110,13 +113,14 @@ async function getPublicCurriculum(link, config2)
 
 async function getCoursesDetail(id)
 {
-    console.log(`https://www.udemy.com/api-2.0/courses/${id}`)
+    // console.log(`https://www.udemy.com/api-2.0/courses/${id}`)
     try
     {
         let response = await axios.get(`https://www.udemy.com/api-2.0/courses/${id}`)
-        console.log(`response from axios get detail`, response)
+        // console.log(`response from axios get detail`, response)
         let instructors = response.data.visible_instructors.map(el => el.display_name)
-        return instructors
+        let courseTitle = response.data.title
+        return {instructors, courseTitle}
     }
     catch(err)
     {

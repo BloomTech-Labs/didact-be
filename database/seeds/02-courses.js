@@ -4,7 +4,7 @@ exports.seed = function(knex, Promise)
     .insert(
         [
             {
-                name: "Learning How to Learn: Powerful mental tools to help you master tough subjects",
+                name: "Learning How to Learn",
                 link: "https://www.coursera.org/learn/learning-how-to-learn",
                 description: "This course gives you easy access to the invaluable learning techniques" +
                 " used by experts in art, music, literature, math, science, sports, and many other" +

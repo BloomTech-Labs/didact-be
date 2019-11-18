@@ -3,63 +3,47 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const hashCount = require('../utils/hashCount')
 const duplicateUser = require('../utils/duplicateUser')
+const restricted = require('../utils/restricted')
+const sgMail = require('@sendgrid/mail')
 
 const secrets = require('../config/secret')
 
 const Users = require('../users/usersModel')
 
-/**
- * @api {post} /api/auth/register Post User Registration
- * @apiName PostUser
- * @apiGroup Authentication
- * 
- * @apiParam {String} email The email of the new user
- * @apiParam {String} password The password of the new user
- * @apiParam {String} first_name The first_name of the new user
- * @apiParam {String} last_name The last_name of the new user
- * 
- * @apiParamExample {json} Request-Example:
- *  {
- *    "email": "doctest@example.com",
- *    "password": "blahblahblah",
- *    "first_name": "Doc",
- *    "last_name": "Test"
- *  }
- * 
- * @apiSuccess (201) {Object} user An object with the user id, email and token
- * 
- * @apiSuccessExample Success-Response:
- * HTTP/1.1 201 Created
- * {
- *   "token": "fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf",
- *   "id": 3,
- *   "email": "doctest@example.com"
- * }
- * 
- * @apiError (400) {Object} bad-request-error The username or password is missing.
- * 
- * @apiErrorExample 400-Error-Response:
- * HTTP/1.1 400 Bad Request
- * {
- *  "message": "email, password, first_name, and last_name are required"
- * }
- * 
- * @apiError (409) {Object} duplicate-email-error The email is already registered
- * 
- * @apiErrorExample 409-Error-Response:
- * HTTP/1.1 409 Conflict
- * {
- *  "message": "A user with that email already exists"
- * }
- * @apiError (500) {Object} internal-server-error The user couldn't be registered
- * 
- * @apiErrorExample 500-Error-Response:
- * HTTP/1.1 500 Internal-Server-Error
- * {
- *  "message": "Error connecting with server"
- * }
- * 
- */
+router.post('/emaillist', (req, res) =>
+{
+    if(!req.body.email) res.status(400).json({ message: 'Must send email' })
+    else
+    {
+        let email = req.body.email
+        Users.checkEmailListForEmail(email)
+        .then(emailResponse =>
+        {
+            console.log(emailResponse)
+            if(emailResponse) res.status(200).json({ message: 'Email was already in database' })
+            else 
+            {
+                Users.addToEmailList(email)
+                .then(response => res.status(201).json({ message: 'Email has been added to list' }))
+                .catch(err => res.status(500).json({ message: 'Internal Error: Could not add email' }))
+            }
+        })
+        .catch(error =>
+        {
+            
+            res.status(500).json({ message: 'Internal Error: Could not add email' })
+        })
+    }
+})
+
+//TODO make admin account, admin middleware, put it on this endpoint
+// Avoid email get for any random person. Only admin.
+// router.get('/emaillist', (req, res) =>
+// {
+//     Users.getEmailList()
+//     .then(response => res.status(200).json(response))
+//     .catch(err => res.status(500).json({ message: 'Internal Error: Could not get emails' }))
+// })
 
 router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
     let user = req.body
@@ -90,48 +74,6 @@ router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
             res.status(500).json({ message: 'Error connecting with server'})
         })
 })
-
-/**
- * @api {post} /api/auth/login Post User Login
- * @apiName PostLogin
- * @apiGroup Authentication
- * 
- * @apiParam {String} email The email of the existant user
- * @apiParam {String} password The password of the existant user
- * 
- * @apiParamExample {json} Request-Example:
- *  {
- *    "email": "doctest@example.com",
- *    "password": "blahblahblah"
- *  }
- * 
- * @apiSuccess (200) {Object} user An object with the user id and username and token
- * 
- * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 OK
- * {
- *   "message": "User Created",
- *   "token": "fkjhfbedof84g3ygf89fgy3qf0897yguf942u7fg84gf",
- *   "email": "doctest@example.com"
- * }
- * 
- * @apiError (400) {Object} bad-request-error The username or password is missing.
- * 
- * @apiErrorExample 400-Error-Response:
- * HTTP/1.1 400 Bad Request
- * {
- *  "message": "missing email or password"
- * }
- * 
- * @apiError (500) {Object} internal-server-error The user couldn't be logged in
- * 
- * @apiErrorExample 500-Error-Response:
- * HTTP/1.1 500 Internal-Server-Error
- * {
- *  "message": "Couldn't connect to login service"
- * }
- * 
- */
 
 router.post('/login', validateUserLogin, (req, res) => {
     let { email, password } = req.body
@@ -176,15 +118,37 @@ router.post('/', (req, res) => {
     }
 })
 
-router.get('/users', (req, res) => {
-    Users.findAll()
-        .then(users => {
-            res.json(users)
+router.post('/contactmessage', restricted, (req, res) => 
+{
+    if(!req.body.message || !req.body.email || !req.body.name) res.status(400).json({ message: 'body must include name, email, and message' })
+    else
+    {
+        let name = req.body.name
+        let email = req.body.email
+        let message = req.body.message
+
+        let emailMessage = 
+        {
+            from: `${email}`,
+            to: `${process.env.EMAIL}`,
+            subject: `Contact Us Message from ${name} at ${email}`,
+            text: `${message}`,
+            // html: `<p>${message}</p>`
+        }
+
+        
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+        
+        sgMail.send(emailMessage)
+        .then(response => 
+        {
+            res.status(201).json({ message: 'Email Sent' })
         })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({ message: `Couldn't get all users`})
+        .catch(error =>
+        {
+            res.status(500).json({ message: 'Error sending message' })
         })
+    }
 })
 
 function generateToken(user) {
@@ -193,10 +157,9 @@ function generateToken(user) {
     };
 
     const options = {
-        expiresIn: '1d'
+        expiresIn: '7d'
     }
     
-
     return jwt.sign(payload, secrets.jwtSecret, options)
 }
 

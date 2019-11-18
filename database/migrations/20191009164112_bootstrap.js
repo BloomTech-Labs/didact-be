@@ -64,6 +64,7 @@ exports.up = function(knex) {
         tbl.string('description', 1000)
         tbl.string('category', 125)
         tbl.integer('creator_id').notNullable()
+        tbl.string('font_awesome_name', 1000)
     })
     .createTable('path_items', tbl =>
     {
@@ -165,82 +166,120 @@ exports.up = function(knex) {
         
         tbl.boolean('created').notNullable().defaultTo(0)
         tbl.integer('rating').notNullable().defaultTo(0)
+        tbl.integer('user_path_order').notNullable()
+        tbl.boolean('manually_completed').notNullable().defaultTo(0)
+        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
 
         tbl.primary(['user_id', 'path_id'])
     })
 
-    // .createTable('users_section_details', tbl =>
-    // {
-    //     tbl
-    //         .integer('user_id')
-    //         .unsigned()
-    //         .references('id')
-    //         .inTable('users')
-    //         .onDelete('CASCADE')
-    //         .onUpdate('CASCADE')
-    //     tbl
-    //         .integer('section_details_id')
-    //         .unsigned()
-    //         .references('id')
-    //         .inTable('section_details')
-    //         .onDelete('CASCADE')
-    //         .onUpdate('CASCADE')
+    .createTable('users_path_items', tbl =>
+    {
+        tbl
+            .integer('user_id')
+            .unsigned()
+            .references('id')
+            .inTable('users')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+        tbl
+            .integer('path_item_id')
+            .unsigned()
+            .references('id')
+            .inTable('path_items')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
 
-    //     tbl.boolean('manually_completed').notNullable().defaultTo(0)
-    //     tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+        tbl.boolean('manually_completed').notNullable().defaultTo(0)
+        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
 
-    //     tbl.primary(['user_id', 'section_details_id'])
-    // })
+        tbl.primary(['user_id', 'path_item_id'])
+    })
 
-    // .createTable('users_sections', tbl =>
-    // {
-    //     tbl
-    //         .integer('user_id')
-    //         .unsigned()
-    //         .references('id')
-    //         .inTable('users')
-    //         .onDelete('CASCADE')
-    //         .onUpdate('CASCADE')
-    //     tbl
-    //         .integer('section_id')
-    //         .unsigned()
-    //         .references('id')
-    //         .inTable('course_sections')
-    //         .onDelete('CASCADE')
-    //         .onUpdate('CASCADE')
+    .createTable('users_courses', tbl =>
+    {
+        tbl
+            .integer('user_id')
+            .unsigned()
+            .references('id')
+            .inTable('users')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+        tbl
+            .integer('course_id')
+            .unsigned()
+            .references('id')
+            .inTable('courses')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
 
-    //     tbl.boolean('manually_completed').notNullable().defaultTo(0)
-    //     tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+        tbl.boolean('manually_completed').notNullable().defaultTo(0)
+        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
 
-    //     tbl.primary(['user_id', 'section_id'])
-    // })
+        tbl.primary(['user_id', 'course_id'])
+    })
 
-    // .createTable('users_courses', tbl =>
-    // {
-    //     tbl
-    //         .integer('user_id')
-    //         .unsigned()
-    //         .references('id')
-    //         .inTable('users')
-    //         .onDelete('CASCADE')
-    //         .onUpdate('CASCADE')
-    //     tbl
-    //         .integer('section_id')
-    //         .unsigned()
-    //         .references('id')
-    //         .inTable('course_sections')
-    //         .onDelete('CASCADE')
-    //         .onUpdate('CASCADE')
+    .createTable('users_sections', tbl =>
+    {
+        tbl
+            .integer('user_id')
+            .unsigned()
+            .references('id')
+            .inTable('users')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+        tbl
+            .integer('section_id')
+            .unsigned()
+            .references('id')
+            .inTable('course_sections')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
 
-    //     tbl.boolean('manually_completed').notNullable().defaultTo(0)
-    //     tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+        tbl.boolean('manually_completed').notNullable().defaultTo(0)
+        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
 
-    //     tbl.primary(['user_id', 'section_id'])
-    // })
+        tbl.primary(['user_id', 'section_id'])
+    })
+
+    .createTable('users_section_details', tbl =>
+    {
+        tbl
+            .integer('user_id')
+            .unsigned()
+            .references('id')
+            .inTable('users')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+        tbl
+            .integer('section_detail_id')
+            .unsigned()
+            .references('id')
+            .inTable('section_details')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+
+        tbl.boolean('manually_completed').notNullable().defaultTo(0)
+        tbl.boolean('automatically_completed').notNullable().defaultTo(0)
+
+        tbl.primary(['user_id', 'section_detail_id'])
+    })
+    
+    .createTable('email_list', tbl =>
+    {
+        tbl.increments()
+        tbl.string('email', 500).unique().notNullable()
+    })
+
 };
 
 exports.down = function(knex) {
     return knex.schema
+        .dropTableIfExists('email_list')
+        .dropTableIfExists('users_section_details')
+        .dropTableIfExists('users_sections')
+        .dropTableIfExists('users_courses')
+        .dropTableIfExists('users_path_items')
         .dropTableIfExists('users_paths')
         .dropTableIfExists('paths_courses')
         .dropTableIfExists('path_items')

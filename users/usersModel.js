@@ -1,4 +1,5 @@
 const db = require('../database/dbConfig');
+const learningPath = require('../learning-paths/learningPathsModel')
 
 module.exports = {
     add,
@@ -6,7 +7,10 @@ module.exports = {
     findById,
     findAll,
     FBfindOrCreate,
-    GGLfindOrCreate
+    GGLfindOrCreate,
+    addToEmailList,
+    getEmailList,
+    checkEmailListForEmail
 };
 
 function findBy(filter) {
@@ -16,8 +20,15 @@ function findBy(filter) {
         .first();
 }
 
-function add(user) {
-    return db('users').insert(user);
+// function add(user) {
+//     return db('users').insert(user);
+// }
+
+async function add(user) {
+    let userId = await db('users').insert(user, 'id');
+    console.log(userId)
+    await learningPath.joinLearningPath(userId[0], 1, 1)
+    return userId
 }
 
 function findById(id) {
@@ -55,6 +66,7 @@ async function FBfindOrCreate(userObj) {
         let newUser = await db('users')
             .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, facebookID: userObj.facebookID, photo: userObj.photo }, 'id')
         console.log(newUser)
+        await learningPath.joinLearningPath(newUser[0], 1, 1)
         return db('users').where({ id: newUser[0] }).first()
     }
     else {
@@ -85,9 +97,22 @@ async function GGLfindOrCreate(userObj) {
         let newUser = await db('users')
             .insert({ email: userObj.email, first_name: userObj.first_name, last_name: userObj.last_name, googleID: userObj.googleID, photo: userObj.photo }, 'id')
         console.log(newUser)
+        await learningPath.joinLearningPath(newUser[0], 1, 1)
         return db('users').where({ id: newUser[0] }).first()
     }
     else {
         return user[0]
     }
+}
+
+function addToEmailList(email)
+{
+    return db('email_list').insert({email})
+}
+
+function getEmailList() { return db('email_list') }
+
+function checkEmailListForEmail(email)
+{
+    return db('email_list').where({ email }).first()
 }
