@@ -110,3 +110,4 @@ function addToEmailList(email)
 }
 
 function getEmailList() { return db('email_list') }
+

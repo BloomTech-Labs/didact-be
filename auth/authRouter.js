@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const hashCount = require('../utils/hashCount')
 const duplicateUser = require('../utils/duplicateUser')
 const restricted = require('../utils/restricted')
-const nodemailer = require('nodemailer')
+const sgMail = require('@sendgrid/mail')
 
 const secrets = require('../config/secret')
 
@@ -115,49 +115,28 @@ router.post('/contactmessage', restricted, (req, res) =>
 
         let emailMessage = 
         {
-            from: `${process.env.EMAIL}`,
+            from: `${email}`,
             to: `${process.env.EMAIL}`,
             subject: `Contact Us Message from ${name} at ${email}`,
             text: `${message}`,
             // html: `<p>${message}</p>`
         }
 
-        sendEmail(emailMessage)
-        .then(info => 
+        
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+        
+        sgMail.send(emailMessage)
+        .then(response => 
         {
-            res.status(201).json({ message: "You sent the message" })
+            res.status(201).json({ message: 'Email Sent' })
         })
-        .catch(error => res.status(500).json({ message: "Error! No message sent. Who knows?" }))
-
+        .catch(error =>
+        {
+            res.status(500).json({ message: 'Error sending message' })
+        })
     }
 })
 
-async function sendEmail(emailMessage)
-{
-    
-    console.log('email message', emailMessage)
-
-    let transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-        user: `${process.env.EMAIL}`,
-        pass: `${process.env.EMAIL_PASSWORD}`
-    }
-    });
-
-    let mailOptions = emailMessage
-    let retVal = 1
-    transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-            retVal = 0
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
-    return retVal
-}
-    
 function generateToken(user) {
     const payload = {
         email: user.email
