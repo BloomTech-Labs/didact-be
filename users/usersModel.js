@@ -9,7 +9,8 @@ module.exports = {
     FBfindOrCreate,
     GGLfindOrCreate,
     addToEmailList,
-    getEmailList
+    getEmailList,
+    checkEmailListForEmail
 };
 
 function findBy(filter) {
@@ -111,3 +112,7 @@ function addToEmailList(email)
 
 function getEmailList() { return db('email_list') }
 
+function checkEmailListForEmail(email)
+{
+    return db('email_list').where({ email }).first()
+}

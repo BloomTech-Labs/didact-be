@@ -16,9 +16,23 @@ router.post('/emaillist', (req, res) =>
     else
     {
         let email = req.body.email
-        Users.addToEmailList(email)
-        .then(response => res.status(201).json({ message: 'Email has been added to list' }))
-        .catch(err => res.status(500).json({ message: 'Internal Error: Could not add email' }))
+        Users.checkEmailListForEmail(email)
+        .then(emailResponse =>
+        {
+            console.log(emailResponse)
+            if(emailResponse) res.status(200).json({ message: 'Email was already in database' })
+            else 
+            {
+                Users.addToEmailList(email)
+                .then(response => res.status(201).json({ message: 'Email has been added to list' }))
+                .catch(err => res.status(500).json({ message: 'Internal Error: Could not add email' }))
+            }
+        })
+        .catch(error =>
+        {
+            
+            res.status(500).json({ message: 'Internal Error: Could not add email' })
+        })
     }
 })
 
