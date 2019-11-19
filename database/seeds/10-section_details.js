@@ -1222,7 +1222,8 @@ exports.seed = function (knex, Promise) {
                     link: "",
                     type: "text",
                     order: 2,
-                },
+                }
+                
             ]
         )
 }

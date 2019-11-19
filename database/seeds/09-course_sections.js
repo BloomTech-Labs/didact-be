@@ -9,6 +9,7 @@ exports.seed = function (knex, Promise) {
                     link: "https://www.coursera.org/learn/learning-how-to-learn/home/week/1",
                     order: 1,
                 },
+                
                 {
                     name: "Chunking",
                     course_id: 1,
@@ -116,7 +117,38 @@ exports.seed = function (knex, Promise) {
                     course_id: 3,
                     description: "Performance is not about working 24/7 until you burn out. Learn why burnout is a sign that you're not performing well and how to prevent it.",
                     order: 7,
+                }, 
+                //Introduction to Marketing
+                {
+                    name: "BRANDING:  Marketing Strategy and Brand Positioning",
+                    course_id: 4,
+                    description: "",
+                    order: 1
                 },
+                {
+                    name: "CUSTOMER CENTRICITY: The Limits of Product-Centric Thinking & The Opportunities and Challenges of Customer Centricity",
+                    course_id: 4,
+                    description: "",
+                    order: 2
+                },
+                {
+                    name: "GO TO MARKET STRATEGIES: Online-Offline Interaction & How to Find Lead Users and Facilitate Influence and Contagion",
+                    course_id: 4,
+                    description: "",
+                    order: 3
+                },
+                {
+                    name: "BRANDING: Effective Brand Communications Strategies and Repositioning Strategies",
+                    course_id: 4,
+                    description: "",
+                    order: 4
+                },
+                {
+                    name: "Applied Marketing (Optional)",
+                    course_id: 4,
+                    description: "",
+                    order: 5
+                }
             ]
         )
      }
