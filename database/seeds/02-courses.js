@@ -42,6 +42,13 @@ exports.seed = function(knex, Promise)
                 foreign_instructors: "Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo",
                 foreign_rating: "4.8 stars",
             },
+            {
+            name: "AbyssMind Performance Email Course",
+            link: "https://www.abyssmind.com/performance/try](https://www.abyssmind.com/performance/try",
+            description: "AbyssMind is a learning outcomes program that helps you understand the skills and techniques needed to succeed in your self-directed learning ambitions.  Sign up", 
+            creator_id: 2,
+            foreign_instructors: "AbyssMind"
+            }
 
         ]
     )

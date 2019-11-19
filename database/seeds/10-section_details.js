@@ -1203,7 +1203,26 @@ exports.seed = function (knex, Promise) {
                     type: "video",
                     order: 18,
                 },
+                // Abyssmind lessons
                 
+                {
+                    name: "AbyssMind Email Day 7 Part 1",
+                    course_sections_id: 15,
+                    description: "",
+                    link: "",
+                    type: "text",
+                    order: 1,
+                },
+
+
+                {
+                    name: "AbyssMind Email Day 7 Part 2",
+                    course_sections_id: 15,
+                    description: "",
+                    link: "",
+                    type: "text",
+                    order: 2,
+                },
             ]
         )
 }

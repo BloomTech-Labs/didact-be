@@ -63,6 +63,60 @@ exports.seed = function (knex, Promise) {
                     link: "https://www.coursera.org/learn/mindshift/home/week/4",
                     order: 4,
                 },
+                
+                // Abyssmind sections
+                {
+                    name: "Day 1",
+                    course_id: 3,
+                    description: "Why do you want to achieve your project? Discover the power of self-awareness!",
+                    order: 1,
+                },
+
+
+                {
+                    name: "Day 2",
+                    course_id: 3,
+                    description: "When it's about work, what matters is not the quantity but the quality. Learn the rules of focus in a distracted world.",
+                    order: 2,
+                },
+
+                {
+                    name: "Day 3",
+                    course_id: 3,
+                    description: "Time is precious, so managing your time is the key. Keep a healthy work/life balance while still have those peak performance.",
+                    order: 3,
+                },
+
+                {
+                    name: "Day 4",
+                    course_id: 3,
+                    description: "What's the point of being focused if you don't have energy? Understand your willpower.",
+                    order: 4,
+                },
+
+
+                {
+                    name: "Day 5",
+                    course_id: 3,
+                    description: "Your project is a marathon, not a sprint. Learn how to keep motivation over time.",
+                    order: 5,
+                },
+
+
+                {
+                    name: "Day 6",
+                    course_id: 3,
+                    description: "Let's talk about learning! See why at AbyssMind, we believe that knowledge is nothing compared to actions.",
+                    order: 6,
+                },
+
+
+                {
+                    name: "Day 7",
+                    course_id: 3,
+                    description: "Performance is not about working 24/7 until you burn out. Learn why burnout is a sign that you're not performing well and how to prevent it.",
+                    order: 7,
+                },
             ]
         )
-}
+     }
