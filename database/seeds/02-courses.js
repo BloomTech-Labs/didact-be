@@ -46,7 +46,7 @@ exports.seed = function(knex, Promise)
             name: "AbyssMind Performance Email Course",
             link: "https://www.abyssmind.com/performance/try](https://www.abyssmind.com/performance/try",
             description: "AbyssMind is a learning outcomes program that helps you understand the skills and techniques needed to succeed in your self-directed learning ambitions.  Sign up", 
-            creator_id: 2,
+            creator_id: 1,
             foreign_instructors: "AbyssMind"
             }
 

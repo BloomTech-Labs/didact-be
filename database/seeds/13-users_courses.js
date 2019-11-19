@@ -27,6 +27,12 @@ exports.seed = function(knex, Promise)
                 manually_completed: false,
                 automatically_completed: false
             },
+            {
+                user_id: 2,
+                course_id: 3,
+                manually_completed: false,
+                automatically_completed: false
+            },
         ]
     )
 }
