@@ -1,74 +1,28 @@
-🚫 Note: All lines that start with 🚫 are instructions and should be deleted before this is posted to your portfolio. This is intended to be a guideline. Feel free to add your own flare to it.
-
-🚫 The numbers 1️⃣ through 3️⃣ next to each item represent the week that part of the docs needs to be comepleted by.  Make sure to delete the numbers by the end of Labs.
-
-🚫 Each student has a required minimum number of meaningful PRs each week per the rubric.  Contributing to docs does NOT count as a PR to meet your weekly requirements.
-
 # API Documentation
 
-#### 1️⃣ Backend delpoyed at [🚫name service here](🚫add URL here) <br>
+#### Backend delpoyed at [Heroku](https://dashboard.heroku.com/apps/didactlms) <br>
 
-## 1️⃣ Getting started
+## Getting started
 
 To get the server running locally:
-
-🚫 adjust these scripts to match your project
 
 - Clone this repo
 - **yarn install** to install all required dependencies
 - **yarn server** to start the local server
 - **yarn test** to start server using testing environment
+- **yarn docs** to create/update the apidoc page
 
-### Backend framework goes here
+### Express
 
-🚫 Why did you choose this framework?
+-    We knew how to use it
+-    It's lightweight
+-    Works with nodejs
+-    Many useful packages
 
--    Point One
--    Point Two
--    Point Three
--    Point Four
-
-## 2️⃣ Endpoints
-
-🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
-
-#### Organization Routes
-
-| Method | Endpoint                | Access Control | Description                                  |
-| ------ | ----------------------- | -------------- | -------------------------------------------- |
-| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |
-| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |
-| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |
-
-#### User Routes
-
-| Method | Endpoint                | Access Control      | Description                                        |
-| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/users/current`        | all users           | Returns info for the logged in user.               |
-| GET    | `/users/org/:userId`    | owners, supervisors | Returns all users for an organization.             |
-| GET    | `/users/:userId`        | owners, supervisors | Returns info for a single user.                    |
-| POST   | `/users/register/owner` | none                | Creates a new user as owner of a new organization. |
-| PUT    | `/users/:userId`        | owners, supervisors |                                                    |
-| DELETE | `/users/:userId`        | owners, supervisors |                                                    |
+## [Back-End API Docs](https://didactlms.herokuapp.com/api/docs/)
 
 # Data Model
 
-🚫This is just an example. Replace this with your data model
-
-#### 2️⃣ ORGANIZATIONS
-
----
-
-```
-{
-  id: UUID
-  name: STRING
-  industry: STRING
-  paid: BOOLEAN
-  customer_id: STRING
-  subscription_id: STRING
-}
-```
 
 #### USERS
 
@@ -76,45 +30,401 @@ To get the server running locally:
 
 ```
 {
-  id: UUID
-  organization_id: UUID foreign key in ORGANIZATIONS table
+  id: INTEGER
   first_name: STRING
   last_name: STRING
-  role: STRING [ 'owner', 'supervisor', 'employee' ]
   email: STRING
-  phone: STRING
-  cal_visit: BOOLEAN
-  emp_visit: BOOLEAN
-  emailpref: BOOLEAN
-  phonepref: BOOLEAN
+  password: STRING
+  facebookID: STRING
+  googleID: STRING
+  slackID: STRING
+  photo: STRING
 }
 ```
 
-## 2️⃣ Actions
+#### COURSES
 
-🚫 This is an example, replace this with the actions that pertain to your backend
+---
 
-`getOrgs()` -> Returns all organizations
+```
+{
+  id: INTEGER
+  name: STRING
+  link: STRING
+  description: STRING
+  category: STRING
+  creator_id: INTEGER
+  foreign_rating: STRING
+  foreign_instructors: STRING
+}
+```
 
-`getOrg(orgId)` -> Returns a single organization by ID
+#### COURSE_SECTIONS
 
-`addOrg(org)` -> Returns the created org
+---
 
-`updateOrg(orgId)` -> Update an organization by ID
+```
+{
+  id: INTEGER
+  name: STRING
+  course_id: INTEGER
+  description: STRING
+  link: STRING
+  order: INTEGER
+}
+```
 
-`deleteOrg(orgId)` -> Delete an organization by ID
+#### SECTION_DETAILS
+
+---
+
+```
+{
+  id: INTEGER
+  name: STRING
+  course_sections_id: INTEGER
+  description: STRING
+  link: STRING
+  type: STRING
+  order: INTEGER
+}
+```
+
+#### PATHS
+
+---
+
+```
+{
+  id: INTEGER
+  name: STRING
+  description: STRING
+  category: STRING
+  creator_id: INTEGER
+  font_awesome_name: STRING
+}
+```
+
+#### PATH_ITEMS
+
+---
+
+```
+{
+  id: INTEGER
+  path_id: INTEGER
+  name: STRING
+  description: STRING
+  link: STRING
+  type: STRING
+  path_order: INTEGER
+}
+```
+
+#### TAGS
+
+---
+
+```
+{
+  id: INTEGER
+  name: STRING
+}
+```
+
+#### TAGS_COURSES
+
+---
+
+```
+{
+  tag_id: INTEGER
+  course_id: INTEGER
+}
+```
+
+#### TAGS_PATHS
+
+---
+
+```
+{
+  tag_id: INTEGER
+  path_id: INTEGER
+}
+```
+
+#### PATHS_COURSES
+
+---
+
+```
+{
+  path_id: INTEGER
+  course_id: INTEGER
+  path_order: INTEGER
+}
+```
+
+#### USERS_PATHS
+
+---
+
+```
+{
+  user_id: INTEGER
+  path_id: INTEGER
+  created: BOOLEAN
+  rating: INTEGER
+  user_path_order: INTEGER
+  manually_completed: BOOLEAN
+  automatically_completed: BOOLEAN
+}
+```
+
+#### USERS_PATH_ITEMS
+
+---
+
+```
+{
+  user_id: INTEGER
+  path_item_id: INTEGER
+  manually_completed: BOOLEAN
+  automatically_completed: BOOLEAN
+}
+```
+
+#### USERS_COURSES
+
+---
+
+```
+{
+  user_id: INTEGER
+  course_id: INTEGER
+  manually_completed: BOOLEAN
+  automatically_completed: BOOLEAN
+}
+```
+
+#### USERS_SECTIONS
+
+---
+
+```
+{
+  user_id: INTEGER
+  section_id: INTEGER
+  manually_completed: BOOLEAN
+  automatically_completed: BOOLEAN
+}
+```
+
+#### USERS_SECTION_DETAILS
+
+---
+
+```
+{
+  user_id: INTEGER
+  section_detail_id: INTEGER
+  manually_completed: BOOLEAN
+  automatically_completed: BOOLEAN
+}
+```
+
+#### EMAIL_LIST
+
+---
+
+```
+{
+  id: INTEGER
+  email: STRING
+}
+```
+
+##  Actions
+
+Function names are such that for most, you know what they do.
+
+#### USERS
+
+  `add(user)` -> adds a user to the database
+
+  `findBy(filter)` -> finds users by filter
+
+  `findById(id)` -> finds user by id
+
+  `findAll()` -> finds all users
+
+  `FBfindOrCreate(userObj)` -> finds or creates a user from facebook userObj
+
+  `GGLfindOrCreate(userObj)` -> finds or creates a user from google userObj
+
+  `addToEmailList(email)` -> adds email to list
+
+  `getEmailList()` -> gets email list
+
+  `checkEmailListForEmail(email)` -> checks email list for email
+
+
 <br>
 <br>
 <br>
-`getUsers(orgId)` -> if no param all users
 
-`getUser(userId)` -> Returns a single user by user ID
+#### COURSES
 
-`addUser(user object)` --> Creates a new user and returns that user. Also creates 7 availabilities defaulted to hours of operation for their organization.
+  `find()` -> finds courses
 
-`updateUser(userId, changes object)` -> Updates a single user by ID.
+  `findById(id)` -> finds course by id
 
-`deleteUser(userId)` -> deletes everything dependent on the user
+  `add(userId, courseObj)` -> adds course to db
+
+  `updateCourseById(userId, courseId, changes)` -> 
+
+  `deleteCourseById(userId, courseId)` -> 
+
+  `addCourseTag(userId, courseId, tag)` -> 
+
+  `deleteCourseTag(userId, courseId, tag)` -> 
+
+  `getTagsForCourse(courseId)` -> 
+
+  `findCourseSectionsByCourseId(id)` -> 
+
+  `findSectionDetailsByCourseSectionsId(id)` -> 
+
+  `addCourseSection(userId, courseId, section)` -> 
+
+  `updateCourseSection(userId, courseId, sectionId, changes)` -> 
+
+  `deleteCourseSection(userId, courseId, sectionId)` -> 
+
+  `addSectionDetails(userId, courseId, details)` -> 
+
+  `updateSectionDetails(userId, courseId, sectionId, detailId, changes)` -> 
+
+  `deleteSectionDetails(userId, courseId, sectionId, detailId)` -> 
+
+  `manualLessonCompleteToggle(userId, courseId, sectionId, sectionDetailId)` -> 
+
+  `manualSectionCompleteToggle(userId, courseId, sectionId)` -> 
+
+  `manualCourseCompleteToggle(userId, courseId)` -> 
+
+  `getLessonsWithUserCompletion(userId, sectionId)` -> 
+
+  `findYourCourseSectionsByCourseId(userId, courseId)` -> 
+
+  `findYoursById(userId, courseId)` -> 
+
+  `autoCourseCompleteToggle(userId, courseId, isPathCompleted)` -> 
+
+  `itemCascadeUp(userId, contentId)` -> checks if learning path is complete when completing an item
+
+  `cascadeUp(userId, contentId, contentType)` -> checks for general upwards completion when completing something
+
+  `generateUdemyCourse(userId, link, results, details)` -> 
+
+  `findAllCoursesForUser(userId)` -> 
+
+  `checkDbForCourseUrl(link)` -> 
+
+
+  
+<br>
+<br>
+<br>
+
+#### TAGS
+
+`find()` -> finds all tags
+
+<br>
+<br>
+<br>
+
+#### LEARNING PATHS
+
+`getUsernameByUserId(userId)` -> 
+
+`find() ` -> 
+
+`findForUserId(userId)` -> 
+
+`findForOwner(userId)` -> 
+
+`findForNotUserId(userId)` -> 
+
+`findById(id)` -> 
+
+`findYourPathById(userId, pathId)` -> 
+
+`getTagsForPath(pathId) ` -> 
+
+`getCreatorIdForPath(pathId)` -> 
+
+`findCoursesForPath(pathId)` -> 
+
+`findPathItemsForPath(pathId)` -> 
+
+`findYourPathItemsForPath(userId, pathId)` -> 
+
+`addPathItem(userId, pathId, item)` -> 
+
+`updatePathItem(userId, pathId, itemId, changes)` -> 
+
+`togglePathItemCompletion(userId, pathId, itemId)` -> 
+
+`deletePathItem(userId, pathId, itemId)` -> 
+
+`add(userId, path, order)` -> 
+
+`updatePathById(userId, pathId, changes)` -> 
+
+`togglePathCompletion(userId, pathId)` -> 
+
+`deletePathById(userId, pathId)` -> 
+
+`joinLearningPath(userId, pathId, order)` -> 
+
+`addUserPathItem(userId, pathItemId)` -> 
+
+`addUserCourse(userId, courseId)` -> 
+
+`addUserSection(userId, sectionId)` -> 
+
+`addUserSectionDetail(userId, sectionDetailId)` -> 
+
+`quitLearningPath(userId, pathId)` -> 
+
+`checkForTag(tagName)` -> 
+
+`addPathTag(userId, pathId, tag)` -> 
+
+`deletePathTag(userId, pathId, tag)` -> 
+
+`findCourseById(id)` -> 
+
+`addPathCourse(userId, pathId, courseId, path_order)` -> 
+
+`removePathCourse(userId, pathId, courseId)` -> 
+
+`updateCourseOrder(userId, pathId, courseId, path_order)` -> 
+
+`updateContentOrder(userId, pathId, content)` -> 
+
+`updatePathOrder(userId, pathOrderArray)` -> 
+
+`updateUsersCoursesOnCourseAdd(courseId, pathId)` -> 
+
+`updateUsersPathItemsOnItemAdd(itemId, pathId)` -> 
+
+<br>
+<br>
+<br>
 
 ## 3️⃣ Environment Variables
 
@@ -122,13 +432,21 @@ In order for the app to function correctly, the user must set up their own envir
 
 create a .env file that includes the following:
 
-🚫 These are just examples, replace them with the specifics for your app
     
-    *  STAGING_DB - optional development db for using functionality not available in SQLite
-    *  NODE_ENV - set to "development" until ready for "production"
-    *  JWT_SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-*=+)') for i in range(50)])
-    *  SENDGRID_API_KEY - this is generated in your Sendgrid account
-    *  stripe_secret - this is generated in the Stripe dashboard
+   * DB_ENV - production, development, testing, staging
+   * JWT_SECRET - a secret for signing json web tokens
+   * FACEBOOK_APP_ID - facebook id for our app
+   * FACEBOOK_APP_SECRET - facebook secret for auth
+   * GOOGLE_APP_ID - google id for our app
+   * GOOGLE_APP_SECRET - google secret for auth
+   * YOUR_CLIENT_ID - app id for udemy
+   * YOUR_CLIENT_SECRET - app secret for udemy
+   * Authorization - authorization for udemy
+   * REDIRECT_URL - whether we're hitting front-end staging or master deploy
+   * EMAIL - our app email
+   * EMAIL_PASSWORD - our app password
+   * SENDGRID_API_KEY - our app sendgrid api key
+   * SENDGRID_BASE64_CONVERSION - our app sendgrid api key converted to base64
     
 ## Contributing
 
@@ -168,5 +486,4 @@ These contribution guidelines have been adapted from [this good-Contributing.md-
 
 ## Documentation
 
-See [Frontend Documentation](🚫link to your frontend readme here) for details on the fronend of our project.
-🚫 Add DS iOS and/or Andriod links here if applicable.
+See [Frontend Documentation](https://github.com/Lambda-School-Labs/didact-fe/blob/master/README.md) for details on the fronend of our project.
