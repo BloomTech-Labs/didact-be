@@ -31,18 +31,38 @@
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
  * 
- *  [
- *      {
- *          "id": 1,
- *          "name": "Learning How to Learn: Powerful mental tools to help you master tough subjects",
- *          "link": "https://www.coursera.org/learn/learning-how-to-learn",
- *          "description": "This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\n\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.",
- *          "category": null,
- *          "creator_id": 1,
- *          "foreign_rating": "4.8 stars",
- *          "foreign_instructors": "Dr. Barbara Oakley, Dr. Terrence Sejnowski"
- *        }
- *  ]
+ * [
+ *   {
+ *     "id": 1,
+ *     "name": "Learning How to Learn",
+ *     "link": "https://www.coursera.org/learn/learning-how-to-learn",
+ *     "description": "This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\n\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.",
+ *     "category": null,
+ *     "creator_id": 1,
+ *     "foreign_rating": "4.8 stars",
+ *     "foreign_instructors": "Dr. Barbara Oakley, Dr. Terrence Sejnowski"
+ *   },
+ *   {
+ *     "id": 2,
+ *     "name": "Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential",
+ *     "link": "https://www.coursera.org/learn/mindshift",
+ *     "description": "Mindshift is designed to help boost your career and life in today’s fast-paced learning environment. Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs, how to seek out and work with mentors, the secrets to avoiding career ruts (and catastrophes) and general ruts in life, and insights such as the value of selective ignorance over general competence.  We’ll provide practical insights from science about how to learn and change effectively even in maturity, and we’ll build on what you already know to take your life’s learning in fantastic new directions.  This course is designed to show you how to look at what you’re learning, and your place in what’s unfolding in the society around you, so you can be what you want to be, given the real world constraints that life puts on us all. You’ll see that by using certain mental tools and insights, you can learn and do more—far more—than you might have ever dreamed! This course can be taken independent of, concurrent with, or subsequent to, its companion course, Learning How to Learn. (Mindshift is more career focused, and Learning How to Learn is more learning focused.)",
+ *     "category": null,
+ *     "creator_id": 1,
+ *     "foreign_rating": "4.8 stars",
+ *     "foreign_instructors": "Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo"
+ *   },
+ *   {
+ *     "id": 3,
+ *     "name": "AbyssMind Performance Email Course",
+ *     "link": "https://www.abyssmind.com/performance/try](https://www.abyssmind.com/performance/try",
+ *     "description": "AbyssMind is a learning outcomes program that helps you understand the skills and techniques needed to succeed in your self-directed learning ambitions.  Sign up",
+ *     "category": null,
+ *     "creator_id": 2,
+ *     "foreign_rating": null,
+ *     "foreign_instructors": "AbyssMind"
+ *   }
+ * ]
  * 
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
@@ -72,8 +92,8 @@
  */
 
 /**
- * @api {get} /api/courses/allyours Get All Courses That User Is Signed Up For
- * @apiName GetAllCoursesForUser
+ * @api {post} /api/courses/checkdb Check Database For Course With Link
+ * @apiName CheckDatabaseForCourseWithLink
  * @apiGroup Courses
  * 
  * @apiHeader {string} Content-Type the type of content being sent
@@ -85,38 +105,21 @@
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiSuccess (200) {Array} Courses An array of the courses for the user on the website
+ * @apiParam {String} link The link of the course you want to check
+ * 
+ * @apiParamExample {json} Check-Database-For-Link-Example:
+ * { 
+ * 	 "link": "fakelink.com",
+ * }
+ * 
+ * @apiSuccess (200) {Object} CourseFoundObject an object detailing whether the course was found
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
- * 
- * [
- *   {
- *     "id": 1,
- *     "name": "Learning How to Learn",
- *     "link": "https://www.coursera.org/learn/learning-how-to-learn",
- *     "description": "This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\n\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.",
- *     "category": null,
- *     "creator_id": 1,
- *     "foreign_rating": "4.8 stars",
- *     "foreign_instructors": "Dr. Barbara Oakley, Dr. Terrence Sejnowski",
- *     "manually_completed": 0,
- *     "automatically_completed": 0
- *   },
- *   {
- *     "id": 2,
- *     "name": "Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential",
- *     "link": "https://www.coursera.org/learn/mindshift",
- *     "description": "Mindshift is designed to help boost your career and life in today’s fast-paced learning environment. Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs, how to seek out and work with mentors, the secrets to avoiding career ruts (and catastrophes) and general ruts in life, and insights such as the value of selective ignorance over general competence.  We’ll provide practical insights from science about how to learn and change effectively even in maturity, and we’ll build on what you already know to take your life’s learning in fantastic new directions.  This course is designed to show you how to look at what you’re learning, and your place in what’s unfolding in the society around you, so you can be what you want to be, given the real world constraints that life puts on us all. You’ll see that by using certain mental tools and insights, you can learn and do more—far more—than you might have ever dreamed! This course can be taken independent of, concurrent with, or subsequent to, its companion course, Learning How to Learn. (Mindshift is more career focused, and Learning How to Learn is more learning focused.)",
- *     "category": null,
- *     "creator_id": 1,
- *     "foreign_rating": "4.8 stars",
- *     "foreign_instructors": "Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo",
- *     "manually_completed": 0,
- *     "automatically_completed": 0
- *   }
- * ]
- * 
+ * {
+ *        "courseFound": false,
+ *        "id": -1
+ * }
  * 
  * @apiError (401) {Object} bad-request-error The authorization header is absent
  * 
@@ -134,12 +137,100 @@
  *  "message": "Invalid Credentials"
  * }
  * 
- * @apiError (500) {Object} internal-server-error Could not retrieve courses
+ * @apiError (500) {Object} internal-server-error Could not get courses
  * 
  * @apiErrorExample 500-Error-Response:
  * HTTP/1.1 500 Internal Server Error
  * {
- *  "message": "Could not get all courses"
+ *  "message": "Could not get courses"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Could not find user to get courses for
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user to get courses for"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Could not find user
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Could not find user"
+ * }
+ * 
+ */
+
+/**
+ * @api {get} /api/courses/:id/yours Get Course by ID The User Is In Learning Path For
+ * @apiName GetCourseByIDYours
+ * @apiGroup Courses
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {object} Course An object of the course matching the id param
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "id": 2,
+ *   "name": "Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential",
+ *   "link": "https://www.coursera.org/learn/mindshift",
+ *   "description": "Mindshift is designed to help boost your career and life in today’s fast-paced learning environment. Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs, how to seek out and work with mentors, the secrets to avoiding career ruts (and catastrophes) and general ruts in life, and insights such as the value of selective ignorance over general competence.  We’ll provide practical insights from science about how to learn and change effectively even in maturity, and we’ll build on what you already know to take your life’s learning in fantastic new directions.  This course is designed to show you how to look at what you’re learning, and your place in what’s unfolding in the society around you, so you can be what you want to be, given the real world constraints that life puts on us all. You’ll see that by using certain mental tools and insights, you can learn and do more—far more—than you might have ever dreamed! This course can be taken independent of, concurrent with, or subsequent to, its companion course, Learning How to Learn. (Mindshift is more career focused, and Learning How to Learn is more learning focused.)",
+ *   "category": null,
+ *   "creator_id": 1,
+ *   "foreign_rating": "4.8 stars",
+ *   "foreign_instructors": "Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo",
+ *   "tags": [
+ *     "Video",
+ *     "Coursera",
+ *     "Free"
+ *   ],
+ *   "total": 69,
+ *   "completed": 0,
+ *   "manually_completed": 0,
+ *   "automatically_completed": 0
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {Object} Course-Not-Found The course isn't in the database
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Course Not Found
+ * {
+ *  "message": "No course found with that ID"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Could not retrieve course
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Error connecting with server"
  * }
  * 
  */
@@ -681,7 +772,108 @@
  *  "message": "could not find a course with an id of 4"
  * }
  * 
- * @apiError (500) {Object} Find-Section-Error Could not find section to get course for
+ * @apiError (500) {Object} Find-Section-Error Could not find user to get sections for
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "message": "Could not find user to get section for"
+ * }
+ * 
+ */
+
+/**
+ * @api {get} /api/courses/:id/yoursections Get Your Course Sections
+ * @apiName GetYourCourseSections
+ * @apiGroup Sections
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Array} Sections an array of the course sections for the user
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "sections": [
+ *     {
+ *       "id": 5,
+ *       "name": "Change IS possible",
+ *       "course_id": 2,
+ *       "description": "In today's world, change is the only constant. This means that whatever stage you are in life, you need to keep yourself open and able to change. How can you do this? In three ways: Learn more about your hidden capabilities and assets. Learn more about learning effectively. Learn about matching your assets with the opportunities that face you. In this week, we'll dive into these three important areas!",
+ *       "link": "https://www.coursera.org/learn/mindshift/home/week/1",
+ *       "order": 1,
+ *       "manually_completed": 0,
+ *       "automatically_completed": 0
+ *     },
+ *     {
+ *       "id": 6,
+ *       "name": "Getting deeper into happy learning",
+ *       "course_id": 2,
+ *       "description": "Key to your ability to mindshift is being able to learn effectively. This week, we’ll dive deeper into this vital area. Getting yourself motivated to tackle procrastination can sometimes be a challenge in learning, so we’ll give you some important tips here. But we’ll also give insights into mental tricks to help you focus, relax, and reframe if stress intrudes. We’ll also show you how to avoid common learning pitfalls. Welcome and enjoy!",
+ *       "link": "https://www.coursera.org/learn/mindshift/home/week/2",
+ *       "order": 2,
+ *       "manually_completed": 0,
+ *       "automatically_completed": 0
+ *     },
+ *     {
+ *       "id": 7,
+ *       "name": "Learning and careers",
+ *       "course_id": 2,
+ *       "description": "This week, we’ll be talking about how your own career can develop and change through your life. Your own internal feelings about what you want to do can play a critical role in your long-term happiness. But society and culture can also have a dramatic effect on your career choices and decisions—as can your parents, family, and friends. We’ll talk about second-skilling yourself, and developing a talent stack of average talents that can combine into a formidable asset. We’ll also talk about various tactics and techniques to help you survive career changes and upheavals. Welcome and enjoy!",
+ *       "link": "https://www.coursera.org/learn/mindshift/home/week/3",
+ *       "order": 3,
+ *       "manually_completed": 0,
+ *       "automatically_completed": 0
+ *     },
+ *     {
+ *       "id": 8,
+ *       "name": "Adopting a learning lifestyle",
+ *       "course_id": 2,
+ *       "description": "In this final week of the course, we'll be exploring how and why to keep yourself in 'mindshift' mode. We'll give you all sorts of insider tips on how to pick out the best online learning with materials that are right for you. And we'll also talk about other ways of learning—ways that can make you 'the smartest person in the room. Disruption lies ahead in the world—this week, we'll help you seize the advantage. Off we go for our final week of Mindshift!",
+ *       "link": "https://www.coursera.org/learn/mindshift/home/week/4",
+ *       "order": 4,
+ *       "manually_completed": 0,
+ *       "automatically_completed": 0
+ *     }
+ *   ]
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (404) {Object} not-found-error could not find a course with the passed in id
+ * 
+ * @apiErrorExample 404-Error-Response:
+ * HTTP/1.1 404 Not Found
+ * {
+ *  "message": "could not find a course with an id of 4"
+ * }
+ * 
+ * @apiError (500) {Object} Find-Section-Error Could not find user to get sections for
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "message": "Could not find user to get section for"
+ * }
  * 
  */
 
@@ -1110,7 +1302,7 @@
 /**
  * @api {put} /api/courses/:id/sections/:section_id/togglecomplete Toggle Section Completion
  * @apiName ToggleSectionCompletion
- * @apiGroup Section
+ * @apiGroup Sections
  * 
  * @apiHeader {string} Content-Type the type of content being sent
  * @apiHeader {string} token User's token for authorization
@@ -1162,7 +1354,7 @@
 /**
  * @api {put} /api/courses/:id/togglecomplete Toggle Course Completion
  * @apiName ToggleCourseCompletion
- * @apiGroup Course
+ * @apiGroup Courses
  * 
  * @apiHeader {string} Content-Type the type of content being sent
  * @apiHeader {string} token User's token for authorization

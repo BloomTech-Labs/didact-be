@@ -350,11 +350,11 @@
     "name": ""
   },
   {
-    "type": "put",
-    "url": "/api/courses/:id/togglecomplete",
-    "title": "Toggle Course Completion",
-    "name": "ToggleCourseCompletion",
-    "group": "Course",
+    "type": "post",
+    "url": "/api/courses/checkdb",
+    "title": "Check Database For Course With Link",
+    "name": "CheckDatabaseForCourseWithLink",
+    "group": "Courses",
     "header": {
       "fields": {
         "Header": [
@@ -382,6 +382,26 @@
         }
       ]
     },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "link",
+            "description": "<p>The link of the course you want to check</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Check-Database-For-Link-Example:",
+          "content": "{ \n\t \"link\": \"fakelink.com\",\n}",
+          "type": "json"
+        }
+      ]
+    },
     "success": {
       "fields": {
         "200": [
@@ -389,15 +409,15 @@
             "group": "200",
             "type": "Object",
             "optional": false,
-            "field": "Updated",
-            "description": "<p>message</p>"
+            "field": "CourseFoundObject",
+            "description": "<p>an object detailing whether the course was found</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Course completion toggled\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n       \"courseFound\": false,\n       \"id\": -1\n}",
           "type": "json"
         }
       ]
@@ -418,15 +438,8 @@
             "group": "500",
             "type": "Object",
             "optional": false,
-            "field": "Find-User-Error",
-            "description": "<p>Could not find user to update course for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update course for&quot; }</p>"
-          },
-          {
-            "group": "500",
-            "type": "Object",
-            "optional": false,
-            "field": "Toggle-Course-Error",
-            "description": "<p>Internal Error: Could not toggle course completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle course completion&quot; }</p>"
+            "field": "internal-server-error",
+            "description": "<p>Could not get courses</p>"
           }
         ]
       },
@@ -440,12 +453,27 @@
           "title": "401-Error-Response:",
           "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
           "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not get courses\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user to get courses for\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not find user\"\n}",
+          "type": "json"
         }
       ]
     },
     "version": "0.0.0",
     "filename": "./courses/coursesRouterDocs.js",
-    "groupTitle": "Course"
+    "groupTitle": "Courses"
   },
   {
     "type": "delete",
@@ -917,102 +945,6 @@
   },
   {
     "type": "get",
-    "url": "/api/courses/allyours",
-    "title": "Get All Courses That User Is Signed Up For",
-    "name": "GetAllCoursesForUser",
-    "group": "Courses",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "string",
-            "optional": false,
-            "field": "Content-Type",
-            "description": "<p>the type of content being sent</p>"
-          },
-          {
-            "group": "Header",
-            "type": "string",
-            "optional": false,
-            "field": "token",
-            "description": "<p>User's token for authorization</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "200": [
-          {
-            "group": "200",
-            "type": "Array",
-            "optional": false,
-            "field": "Courses",
-            "description": "<p>An array of the courses for the user on the website</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n\n[\n  {\n    \"id\": 1,\n    \"name\": \"Learning How to Learn\",\n    \"link\": \"https://www.coursera.org/learn/learning-how-to-learn\",\n    \"description\": \"This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\\n\\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.\",\n    \"category\": null,\n    \"creator_id\": 1,\n    \"foreign_rating\": \"4.8 stars\",\n    \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski\",\n    \"manually_completed\": 0,\n    \"automatically_completed\": 0\n  },\n  {\n    \"id\": 2,\n    \"name\": \"Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential\",\n    \"link\": \"https://www.coursera.org/learn/mindshift\",\n    \"description\": \"Mindshift is designed to help boost your career and life in today’s fast-paced learning environment. Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs, how to seek out and work with mentors, the secrets to avoiding career ruts (and catastrophes) and general ruts in life, and insights such as the value of selective ignorance over general competence.  We’ll provide practical insights from science about how to learn and change effectively even in maturity, and we’ll build on what you already know to take your life’s learning in fantastic new directions.  This course is designed to show you how to look at what you’re learning, and your place in what’s unfolding in the society around you, so you can be what you want to be, given the real world constraints that life puts on us all. You’ll see that by using certain mental tools and insights, you can learn and do more—far more—than you might have ever dreamed! This course can be taken independent of, concurrent with, or subsequent to, its companion course, Learning How to Learn. (Mindshift is more career focused, and Learning How to Learn is more learning focused.)\",\n    \"category\": null,\n    \"creator_id\": 1,\n    \"foreign_rating\": \"4.8 stars\",\n    \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo\",\n    \"manually_completed\": 0,\n    \"automatically_completed\": 0\n  }\n]",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "401": [
-          {
-            "group": "401",
-            "type": "Object",
-            "optional": false,
-            "field": "bad-request-error",
-            "description": "<p>The authorization header is absent</p>"
-          }
-        ],
-        "500": [
-          {
-            "group": "500",
-            "type": "Object",
-            "optional": false,
-            "field": "internal-server-error",
-            "description": "<p>Could not retrieve courses</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "401-Error-Response:",
-          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "401-Error-Response:",
-          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "500-Error-Response:",
-          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Could not get all courses\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./courses/coursesRouterDocs.js",
-    "groupTitle": "Courses"
-  },
-  {
-    "type": "get",
     "url": "/api/courses/:id",
     "title": "Get Course by ID",
     "name": "GetCourseByID",
@@ -1060,6 +992,116 @@
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n {\n    \"id\": 1,\n    \"name\": \"Learning How to Learn: Powerful mental tools to help you master tough subjects\",\n    \"link\": \"https://www.coursera.org/learn/learning-how-to-learn\",\n    \"description\": \"This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\\n\\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.\",\n    \"category\": null,\n    \"creator_id\": 1,\n    \"foreign_rating\": \"4.8 stars\",\n    \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "Course-Not-Found",
+            "description": "<p>The course isn't in the database</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not retrieve course</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response:",
+          "content": "HTTP/1.1 404 Course Not Found\n{\n \"message\": \"No course found with that ID\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Error connecting with server\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Courses"
+  },
+  {
+    "type": "get",
+    "url": "/api/courses/:id/yours",
+    "title": "Get Course by ID The User Is In Learning Path For",
+    "name": "GetCourseByIDYours",
+    "group": "Courses",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "object",
+            "optional": false,
+            "field": "Course",
+            "description": "<p>An object of the course matching the id param</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"id\": 2,\n  \"name\": \"Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential\",\n  \"link\": \"https://www.coursera.org/learn/mindshift\",\n  \"description\": \"Mindshift is designed to help boost your career and life in today’s fast-paced learning environment. Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs, how to seek out and work with mentors, the secrets to avoiding career ruts (and catastrophes) and general ruts in life, and insights such as the value of selective ignorance over general competence.  We’ll provide practical insights from science about how to learn and change effectively even in maturity, and we’ll build on what you already know to take your life’s learning in fantastic new directions.  This course is designed to show you how to look at what you’re learning, and your place in what’s unfolding in the society around you, so you can be what you want to be, given the real world constraints that life puts on us all. You’ll see that by using certain mental tools and insights, you can learn and do more—far more—than you might have ever dreamed! This course can be taken independent of, concurrent with, or subsequent to, its companion course, Learning How to Learn. (Mindshift is more career focused, and Learning How to Learn is more learning focused.)\",\n  \"category\": null,\n  \"creator_id\": 1,\n  \"foreign_rating\": \"4.8 stars\",\n  \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo\",\n  \"tags\": [\n    \"Video\",\n    \"Coursera\",\n    \"Free\"\n  ],\n  \"total\": 69,\n  \"completed\": 0,\n  \"manually_completed\": 0,\n  \"automatically_completed\": 0\n}",
           "type": "json"
         }
       ]
@@ -1201,7 +1243,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n\n [\n     {\n         \"id\": 1,\n         \"name\": \"Learning How to Learn: Powerful mental tools to help you master tough subjects\",\n         \"link\": \"https://www.coursera.org/learn/learning-how-to-learn\",\n         \"description\": \"This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\\n\\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.\",\n         \"category\": null,\n         \"creator_id\": 1,\n         \"foreign_rating\": \"4.8 stars\",\n         \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski\"\n       }\n ]",
+          "content": "HTTP/1.1 200 OK\n\n[\n  {\n    \"id\": 1,\n    \"name\": \"Learning How to Learn\",\n    \"link\": \"https://www.coursera.org/learn/learning-how-to-learn\",\n    \"description\": \"This course gives you easy access to the invaluable learning techniques used by experts in art, music, literature, math, science, sports, and many other disciplines. We’ll learn about the how the brain uses two very different learning modes and how it encapsulates (“chunks”) information. We’ll also cover illusions of learning, memory techniques, dealing with procrastination, and best practices shown by research to be most effective in helping you master tough subjects.\\n\\nUsing these approaches, no matter what your skill levels in topics you would like to master, you can change your thinking and change your life. If you’re already an expert, this peep under the mental hood will give you ideas for: turbocharging successful learning, including counter-intuitive test-taking tips and insights that will help you make the best use of your time on homework and problem sets. If you’re struggling, you’ll see a structured treasure trove of practical techniques that walk you through what you need to do to get on track. If you’ve ever wanted to become better at anything, this course will help serve as your guide.\",\n    \"category\": null,\n    \"creator_id\": 1,\n    \"foreign_rating\": \"4.8 stars\",\n    \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski\"\n  },\n  {\n    \"id\": 2,\n    \"name\": \"Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential\",\n    \"link\": \"https://www.coursera.org/learn/mindshift\",\n    \"description\": \"Mindshift is designed to help boost your career and life in today’s fast-paced learning environment. Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs, how to seek out and work with mentors, the secrets to avoiding career ruts (and catastrophes) and general ruts in life, and insights such as the value of selective ignorance over general competence.  We’ll provide practical insights from science about how to learn and change effectively even in maturity, and we’ll build on what you already know to take your life’s learning in fantastic new directions.  This course is designed to show you how to look at what you’re learning, and your place in what’s unfolding in the society around you, so you can be what you want to be, given the real world constraints that life puts on us all. You’ll see that by using certain mental tools and insights, you can learn and do more—far more—than you might have ever dreamed! This course can be taken independent of, concurrent with, or subsequent to, its companion course, Learning How to Learn. (Mindshift is more career focused, and Learning How to Learn is more learning focused.)\",\n    \"category\": null,\n    \"creator_id\": 1,\n    \"foreign_rating\": \"4.8 stars\",\n    \"foreign_instructors\": \"Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo\"\n  },\n  {\n    \"id\": 3,\n    \"name\": \"AbyssMind Performance Email Course\",\n    \"link\": \"https://www.abyssmind.com/performance/try](https://www.abyssmind.com/performance/try\",\n    \"description\": \"AbyssMind is a learning outcomes program that helps you understand the skills and techniques needed to succeed in your self-directed learning ambitions.  Sign up\",\n    \"category\": null,\n    \"creator_id\": 2,\n    \"foreign_rating\": null,\n    \"foreign_instructors\": \"AbyssMind\"\n  }\n]",
           "type": "json"
         }
       ]
@@ -1780,6 +1822,104 @@
     "groupTitle": "Courses"
   },
   {
+    "type": "put",
+    "url": "/api/courses/:id/togglecomplete",
+    "title": "Toggle Course Completion",
+    "name": "ToggleCourseCompletion",
+    "group": "Courses",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Course completion toggled\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to update course for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update course for&quot; }</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Course-Error",
+            "description": "<p>Internal Error: Could not toggle course completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle course completion&quot; }</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Courses"
+  },
+  {
     "type": "delete",
     "url": "/api/courses/:id/sections/:section_id/details/:detail_id",
     "title": "Delete Course Section Details",
@@ -2296,6 +2436,104 @@
     "version": "0.0.0",
     "filename": "./courses/coursesRouterDocs.js",
     "groupTitle": "Details"
+  },
+  {
+    "type": "post",
+    "url": "/api/auth/emaillist",
+    "title": "Post Email Address To List",
+    "name": "PostEmailAddressToList",
+    "group": "EmailList",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>The user's email</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n  \"email\": \"fakename@fakemail.com\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>A message that the email was already in the list</p>"
+          }
+        ],
+        "201": [
+          {
+            "group": "201",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>A message that the email has been added to the list</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Email was already in database\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 201 Created\n{\n  \"message\": \"Email has been added to list\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The email is missing.</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not add email</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "400-Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n \"message\": \"Must send email\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"message\": \"Internal Error: Could not add email\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./auth/authRouterDocs.js",
+    "groupTitle": "EmailList"
   },
   {
     "type": "delete",
@@ -3112,7 +3350,7 @@
       "examples": [
         {
           "title": "Tag Delete Example:",
-          "content": "{ \n        tag: 'Learning'\n}",
+          "content": "{ \n       tag: 'Learning'\n}",
           "type": "json"
         }
       ]
@@ -3662,8 +3900,8 @@
             "group": "200",
             "type": "Array",
             "optional": false,
-            "field": "Learning",
-            "description": "<p>Paths An array of the Learning Paths on the website, optionally filtered by url sent in body</p>"
+            "field": "Learning-Paths",
+            "description": "<p>An array of the Learning Paths on the website</p>"
           }
         ]
       },
@@ -3671,6 +3909,102 @@
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n\n[\n  {\n    \"id\": 1,\n    \"name\": \"Onboarding Learning Path\",\n    \"description\": \"This learning path will get you on the road to success.\",\n    \"category\": \"Learning\"\n  }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "internal-server-error",
+            "description": "<p>Could not retrieve learning paths</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n \"message\": \"Error connecting with server\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./learning-paths/learningPathRouterDocs.js",
+    "groupTitle": "Learning_Paths"
+  },
+  {
+    "type": "get",
+    "url": "/api/learning-paths/yours-owned",
+    "title": "Get Your Owned Learning Paths",
+    "name": "GetYourOwnedLearningPaths",
+    "group": "Learning_Paths",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Array",
+            "optional": false,
+            "field": "Learning-Paths",
+            "description": "<p>An array of the Learning Paths on the website that the user created/owns</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n[\n  {\n    \"id\": 2,\n    \"name\": \"Python Basics\",\n    \"description\": \"Learn the basics of Python scripting language.\",\n    \"category\": \"Python\",\n    \"creator_id\": 2,\n    \"font_awesome_name\": null,\n    \"courseIds\": [],\n    \"contentLength\": 0\n  }\n]",
           "type": "json"
         }
       ]
@@ -4987,104 +5321,6 @@
     "groupTitle": "Learning_Paths"
   },
   {
-    "type": "put",
-    "url": "/api/courses/:id/sections/:section_id/togglecomplete",
-    "title": "Toggle Section Completion",
-    "name": "ToggleSectionCompletion",
-    "group": "Section",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "string",
-            "optional": false,
-            "field": "Content-Type",
-            "description": "<p>the type of content being sent</p>"
-          },
-          {
-            "group": "Header",
-            "type": "string",
-            "optional": false,
-            "field": "token",
-            "description": "<p>User's token for authorization</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "200": [
-          {
-            "group": "200",
-            "type": "Object",
-            "optional": false,
-            "field": "Updated",
-            "description": "<p>message</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Section completion toggled\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "401": [
-          {
-            "group": "401",
-            "type": "Object",
-            "optional": false,
-            "field": "bad-request-error",
-            "description": "<p>The authorization header is absent</p>"
-          }
-        ],
-        "500": [
-          {
-            "group": "500",
-            "type": "Object",
-            "optional": false,
-            "field": "Find-User-Error",
-            "description": "<p>Could not find user to update section for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update section for&quot; }</p>"
-          },
-          {
-            "group": "500",
-            "type": "Object",
-            "optional": false,
-            "field": "Toggle-Section-Error",
-            "description": "<p>Internal Error: Could not toggle section completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle section completion&quot; }</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "401-Error-Response:",
-          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "401-Error-Response:",
-          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./courses/coursesRouterDocs.js",
-    "groupTitle": "Section"
-  },
-  {
     "type": "delete",
     "url": "/api/courses/:id/sections/:section_id",
     "title": "Delete Course Section",
@@ -5268,7 +5504,7 @@
             "type": "Object",
             "optional": false,
             "field": "Find-Section-Error",
-            "description": "<p>Could not find section to get course for</p>"
+            "description": "<p>Could not find user to get sections for</p>"
           }
         ]
       },
@@ -5286,6 +5522,121 @@
         {
           "title": "404-Error-Response:",
           "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"could not find a course with an id of 4\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"message\": \"Could not find user to get section for\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Sections"
+  },
+  {
+    "type": "get",
+    "url": "/api/courses/:id/yoursections",
+    "title": "Get Your Course Sections",
+    "name": "GetYourCourseSections",
+    "group": "Sections",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Array",
+            "optional": false,
+            "field": "Sections",
+            "description": "<p>an array of the course sections for the user</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"sections\": [\n    {\n      \"id\": 5,\n      \"name\": \"Change IS possible\",\n      \"course_id\": 2,\n      \"description\": \"In today's world, change is the only constant. This means that whatever stage you are in life, you need to keep yourself open and able to change. How can you do this? In three ways: Learn more about your hidden capabilities and assets. Learn more about learning effectively. Learn about matching your assets with the opportunities that face you. In this week, we'll dive into these three important areas!\",\n      \"link\": \"https://www.coursera.org/learn/mindshift/home/week/1\",\n      \"order\": 1,\n      \"manually_completed\": 0,\n      \"automatically_completed\": 0\n    },\n    {\n      \"id\": 6,\n      \"name\": \"Getting deeper into happy learning\",\n      \"course_id\": 2,\n      \"description\": \"Key to your ability to mindshift is being able to learn effectively. This week, we’ll dive deeper into this vital area. Getting yourself motivated to tackle procrastination can sometimes be a challenge in learning, so we’ll give you some important tips here. But we’ll also give insights into mental tricks to help you focus, relax, and reframe if stress intrudes. We’ll also show you how to avoid common learning pitfalls. Welcome and enjoy!\",\n      \"link\": \"https://www.coursera.org/learn/mindshift/home/week/2\",\n      \"order\": 2,\n      \"manually_completed\": 0,\n      \"automatically_completed\": 0\n    },\n    {\n      \"id\": 7,\n      \"name\": \"Learning and careers\",\n      \"course_id\": 2,\n      \"description\": \"This week, we’ll be talking about how your own career can develop and change through your life. Your own internal feelings about what you want to do can play a critical role in your long-term happiness. But society and culture can also have a dramatic effect on your career choices and decisions—as can your parents, family, and friends. We’ll talk about second-skilling yourself, and developing a talent stack of average talents that can combine into a formidable asset. We’ll also talk about various tactics and techniques to help you survive career changes and upheavals. Welcome and enjoy!\",\n      \"link\": \"https://www.coursera.org/learn/mindshift/home/week/3\",\n      \"order\": 3,\n      \"manually_completed\": 0,\n      \"automatically_completed\": 0\n    },\n    {\n      \"id\": 8,\n      \"name\": \"Adopting a learning lifestyle\",\n      \"course_id\": 2,\n      \"description\": \"In this final week of the course, we'll be exploring how and why to keep yourself in 'mindshift' mode. We'll give you all sorts of insider tips on how to pick out the best online learning with materials that are right for you. And we'll also talk about other ways of learning—ways that can make you 'the smartest person in the room. Disruption lies ahead in the world—this week, we'll help you seize the advantage. Off we go for our final week of Mindshift!\",\n      \"link\": \"https://www.coursera.org/learn/mindshift/home/week/4\",\n      \"order\": 4,\n      \"manually_completed\": 0,\n      \"automatically_completed\": 0\n    }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "type": "Object",
+            "optional": false,
+            "field": "not-found-error",
+            "description": "<p>could not find a course with the passed in id</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-Section-Error",
+            "description": "<p>Could not find user to get sections for</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404-Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"could not find a course with an id of 4\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "500-Error-Response:",
+          "content": "HTTP/1.1 500 Internal-Server-Error\n{\n \"message\": \"Could not find user to get section for\"\n}",
           "type": "json"
         }
       ]
@@ -5496,6 +5847,104 @@
         {
           "title": "404-Error-Response:",
           "content": "HTTP/1.1 404 Not Found\n{\n \"message\": \"Section not found with id of 4\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./courses/coursesRouterDocs.js",
+    "groupTitle": "Sections"
+  },
+  {
+    "type": "put",
+    "url": "/api/courses/:id/sections/:section_id/togglecomplete",
+    "title": "Toggle Section Completion",
+    "name": "ToggleSectionCompletion",
+    "group": "Sections",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>the type of content being sent</p>"
+          },
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": "<p>User's token for authorization</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"authorization\": \"sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Object",
+            "optional": false,
+            "field": "Updated",
+            "description": "<p>message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 Updated\n{\n    \"message\": \"Section completion toggled\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "type": "Object",
+            "optional": false,
+            "field": "bad-request-error",
+            "description": "<p>The authorization header is absent</p>"
+          }
+        ],
+        "500": [
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Find-User-Error",
+            "description": "<p>Could not find user to update section for HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Could not find user to update section for&quot; }</p>"
+          },
+          {
+            "group": "500",
+            "type": "Object",
+            "optional": false,
+            "field": "Toggle-Section-Error",
+            "description": "<p>Internal Error: Could not toggle section completion HTTP/1.1 500 Internal-Error { &quot;message&quot;: &quot;Internal Error: Could not toggle section completion&quot; }</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Forbidden Access!\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "401-Error-Response:",
+          "content": "HTTP/1.1 401 Bad Request\n{\n \"message\": \"Invalid Credentials\"\n}",
           "type": "json"
         }
       ]
