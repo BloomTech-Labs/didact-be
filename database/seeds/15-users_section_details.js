@@ -897,6 +897,18 @@ exports.seed = function(knex, Promise)
                 manually_completed: false,
                 automatically_completed: false
             },
+            {
+                user_id: 1,
+                section_detail_id: 150,
+                manually_completed: false,
+                automatically_completed: false
+            },
+            {
+                user_id: 1,
+                section_detail_id: 151,
+                manually_completed: false,
+                automatically_completed: false
+            },
         ]
     )
 }

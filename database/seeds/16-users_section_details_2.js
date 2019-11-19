@@ -897,6 +897,7 @@ exports.seed = function(knex, Promise)
                 manually_completed: false,
                 automatically_completed: false
             },
+            
         ]
     )
 }
