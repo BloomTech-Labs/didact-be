@@ -8,21 +8,27 @@ exports.seed = function(knex, Promise)
                 path_id: 1,
                 created: true,
                 rating: 0,
-                user_path_order: 0
+                user_path_order: 0,
+                manually_completed: false,
+                automatically_completed: false
             },
             {
                 user_id: 2,
                 path_id: 1,
                 created: false,
                 rating: 0,
-                user_path_order: 0
+                user_path_order: 0,
+                manually_completed: false,
+                automatically_completed: false
             },
             {
                 user_id: 2,
                 path_id: 2,
                 created: true,
                 rating: 0,
-                user_path_order: 1
+                user_path_order: 1,
+                manually_completed: false,
+                automatically_completed: false
             },
         ]
     )

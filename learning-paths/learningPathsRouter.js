@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
                         res.status(200).json(response)
                     })
                     .catch(err => {
-                        res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
+                        res.status(500).json({ message: 'Internal Error Could not get learning paths that the user has not joined' })
                     })
             }
             else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
