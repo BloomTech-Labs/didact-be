@@ -16,6 +16,12 @@ exports.seed = function(knex, Promise)
                 automatically_completed: false
             },
             {
+                user_id: 1,
+                course_id: 3,
+                manually_completed: false,
+                automatically_completed: false
+            },
+            {
                 user_id: 2,
                 course_id: 1,
                 manually_completed: false,
@@ -27,12 +33,7 @@ exports.seed = function(knex, Promise)
                 manually_completed: false,
                 automatically_completed: false
             },
-            {
-                user_id: 2,
-                course_id: 3,
-                manually_completed: false,
-                automatically_completed: false
-            },
+            
         ]
     )
 }
