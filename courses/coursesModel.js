@@ -754,6 +754,20 @@ async function generateUdemyCourse(userId, link, results, details)
     let sectionOrder = 1
     let lessonOrder = 1
 
+    let chapterFound = false
+    if(results[0]._class !== "chapter")
+    {
+        for(let i=0; i<results.length && !chapterFound; i++)
+        {
+            if(results[i]._class === "chapter")
+            {
+                let section = results.splice(i, 1)
+                results.unshift(section[0])
+                chapterFound = true
+            }
+        }
+    }
+
     for(let i=0; i<results.length; i++)
     {
         if(results[i]._class === "chapter")
