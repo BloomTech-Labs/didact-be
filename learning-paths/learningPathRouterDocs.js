@@ -155,7 +155,7 @@
  *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
  * }
  * 
- * @apiSuccess (200) {Array} Learning Paths An array of the Learning Paths on the website, optionally filtered by url sent in body
+ * @apiSuccess (200) {Array} Learning-Paths An array of the Learning Paths on the website
  * 
  * @apiSuccessExample Success-Response:
  * HTTP/1.1 200 OK
@@ -166,6 +166,64 @@
  *     "name": "Onboarding Learning Path",
  *     "description": "This learning path will get you on the road to success.",
  *     "category": "Learning"
+ *   }
+ * ]
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization header is absent
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Forbidden Access!"
+ * }
+ * 
+ * @apiError (401) {Object} bad-request-error The authorization is invalid
+ * 
+ * @apiErrorExample 401-Error-Response:
+ * HTTP/1.1 401 Bad Request
+ * {
+ *  "message": "Invalid Credentials"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Could not retrieve learning paths
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *  "message": "Error connecting with server"
+ * }
+ * 
+ */
+
+/**
+ * @api {get} /api/learning-paths/yours-owned Get Your Owned Learning Paths
+ * @apiName GetYourOwnedLearningPaths
+ * @apiGroup Learning Paths
+ * 
+ * @apiHeader {string} Content-Type the type of content being sent
+ * @apiHeader {string} token User's token for authorization
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "authorization": "sjvbhoi8uh87hfv8ogbo8iugy387gfofebcvudfbvouydyhf8377fg"
+ * }
+ * 
+ * @apiSuccess (200) {Array} Learning-Paths An array of the Learning Paths on the website that the user created/owns
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * 
+ * [
+ *   {
+ *     "id": 2,
+ *     "name": "Python Basics",
+ *     "description": "Learn the basics of Python scripting language.",
+ *     "category": "Python",
+ *     "creator_id": 2,
+ *     "font_awesome_name": null,
+ *     "courseIds": [],
+ *     "contentLength": 0
  *   }
  * ]
  * 
@@ -724,7 +782,7 @@
  * 
  * @apiParamExample {json} Tag Delete Example:
  * { 
-        tag: 'Learning'
+       tag: 'Learning'
  * }
  * 
  * @apiSuccess (200) {string} Message A message that the tag was removed

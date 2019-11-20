@@ -155,3 +155,49 @@
  * 
  */
 
+/**
+ * @api {post} /api/auth/emaillist Post Email Address To List
+ * @apiName PostEmailAddressToList
+ * @apiGroup EmailList
+ * 
+ * @apiParam {String} email The user's email
+ * 
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *    "email": "fakename@fakemail.com"
+ *  }
+ * 
+ * @apiSuccess (200) {String} message A message that the email was already in the list
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Email was already in database"
+ * }
+ * 
+ * @apiSuccess (201) {String} message A message that the email has been added to the list
+ * 
+ * @apiSuccessExample Success-Response:
+ * HTTP/1.1 201 Created
+ * {
+ *   "message": "Email has been added to list"
+ * }
+ * 
+ * @apiError (400) {Object} bad-request-error The email is missing.
+ * 
+ * @apiErrorExample 400-Error-Response:
+ * HTTP/1.1 400 Bad Request
+ * {
+ *  "message": "Must send email"
+ * }
+ * 
+ * @apiError (500) {Object} internal-server-error Could not add email
+ * 
+ * @apiErrorExample 500-Error-Response:
+ * HTTP/1.1 500 Internal-Server-Error
+ * {
+ *  "message": "Internal Error: Could not add email"
+ * }
+ * 
+ */
+
