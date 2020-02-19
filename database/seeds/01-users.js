@@ -10,13 +10,15 @@ exports.seed = function(knex, Promise)
                 email: "bob@bobmail.com",
                 first_name: "bob",
                 last_name: "bobson",
-                password: bcryptjs.hashSync("password", hashCount)
+                password: bcryptjs.hashSync("password", hashCount),
+                admin: true
             },
             {
                 email: "amy@example.com",
                 first_name: "amy",
                 last_name: "lee",
-                password: bcryptjs.hashSync("123", hashCount)
+                password: bcryptjs.hashSync("123", hashCount),
+                moderator: true
             }
         ]
     )

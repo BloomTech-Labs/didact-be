@@ -22,7 +22,7 @@ exports.up = function(knex) {
       tbl.string("name", 255).notNullable();
       tbl.string("link", 1000);
       tbl.string("description", 5000);
-      // tbl.string('category', 125)
+      tbl.string('topic', 1000).notNullable();
       tbl
         .integer("creator_id")
         .unsigned()
@@ -66,8 +66,8 @@ exports.up = function(knex) {
       tbl.increments();
       tbl.string("name", 255).notNullable();
       tbl.string("description", 1000);
-      // tbl.string('category', 125)
       tbl.integer("creator_id").notNullable();
+      tbl.string("topic", 1000).notNullable();
       tbl.string("font_awesome_name", 1000);
     })
     .createTable("path_items", tbl => {
