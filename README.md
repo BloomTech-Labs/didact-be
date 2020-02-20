@@ -431,7 +431,7 @@ In order for the app to function correctly, the user must set up their own envir
 
 create a .env file that includes the following:
 
-    
+   * ADMIN_SECRET - a secret for the seeded users
    * DB_ENV - production, development, testing, staging
    * JWT_SECRET - a secret for signing json web tokens
    * FACEBOOK_APP_ID - facebook id for our app

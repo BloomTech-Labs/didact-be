@@ -13,11 +13,6 @@ exports.seed = function(knex, Promise)
                 course_id: 2,
                 path_order: 2
             },
-            {
-                path_id: 1,
-                course_id: 3,
-                path_order: 3
-            },
         ]
     )
 }

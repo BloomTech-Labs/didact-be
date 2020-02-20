@@ -13,13 +13,14 @@ exports.up = function(knex) {
       tbl.string("googleID");
       tbl.string("slackID");
       tbl.string("photo");
-      tbl.boolean("admin");
-      tbl.boolean("moderator");
-      tbl.boolean("user");
+      tbl.boolean("owner").defaultTo(false);
+      tbl.boolean("admin").defaultTo(false);
+      tbl.boolean("moderator").defaultTo(false);
+    
     })
     .createTable("courses", tbl => {
       tbl.increments();
-      tbl.string("name", 255).notNullable();
+      tbl.string("title", 255).notNullable();
       tbl.string("link", 1000);
       tbl.string("description", 5000);
       tbl.string('topic', 1000).notNullable();
@@ -64,7 +65,7 @@ exports.up = function(knex) {
     })
     .createTable("paths", tbl => {
       tbl.increments();
-      tbl.string("name", 255).notNullable();
+      tbl.string("title", 255).notNullable();
       tbl.string("description", 1000);
       tbl.integer("creator_id").notNullable();
       tbl.string("topic", 1000).notNullable();
