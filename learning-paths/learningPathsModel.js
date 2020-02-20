@@ -110,6 +110,10 @@ async function findForNotUserId(userId)
     return notUsersPaths
 }
 
+function findByFilter(userId, filter, query) {
+    return findForNotUserId(userId).select('*').where(`paths.${filter}`, query)
+}
+
 async function findById(id)
 {
     try
