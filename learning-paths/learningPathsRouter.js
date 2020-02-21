@@ -2,18 +2,6 @@ const router = require('express').Router()
 const Paths = require('./learningPathsModel')
 const Users = require('../users/usersModel')
 
-// async function filterByTag(aLearningPaths, tag)
-// {
-//     let retArr = []
-//     for(let i=0; i<aLearningPaths.length; i++)
-//     {
-//         let tags = await Paths.getTagsForPath(aLearningPaths[i].id)
-//         tags = tags.map(el => el.toLowerCase())
-//         if(tags.includes(tag.toLowerCase())) retArr.push(aLearningPaths[i])
-//     }
-//     return retArr
-// }
-
 router.get('/', (req, res) => {
 
     let email = req.user.email

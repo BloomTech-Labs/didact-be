@@ -37,6 +37,32 @@ function find() {
     return db('courses')
 } 
 
+function findCoursesByOwner(name) {
+     return db('users').where('users.first_name', name).orWhere('users.last_name', name).then(creator => {
+         if(creator.length > 1) {
+             let coursesArray = creators.map(async owner => {
+             return db('courses').where('courses.creator_id', owner.id)
+            })  
+             return coursesArray.concat()
+        } else if (creator.length === 1) {
+             return db('courses').where('creator_id', creator.id)
+         } else {
+             return null
+         }
+     })
+}
+
+function findByFilter(filter, query) {
+    return db('courses').where(`courses.${filter}`, query)
+}
+
+function findByTag(tag) {
+    return db('courses')
+    .join('tags_courses', 'tags_courses.course_id', 'courses.id')
+    .join('tags', 'tags.id', 'tags_courses.tag_id')
+    .where('tags.name', tag)
+}
+
 async function findById(id)
 {
     let course = await db('courses').where({id}).first()
