@@ -1,7 +1,6 @@
 const bcryptjs = require('bcryptjs')
 const hashCount = require('../../utils/hashCount')
 const secrets = require('../../config/secret.js');
-console.log(secrets)
 exports.seed = function(knex, Promise)
 {
     return knex('users')
