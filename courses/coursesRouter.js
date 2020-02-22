@@ -14,6 +14,31 @@ async function filterByTag(aCourses, tag) {
 }
 
 router.get('/', (req, res) => {
+    if(req.headers.search){
+        let filter = req.headers.search.filter;
+        let query = req.headers.search.query;
+        if(filter === 'topic' || filter === 'title' || filter === 'description' && query){
+            Courses.findByFilter(filter, query).then(response => {
+                res.status(200).json(response)
+            }).catch(error => {
+                res.status(500).json(error)
+            })
+        } else if(filter === 'creator' && query){
+            Courses.findCoursesByOwner(query).then(response => {
+                res.status(200).json(response)
+            }).catch(error => {
+                res.status(500).json(error)
+            })
+        } else if(filter === 'tag' && query){
+            Courses.findByTag(query).then(response => {
+                res.status(200).json(response)
+            }).catch(error => {
+                res.status(500).json(error)
+            })
+        } 
+    } else {
+
+    
     Courses.find()
         .then(response => {
             if (req.body.url) {
@@ -32,6 +57,7 @@ router.get('/', (req, res) => {
         .catch(error => {
             res.status(500).json({ message: 'Error connecting with server' })
         })
+    }
 })
 
 router.get('/allyours', (req, res) => {

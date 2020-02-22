@@ -5,6 +5,9 @@ const db = require('../database/dbConfig');
 module.exports = {
     find,
     findById,
+    findByFilter,
+    findCoursesByOwner,
+    findByTag,
     add,
     updateCourseById,
     deleteCourseById,
