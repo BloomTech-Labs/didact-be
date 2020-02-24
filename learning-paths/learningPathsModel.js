@@ -83,33 +83,11 @@ async function findForUserId(userId)
 }
 
 function findLearningPathsByOwner(name) {
-    return db('users').where('users.first_name', name).orWhere('users.last_name', name).then(creator => {
-        if(creator.length > 1) {
-            let pathsArray = creators.map(async owner => {
-            return find().where('paths.creator_id', owner.id)
-        })  
-            return pathsArray.concat()
-       } else if (creator.length === 1) {
-            return find().where('paths.creator_id', creator.id)
-        } else {
-            return null
-        }
-    })
+    
 }
 
 function findYourLearningPathsByOwner(userId, name) {
-    return db('users').where('users.first_name', name).orWhere('users.last_name', name).then(creator => {
-        if(creator.length > 1) {
-            let pathsArray = creators.map(async owner => {
-            return findForUserId(userId).where('paths.creator_id', owner.id)
-        })  
-            return pathsArray.concat()
-       } else if (creator.length === 1) {
-            return findForUserId(userId).where('paths.creator_id', creator.id)
-        } else {
-            return null
-        }
-    })
+    
 }
 
 async function findForOwner(userId)
@@ -145,25 +123,33 @@ async function findForNotUserId(userId)
 //And all user enrolled learning paths respectively
 
 function findPathsByFilter(userId, filter, query) {
-    return findForNotUserId(userId).select('*').where(`paths.${filter}`, query)
+    return findForNotUserId(userId).select('*').where(`paths.${filter}`, 'like', `%${query}%`)
 }
 
 function findUserPathsByFilter(userId, filter, query) {
-    return findForUserId(userId).select('*').where(`paths.${filter}`, query)
+    return findForUserId(userId).select('*').where(`paths.${filter}`, 'like', `%${query}%`)
 }
 
 function findPathsByTag(tag) {
+    let tagTweak = tag.toLowerCase();
+    let tagReady = tag[0].toUpperCase() + tagTweak.slice(1, tag.length);
+
     return db('paths')
     .join('tags_paths', 'tags_paths.path_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
-    .where('tags.name', tag)
+    .select('paths.*')
+    .where('tags.name', tagReady)
 }
 
 function findYourPathsByTag(userId, tag) {
+    let tagTweak = tag.toLowerCase();
+    let tagReady = tag[0].toUpperCase() + tagTweak.slice(1, tag.length);
+
     return findForUserId(userId)
     .join('tags_paths', 'tags_paths.path_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
-    .where('tags.name', tag)
+    .select('paths.*')
+    .where('tags.name', tagReady)
 }
 
 async function findById(id)

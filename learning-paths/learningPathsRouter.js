@@ -3,11 +3,12 @@ const Paths = require('./learningPathsModel')
 const Users = require('../users/usersModel')
 
 router.get('/', (req, res) => {
-
+    let filter = req.headers.search.filter;
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
             if (user) {
+                
                 Paths.findForNotUserId(user.id)
                     .then(response => {
                         res.status(200).json(response)
