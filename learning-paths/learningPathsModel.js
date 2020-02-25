@@ -5,6 +5,12 @@ module.exports =
 {
     find,
     findById,
+    findPathsByFilter,
+    findYourPathsByFilter,
+    findPathsByTag,
+    findYourPathsByTag,
+    findPathsByOwner,
+    findYourPathsByOwner,
     add,
     updatePathById,
     deletePathById,
@@ -116,35 +122,22 @@ async function findForNotUserId(userId)
 
 function findPathsByFilter(userId, filter, query) {
     let queryTweak = query.toLowerCase();
-    let altQuery = query[0].toUpperCase() + queryTweak.slice(1, query.length);
-
     return findForNotUserId(userId)
-    .where(`paths.${filter}`, 'like', `%${query}%`)
-    .orWhere(`paths.${filter}`, 'like', `%${altQuery}%`)
+    .whereRaw(`LOWER(courses.${filter}) ~ ?`, [queryTweak])
 }
 
-function findUserPathsByFilter(userId, filter, query) {
+function findYourPathsByFilter(userId, filter, query) {
     let queryTweak = query.toLowerCase();
-    let altQuery = query[0].toUpperCase() + queryTweak.slice(1, query.length);
-
     return findForUserId(userId)
-    .where(`paths.${filter}`, 'like', `%${query}%`)
-    .orWhere(`paths.${filter}`, 'like', `%${altQuery}%`)
+    .where(`LOWER(courses.${filter}) ~ ?`, [queryTweak])
 }
 
-function findLearningPathsByOwner(userId, name) {
+function findPathsByOwner(userId, name) {
     let nameTweak = name.toLowerCase();
-    let altName = name[0].toUpperCase() + nameTweak.slice(1, name.length);
 
     //looks for users using search input value, checks many possible case sensitivities
      return db('users')
-     .where('users.first_name', name)
-     .orWhere('users.first_name', altName)
-     .orWhere('users.first_name', nameTweak)
-     .orWhere('users.last_name', name)
-     .orWhere('users.last_name', altName)
-     .orWhere('users.last_name', nameTweak)
-     .orWhereRaw("LOWER(first_name || ' ' || last_name) = ?", [nameTweak])
+     .orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
      .then(users => {
          //mapping through the list of users we got and retrieving the courses they created
          let pathsArray = Promise.all(users.map(async user => {
@@ -165,19 +158,12 @@ function findLearningPathsByOwner(userId, name) {
      })
 }
 
-function findYourLearningPathsByOwner(userId, name) {
+function findYourPathsByOwner(userId, name) {
     let nameTweak = name.toLowerCase();
-    let altName = name[0].toUpperCase() + nameTweak.slice(1, name.length);
 
     //looks for users using search input value, checks many possible case sensitivities
      return db('users')
-     .where('users.first_name', name)
-     .orWhere('users.first_name', altName)
-     .orWhere('users.first_name', nameTweak)
-     .orWhere('users.last_name', name)
-     .orWhere('users.last_name', altName)
-     .orWhere('users.last_name', nameTweak)
-     .orWhereRaw("LOWER(first_name || ' ' || last_name) = ?", [nameTweak])
+     .orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
      .then(users => {
          //mapping through the list of users we got and retrieving the courses they created
          let pathsArray = Promise.all(users.map(async user => {
@@ -199,26 +185,18 @@ function findYourLearningPathsByOwner(userId, name) {
 
 function findPathsByTag(userId, tag) {
     let tagTweak = tag.toLowerCase();
-    let tagReady = tag[0].toUpperCase() + tagTweak.slice(1, tag.length)
-
     return findForNotUserId(userId)
     .join('tags_paths', 'tags_paths.course_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
-    .where('tags.name', tagReady)
-    .orWhere('tags.name', tag)
-    .orWhere('tags.name', tagTweak)
+    .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
 }
 
 function findYourPathsByTag(userId, tag) {
     let tagTweak = tag.toLowerCase();
-    let tagReady = tag[0].toUpperCase() + tagTweak.slice(1, tag.length)
-
     return findForUserId(userId)
     .join('tags_paths', 'tags_paths.course_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
-    .where('tags.name', tagReady)
-    .orWhere('tags.name', tag)
-    .orWhere('tags.name', tagTweak)
+    .whereeRaw('LOWER(tags.name) ~ ?', [tagTweak])
 }
 
 async function findById(id)
