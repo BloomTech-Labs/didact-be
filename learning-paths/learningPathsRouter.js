@@ -3,7 +3,6 @@ const Paths = require('./learningPathsModel')
 const Users = require('../users/usersModel')
 
 router.get('/', (req, res) => {
-    let filter = req.headers.search.filter;
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {

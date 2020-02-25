@@ -82,8 +82,18 @@ async function findForUserId(userId)
     // return 1
 }
 
-function findLearningPathsByOwner(name) {
-    
+async function findLearningPathsByOwner(name) {
+    let userList = await db("users")
+    .where('users.first_name', `%${name}%`)
+    .orWhere('users.last_name', `%${name}%`)
+    .orWhere('users.first_name', '||', 'users.last_name', `%${name}%`)
+
+    let pathsArray = userList.map(async user => {
+        let paths = await user.findForOwner(user.id)
+        return paths
+    })
+    let newPathsArray = pathsArray.concat()
+    return newPathsArray;
 }
 
 function findYourLearningPathsByOwner(userId, name) {

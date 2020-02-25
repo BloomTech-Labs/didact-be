@@ -14,9 +14,9 @@ async function filterByTag(aCourses, tag) {
 }
 
 router.get('/', (req, res) => {
-    if(req.headers.search){
-        let filter = req.headers.search.filter;
-        let query = req.headers.search.query;
+    if(req.headers.query && req.headers.filter){
+        let filter = req.headers.filter;
+        let query = req.headers.query;
         if(filter === 'topic' || filter === 'title' || filter === 'description' && query){
             Courses.findByFilter(filter, query).then(response => {
                 res.status(200).json(response)

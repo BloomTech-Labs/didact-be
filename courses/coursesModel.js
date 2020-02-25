@@ -41,11 +41,30 @@ function find() {
 } 
 
 function findCoursesByOwner(name) {
-     
+    let nameTweak = name.toLowerCase();
+    let altName = name[0].toUpperCase() + nameTweak.slice(1, name.length);
+
+    //looks for users using search input value, checks many possible case sensitivities
+     return db('users')
+     .where('users.first_name', name)
+     .orWhere('users.first_name', altName)
+     .orWhere('users.first_name', nameTweak)
+     .orWhere('users.last_name', name)
+     .orWhere('users.last_name', altName)
+     .orWhere('users.last_name', nameTweak)
+     .orWhereRaw("LOWER(first_name || ' ' || last_name) = ?", [nameTweak])
+     .then(users => {
+         // do something
+     })
 }
 
 function findByFilter(filter, query) {
-    return db('courses').where(`courses.${filter}`, 'like', `%${query}%`)
+    let queryTweak = query.toLowerCase();
+    let altQuery = query[0].toUpperCase() + queryTweak.slice(1, query.length);
+
+    return db('courses')
+    .where(`courses.${filter}`, 'like', `%${query}%`)
+    .orWhere(`courses.${filter}`, 'like', `%${altQuery}%`)
 }
 
 function findByTag(tag) {
@@ -56,6 +75,8 @@ function findByTag(tag) {
     .join('tags_courses', 'tags_courses.course_id', 'courses.id')
     .join('tags', 'tags.id', 'tags_courses.tag_id')
     .where('tags.name', tagReady)
+    .orWhere('tags.name', tag)
+    .orWhere('tags.name', tagTweak)
 }
 
 async function findById(id)
