@@ -4,7 +4,7 @@ exports.seed = function(knex, Promise)
     .insert(
         [
             {
-                name: "Video",
+                name: "Learning",
             },
             {
                 name: "Coursera",

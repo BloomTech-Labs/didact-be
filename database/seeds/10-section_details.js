@@ -7,7 +7,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/75EsZ/introduction-to-the-focused-and-diffuse-modes",
-                    type: "video",
+                    type: "lecture",
                     order: 1,
                 },
                 {
@@ -15,7 +15,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/1bYD5/terrence-sejnowski-and-barbara-oakley-introduction-to-the-course-structure",
-                    type: "video",
+                    type: "lecture",
                     order: 2,
                 },
                 {
@@ -23,7 +23,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/0PXPI/welcome-and-course-information",
-                    type: "reading",
+                    type: "article",
                     order: 3,
                 },
                 {
@@ -31,7 +31,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/GVacn/using-the-focused-and-diffuse-modes-or-a-little-dali-will-do-you",
-                    type: "video",
+                    type: "lecture",
                     order: 4,
                 },
                 {
@@ -39,7 +39,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/7iJVR/what-is-learning",
-                    type: "video",
+                    type: "lecture",
                     order: 5,
                 },
                 {
@@ -55,7 +55,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/bwfi0/get-to-know-your-classmates",
-                    type: "reading",
+                    type: "article",
                     order: 7,
                 },
                 {
@@ -63,7 +63,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/Dci3o/a-procrastination-preview",
-                    type: "video",
+                    type: "lecture",
                     order: 8,
                 },
                 {
@@ -71,7 +71,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/3YLAF/practice-makes-permanent",
-                    type: "video",
+                    type: "lecture",
                     order: 9,
                 },
                 {
@@ -79,7 +79,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/X7E9r/introduction-to-memory",
-                    type: "video",
+                    type: "lecture",
                     order: 10,
                 },
                 {
@@ -87,7 +87,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/AsWfx/the-importance-of-sleep-in-learning",
-                    type: "video",
+                    type: "lecture",
                     order: 11,
                 },
                 {
@@ -95,7 +95,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/8IUbH/interview-with-dr-terrence-sejnowski",
-                    type: "video",
+                    type: "lecture",
                     order: 12,
                 },
                 {
@@ -103,7 +103,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/9BqZe/summary-video-for-module-1",
-                    type: "video",
+                    type: "lecture",
                     order: 13,
                 },
                 {
@@ -111,7 +111,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/1bY0O/excitement-about-whats-next-maryanne-nestor-gives-special-hints",
-                    type: "video",
+                    type: "lecture",
                     order: 14,
                 },
                 {
@@ -127,7 +127,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/uWQyM/reading-focused-versus-diffuse-thinking",
-                    type: "reading",
+                    type: "article",
                     order: 16,
                 },
                 {
@@ -135,7 +135,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/O6cZx/a-posting-about-anxiety-depression-and-ptsd-from-a-learner-in-learning-how-to",
-                    type: "reading",
+                    type: "article",
                     order: 17,
                 },
                 {
@@ -143,7 +143,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/L4yKh/optional-interview-with-benny-the-irish-polyglot-about-learning-languages",
-                    type: "video",
+                    type: "lecture",
                     order: 18,
                 },
                 {
@@ -151,7 +151,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/ZOTmt/optional-interview-with-dr-robert-bilder-on-creativity-and-problem-solving",
-                    type: "video",
+                    type: "lecture",
                     order: 19,
                 },
                 {
@@ -159,7 +159,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 1,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/01m6e/optional-interview-with-writing-coach-daphne-gray-grant",
-                    type: "video",
+                    type: "lecture",
                     order: 20,
                 },
                 {
@@ -184,7 +184,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/01m6e/optional-interview-with-writing-coach-daphne-gray-grant",
-                    type: "video",
+                    type: "lecture",
                     order: 1,
                 },
                 {
@@ -192,7 +192,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/LurUJ/what-is-a-chunk",
-                    type: "video",
+                    type: "lecture",
                     order: 2,
                 },
                 {
@@ -200,7 +200,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/4B5fW/how-to-form-a-chunk-part-1",
-                    type: "video",
+                    type: "lecture",
                     order: 3,
                 },
                 {
@@ -208,7 +208,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/sAVPZ/how-to-form-a-chunk-part-2",
-                    type: "video",
+                    type: "lecture",
                     order: 4,
                 },
                 {
@@ -216,7 +216,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/BuFzf/illusions-of-competence",
-                    type: "video",
+                    type: "lecture",
                     order: 5,
                 },
                 {
@@ -232,7 +232,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/WNYPG/what-motivates-you",
-                    type: "video",
+                    type: "lecture",
                     order: 7,
                 },
                 {
@@ -240,7 +240,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/mrPn2/the-value-of-a-library-of-chunks",
-                    type: "video",
+                    type: "lecture",
                     order: 8,
                 },
                 {
@@ -248,7 +248,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/1MpwV/overlearning-choking-einstellung-and-interleaving",
-                    type: "video",
+                    type: "lecture",
                     order: 9,
                 },
                 {
@@ -256,7 +256,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/LmHGj/summary-for-module-2",
-                    type: "video",
+                    type: "lecture",
                     order: 10,
                 },
                 {
@@ -280,7 +280,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/fWyi5/reading-chunking",
-                    type: "reading",
+                    type: "article",
                     order: 13,
                 },
                 {
@@ -288,7 +288,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/fWyi5/reading-chunking",
-                    type: "reading",
+                    type: "article",
                     order: 14,
                 },
                 {
@@ -296,7 +296,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/NoDez/optional-interview-with-dr-norman-fortenberry-learning-at-mit",
-                    type: "video",
+                    type: "lecture",
                     order: 15,
                 },
                 {
@@ -304,7 +304,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 2,
                     description: "",
                     link: "coursera.org/learn/learning-how-to-learn/lecture/8dpx6/optional-interview-with-scott-young-a-marco-polo-of-learning",
-                    type: "video",
+                    type: "lecture",
                     order: 16,
                 },
                 // ***************************************************************************************************************************
@@ -313,7 +313,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/3vb3Y/introduction-to-procrastination-and-memory",
-                    type: "video",
+                    type: "lecture",
                     order: 1,
                 },
                 {
@@ -321,7 +321,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/J5vCL/tackling-procrastination-it-is-easier-and-more-valuable-than-you-think",
-                    type: "video",
+                    type: "lecture",
                     order: 2,
                 },
                 {
@@ -329,7 +329,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/p7wRU/zombies-everywhere",
-                    type: "video",
+                    type: "lecture",
                     order: 3,
                 },
                 {
@@ -337,7 +337,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/wTEpf/surf-is-up-process-versus-product",
-                    type: "video",
+                    type: "lecture",
                     order: 4,
                 },
                 {
@@ -345,7 +345,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/YS6FO/harnessing-your-zombies-to-help-you",
-                    type: "video",
+                    type: "lecture",
                     order: 5,
                 },
                 {
@@ -353,7 +353,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/QuZsE/juggling-life-and-learning",
-                    type: "video",
+                    type: "lecture",
                     order: 6,
                 },
                 {
@@ -361,7 +361,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/aZ5fS/summing-up-procrastination",
-                    type: "video",
+                    type: "lecture",
                     order: 7,
                 },
                 {
@@ -377,7 +377,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/lNjiu/diving-deeper-into-memory",
-                    type: "video",
+                    type: "lecture",
                     order: 9,
                 },
                 {
@@ -385,7 +385,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/2Uqfy/what-is-long-term-memory",
-                    type: "video",
+                    type: "lecture",
                     order: 10,
                 },
                 {
@@ -393,7 +393,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/ruX7E/creating-meaningful-groups-and-the-memory-palace-technique",
-                    type: "video",
+                    type: "lecture",
                     order: 11,
                 },
                 {
@@ -401,7 +401,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/ZRXCY/summing-up-memory",
-                    type: "video",
+                    type: "lecture",
                     order: 12,
                 },
                 {
@@ -425,7 +425,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/H7Pv0/reading-procrastination-and-memory",
-                    type: "reading",
+                    type: "article",
                     order: 15,
                 },
                 {
@@ -433,7 +433,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/n6sVd/optional-interview-with-4-time-us-memory-champion-nelson-dellis",
-                    type: "video",
+                    type: "lecture",
                     order: 16,
                 },
                 {
@@ -441,7 +441,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/6dg4j/optional-interview-with-dr-robert-gamache-an-award-winning-bilingual-scientist",
-                    type: "video",
+                    type: "lecture",
                     order: 17,
                 },
                 {
@@ -449,7 +449,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 3,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/SQDq8/optional-interview-with-keith-devlin-from-stanford-the-npr-math-guy",
-                    type: "video",
+                    type: "lecture",
                     order: 18,
                 },
                 {
@@ -474,7 +474,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/f839b/how-to-become-a-better-learner",
-                    type: "video",
+                    type: "lecture",
                     order: 1,
                 },
                 {
@@ -482,7 +482,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/SIck3/introduction-to-renaissance-learning-and-unlocking-your-potential",
-                    type: "video",
+                    type: "lecture",
                     order: 2,
                 },
                 {
@@ -490,7 +490,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/ncfit/create-a-lively-visual-metaphor-or-analogy",
-                    type: "video",
+                    type: "lecture",
                     order: 3,
                 },
                 {
@@ -498,7 +498,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/9miFQ/no-need-for-genius-envy",
-                    type: "video",
+                    type: "lecture",
                     order: 4,
                 },
                 {
@@ -506,7 +506,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/Ignxl/change-your-thoughts-change-your-life",
-                    type: "video",
+                    type: "lecture",
                     order: 5,
                 },
                 {
@@ -522,7 +522,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/KyGCI/the-value-of-teamwork",
-                    type: "video",
+                    type: "lecture",
                     order: 7,
                 },
                 {
@@ -530,7 +530,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/D40pr/a-test-checklist",
-                    type: "video",
+                    type: "lecture",
                     order: 8,
                 },
                 {
@@ -538,7 +538,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/8s6D6/hard-start-jump-to-easy",
-                    type: "video",
+                    type: "lecture",
                     order: 9,
                 },
                 {
@@ -546,7 +546,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/qcZLL/final-helpful-hints-for-tests",
-                    type: "video",
+                    type: "lecture",
                     order: 10,
                 },
                 {
@@ -554,7 +554,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/9T5on/summary-for-module-4",
-                    type: "video",
+                    type: "lecture",
                     order: 11,
                 },
                 {
@@ -562,7 +562,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/Emras/wrapup-to-the-course-by-terrence-sejnowski-and-barbara-oakley",
-                    type: "video",
+                    type: "lecture",
                     order: 12,
                 },
                 {
@@ -586,7 +586,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/cfXfQ/please-rate-this-course-on-class-central",
-                    type: "reading",
+                    type: "article",
                     order: 15,
                 },
                 {
@@ -594,7 +594,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/bJW5V/reading-renaissance-learning-and-unlocking-your-potential",
-                    type: "reading",
+                    type: "article",
                     order: 16,
                 },
                 {
@@ -602,7 +602,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/6093o/optional-part-1-how-not-to-take-a-test-interview-with-dr-richard-felder-and-dr",
-                    type: "video",
+                    type: "lecture",
                     order: 17,
                 },
                 {
@@ -610,7 +610,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/bLsOJ/optional-part-2-learning-something-new-interview-with-dr-richard-felder-and-dr",
-                    type: "video",
+                    type: "lecture",
                     order: 18,
                 },
                 {
@@ -618,7 +618,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/nnVjq/optional-part-3-the-imposter-syndrome-and-dealing-with-procrastination-interview",
-                    type: "video",
+                    type: "lecture",
                     order: 19,
                 },
                 {
@@ -626,7 +626,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/pZUES/optional-writer-john-maguire-readablewriting-com-on-the-importance-of-putting",
-                    type: "video",
+                    type: "lecture",
                     order: 20,
                 },
                 {
@@ -634,7 +634,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/lecture/5tk5r/optional-interview-with-william-craig-rice-on-learning-in-the-humanities",
-                    type: "video",
+                    type: "lecture",
                     order: 21,
                 },
                 {
@@ -642,7 +642,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 4,
                     description: "",
                     link: "https://www.coursera.org/learn/learning-how-to-learn/supplement/zdeq4/farewell-and-hello",
-                    type: "reading",
+                    type: "article",
                     order: 22,
                 },
                 // *****************************************************************************************************************************
@@ -653,7 +653,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/1ldX4/1-1-introduction-about-mindshift",
-                    type: "video",
+                    type: "lecture",
                     order: 1,
                 },
                 {
@@ -661,7 +661,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/4oCev/1-2-the-value-of-being-a-slow-learner",
-                    type: "video",
+                    type: "lecture",
                     order: 2,
                 },
                 {
@@ -669,7 +669,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/B7iH4/1-3-from-passive-to-active",
-                    type: "video",
+                    type: "lecture",
                     order: 3,
                 },
                 {
@@ -677,7 +677,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/Yw1vu/1-4-the-value-of-your-past",
-                    type: "video",
+                    type: "lecture",
                     order: 4,
                 },
                 {
@@ -685,7 +685,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/D1rex/the-unexpected-assets-from-your-past-and-breaking-through-initial-feelings-of",
-                    type: "discussion",
+                    type: "other",
                     order: 5,
                 },
                 {
@@ -693,7 +693,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/F7dGM/1-5-mastery-learning",
-                    type: "video",
+                    type: "lecture",
                     order: 6,
                 },
                 {
@@ -701,7 +701,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/4kYYE/1-6-focused-versus-diffuse-furthering-your-understanding",
-                    type: "video",
+                    type: "lecture",
                     order: 7,
                 },
                 {
@@ -709,7 +709,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/v8DY4/1-7-should-you-listen-to-music-when-you-re-studying",
-                    type: "video",
+                    type: "lecture",
                     order: 8,
                 },
                 {
@@ -717,7 +717,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/rNLjr/1-8-learning-something-hard-the-coffee-shop-trick",
-                    type: "video",
+                    type: "lecture",
                     order: 9,
                 },
                 {
@@ -725,7 +725,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/qKaOA/favorite-places-to-study-and-helpful-study-apps",
-                    type: "discussion",
+                    type: "other",
                     order: 10,
                 },
                 {
@@ -733,7 +733,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/KBuYQ/1-9-your-environment-affects-who-you-are",
-                    type: "video",
+                    type: "lecture",
                     order: 11,
                 },
                 {
@@ -741,7 +741,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/QcEPL/1-10-the-changing-world-matching-aspirations-with-opportunity",
-                    type: "video",
+                    type: "lecture",
                     order: 12,
                 },
                 {
@@ -749,7 +749,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/a42Oz/1-11-natural-passions-career-choice-and-gender",
-                    type: "video",
+                    type: "lecture",
                     order: 13,
                 },
                 {
@@ -757,7 +757,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/2QdYz/your-challenge",
-                    type: "discussion",
+                    type: "other",
                     order: 14,
                 },
                 {
@@ -765,7 +765,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/kpt1z/1-12-week-1-wrap-up",
-                    type: "video",
+                    type: "lecture",
                     order: 15,
                 },
                 {
@@ -781,7 +781,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 5,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/jEdP0/optional-bonus-video-nelson-dellis-memory-tips-1",
-                    type: "video",
+                    type: "lecture",
                     order: 17,
                 },
                 {
@@ -798,7 +798,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/zVgFL/2-1-week-2-introduction",
-                    type: "video",
+                    type: "lecture",
                     order: 1,
                 },
                 {
@@ -806,7 +806,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/oeOU6/2-2-the-value-of-a-poor-memory",
-                    type: "video",
+                    type: "lecture",
                     order: 2,
                 },
                 {
@@ -814,7 +814,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/wGsl9/2-3-meditation-and-mindfulness-what-to-look-for",
-                    type: "video",
+                    type: "lecture",
                     order: 3,
                 },
                 {
@@ -822,7 +822,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/0PSGA/2-4-the-pomodoro-technique-as-working-meditation",
-                    type: "video",
+                    type: "lecture",
                     order: 4,
                 },
                 {
@@ -830,7 +830,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/c9b0z/2-5-getting-past-procrastination",
-                    type: "video",
+                    type: "lecture",
                     order: 5,
                 },
                 {
@@ -838,7 +838,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/0Ymz9/2-6-the-value-of-procedural-fluency-and-deliberate-practice",
-                    type: "video",
+                    type: "lecture",
                     order: 6,
                 },
                 {
@@ -846,7 +846,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/SCEBT/2-7-bad-grades-and-barbs-hands-the-value-of-mental-tricks",
-                    type: "video",
+                    type: "lecture",
                     order: 7,
                 },
                 {
@@ -854,7 +854,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/BUYya/2-8-learning-to-reframe-put-a-label-on-it",
-                    type: "video",
+                    type: "lecture",
                     order: 8,
                 },
                 {
@@ -862,7 +862,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/TPjDx/overcoming-cognitive-distortions",
-                    type: "discussion",
+                    type: "other",
                     order: 9,
                 },
                 {
@@ -870,7 +870,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/K0N78/2-9-integrate-all-your-senses-into-learning-the-pitfalls-of-learning-styles",
-                    type: "video",
+                    type: "lecture",
                     order: 10,
                 },
                 {
@@ -878,7 +878,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/k5LWb/2-10-can-you-try-to-learn-too-much",
-                    type: "video",
+                    type: "lecture",
                     order: 11,
                 },
                 {
@@ -886,7 +886,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/KOGho/2-11-your-social-brain",
-                    type: "video",
+                    type: "lecture",
                     order: 12,
                 },
                 {
@@ -894,7 +894,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/UhhhB/2-12-week-2-wrap-up",
-                    type: "video",
+                    type: "lecture",
                     order: 13,
                 },
                 {
@@ -910,7 +910,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/l7NRn/optional-bonus-video-interview-with-singapore-entrepreneur-adam-khoo",
-                    type: "video",
+                    type: "lecture",
                     order: 15,
                 },
                 {
@@ -918,7 +918,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 6,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/cIYZx/optional-bonus-video-nelson-dellis-memory-tips-2",
-                    type: "video",
+                    type: "lecture",
                     order: 16,
                 },
                 // *****************************************************************************************************************************
@@ -927,7 +927,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/DWoSY/3-1-week-3-introduction",
-                    type: "video",
+                    type: "lecture",
                     order: 1,
                 },
                 {
@@ -935,7 +935,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/Bm6W6/3-2-passion-and-work-part-1",
-                    type: "video",
+                    type: "lecture",
                     order: 2,
                 },
                 {
@@ -943,7 +943,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/y83su/3-3-passion-and-work-part-2",
-                    type: "video",
+                    type: "lecture",
                     order: 3,
                 },
                 {
@@ -951,7 +951,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/UmP1U/3-4-passion-and-work-part-3",
-                    type: "video",
+                    type: "lecture",
                     order: 4,
                 },
                 {
@@ -959,7 +959,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/W8uNY/hidden-talents",
-                    type: "discussion",
+                    type: "other",
                     order: 5,
                 },
                 {
@@ -967,7 +967,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/fYuXW/3-5-mindshifting-what-to-do-in-the-face-of-opposition",
-                    type: "video",
+                    type: "lecture",
                     order: 6,
                 },
                 {
@@ -975,7 +975,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/x7NlZ/3-6-general-competence-versus-selective-ignorance",
-                    type: "video",
+                    type: "lecture",
                     order: 7,
                 },
                 {
@@ -983,7 +983,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/akQ4m/3-7-the-value-of-feeling-like-an-imposter",
-                    type: "video",
+                    type: "lecture",
                     order: 8,
                 },
                 {
@@ -991,7 +991,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/J4Zbf/3-8-avoiding-career-ruts-and-surviving-career-catastrophes",
-                    type: "video",
+                    type: "lecture",
                     order: 9,
                 },
                 {
@@ -999,7 +999,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/oqfFS/3-9-bad-traits-as-best-traits",
-                    type: "video",
+                    type: "lecture",
                     order: 10,
                 },
                 {
@@ -1007,7 +1007,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/UZhaa/the-good-side-of-bad-traits",
-                    type: "discussion",
+                    type: "other",
                     order: 11,
                 },
                 {
@@ -1015,7 +1015,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/EcPsr/3-10-the-intelligence-of-emotions",
-                    type: "video",
+                    type: "lecture",
                     order: 12,
                 },
                 {
@@ -1023,7 +1023,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/fPNt6/3-11-week-3-wrap-up",
-                    type: "video",
+                    type: "lecture",
                     order: 13,
                 },
                 {
@@ -1031,7 +1031,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/exam/3hPBb/week-3",
-                    type: "video",
+                    type: "lecture",
                     order: 14,
                 },
                 {
@@ -1039,7 +1039,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/2f5gA/optional-bonus-video-nelson-dellis-memory-tips-3",
-                    type: "video",
+                    type: "lecture",
                     order: 15,
                 },
                 {
@@ -1047,7 +1047,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 7,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/27t4Q/optional-bonus-video-nelson-dellis-memory-tips-4-remembering-names-faces",
-                    type: "video",
+                    type: "lecture",
                     order: 16,
                 },
                 {
@@ -1064,7 +1064,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/rq0Zk/4-1-week-4-introduction",
-                    type: "video",
+                    type: "lecture",
                     order: 1,
                 },
                 {
@@ -1072,7 +1072,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/mUW7p/4-2-why-should-you-keep-learning",
-                    type: "video",
+                    type: "lecture",
                     order: 2,
                 },
                 {
@@ -1080,7 +1080,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/hZR9S/4-3-mooc-tips-part-1-how-to-get-the-most-from-moocs",
-                    type: "video",
+                    type: "lecture",
                     order: 3,
                 },
                 {
@@ -1088,7 +1088,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/VKUwS/4-4-dirty-little-secrets-of-traditional-vs-massive-online-teaching",
-                    type: "video",
+                    type: "lecture",
                     order: 4,
                 },
                 {
@@ -1096,7 +1096,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/fgoXX/4-5-a-visit-to-barbs-basement-the-secret-sauce-of-learning-how-to-learn",
-                    type: "video",
+                    type: "lecture",
                     order: 5,
                 },
                 {
@@ -1104,7 +1104,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/BUonD/4-6-mooc-tips-part-2-looking-more-deeply-into-quality-learning",
-                    type: "video",
+                    type: "lecture",
                     order: 6,
                 },
                 {
@@ -1112,7 +1112,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/a3NWW/best-moocs-and-best-mooc-making",
-                    type: "discussion",
+                    type: "other",
                     order: 7,
                 },
                 {
@@ -1120,7 +1120,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/zoJ73/4-7-mentors-in-your-life",
-                    type: "video",
+                    type: "lecture",
                     order: 8,
                 },
                 {
@@ -1128,7 +1128,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/PMlJX/4-8-read-read-read",
-                    type: "video",
+                    type: "lecture",
                     order: 9,
                 },
                 {
@@ -1136,7 +1136,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/zeB2t/favorite-book-or-author",
-                    type: "discussion",
+                    type: "other",
                     order: 10,
                 },
                 {
@@ -1144,7 +1144,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/x4r9z/4-9-surviving-in-the-new-information-economy",
-                    type: "video",
+                    type: "lecture",
                     order: 11,
                 },
                 {
@@ -1152,7 +1152,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/VFpVy/4-10-week-4-wrap-up",
-                    type: "video",
+                    type: "lecture",
                     order: 12,
                 },
                 {
@@ -1160,7 +1160,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/InXKd/4-11-finale-discovering-your-hidden-potential",
-                    type: "video",
+                    type: "lecture",
                     order: 13,
                 },
                 {
@@ -1168,7 +1168,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/discussionPrompt/bherz/share-your-mindshift",
-                    type: "discussion",
+                    type: "other",
                     order: 14,
                 },
                 {
@@ -1184,7 +1184,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/supplement/pts3w/please-rate-this-course-on-class-central",
-                    type: "reading",
+                    type: "article",
                     order: 16,
                 },
                 {
@@ -1192,7 +1192,7 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/htja1/optional-bonus-video-nelson-dellis-memory-tips-5-language-learning",
-                    type: "video",
+                    type: "lecture",
                     order: 17,
                 },
                 {
@@ -1200,28 +1200,8 @@ exports.seed = function (knex, Promise) {
                     course_sections_id: 8,
                     description: "",
                     link: "https://www.coursera.org/learn/mindshift/lecture/XGnjL/memory-tips-nelson-dellis-on-how-to-memorize-a-speech-or-a-script",
-                    type: "video",
+                    type: "lecture",
                     order: 18,
-                },
-                // Abyssmind lessons
-                
-                {
-                    name: "AbyssMind Email Day 7 Part 1",
-                    course_sections_id: 15,
-                    description: "",
-                    link: "",
-                    type: "text",
-                    order: 1,
-                },
-
-
-                {
-                    name: "AbyssMind Email Day 7 Part 2",
-                    course_sections_id: 15,
-                    description: "",
-                    link: "",
-                    type: "text",
-                    order: 2,
                 },
             ]
         )

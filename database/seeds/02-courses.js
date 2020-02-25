@@ -4,7 +4,7 @@ exports.seed = function(knex, Promise)
     .insert(
         [
             {
-                name: "Learning How to Learn",
+                title: "Learning How to Learn",
                 link: "https://www.coursera.org/learn/learning-how-to-learn",
                 description: "This course gives you easy access to the invaluable learning techniques" +
                 " used by experts in art, music, literature, math, science, sports, and many other" +
@@ -23,9 +23,10 @@ exports.seed = function(knex, Promise)
                 creator_id: 1,
                 foreign_instructors: "Dr. Barbara Oakley, Dr. Terrence Sejnowski",
                 foreign_rating: "4.8 stars",
+                topic: "Learning"
             },
             {
-                name: "Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential",
+                title: "Mindshift: Break Through Obstacles to Learning and Discover Your Hidden Potential",
                 link: "https://www.coursera.org/learn/mindshift",
                 description: "Mindshift is designed to help boost your career and life in today’s fast-paced learning environment." +
                 " Whatever your age or stage, Mindshift teaches you essentials such as how to get the most out of online learning and MOOCs," +
@@ -41,15 +42,8 @@ exports.seed = function(knex, Promise)
                 creator_id: 1,
                 foreign_instructors: "Dr. Barbara Oakley, Dr. Terrence Sejnowski, M.S. Orlando Trejo",
                 foreign_rating: "4.8 stars",
-            },
-            {
-            name: "AbyssMind Performance Email Course",
-            link: "https://www.abyssmind.com/performance/try](https://www.abyssmind.com/performance/try",
-            description: "AbyssMind is a learning outcomes program that helps you understand the skills and techniques needed to succeed in your self-directed learning ambitions.  Sign up", 
-            creator_id: 1,
-            foreign_instructors: "AbyssMind"
+                topic: "Learning"
             }
-
         ]
     )
 }

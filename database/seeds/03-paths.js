@@ -4,16 +4,16 @@ exports.seed = function(knex, Promise)
     .insert(
         [
             {
-                name: "Getting Started with Didact",
+                title: "Getting Started with Didact",
                 description: "This learning path will get you on the road to success.",
-                category: "Learning",
-                creator_id: 1
+                creator_id: 1,
+                topic: "Didact"
             },
             {
-                name: "Python Basics",
+                title: "Python Basics",
                 description: "Learn the basics of Python scripting language.",
-                category: "Python",
-                creator_id: 2
+                creator_id: 2,
+                topic: "Python"
             },
         ]
     )
