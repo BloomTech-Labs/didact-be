@@ -54,7 +54,22 @@ function findCoursesByOwner(name) {
      .orWhere('users.last_name', nameTweak)
      .orWhereRaw("LOWER(first_name || ' ' || last_name) = ?", [nameTweak])
      .then(users => {
-         // do something
+         //mapping through the list of users we got and retrieving the courses they created
+         let coursesArray = Promise.all(users.map(async user => {
+             let courses = await db('courses')
+             .join('users', 'courses.creator_id', 'users.id')
+             .where('courses.creator_id', user.id)
+             .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
+             return courses;
+         }))
+         if(users.length > 1){
+             //combining array of arrays in the case that multiple users popped up (and therefore multiple arrays from return on line 63)
+             let combinedArrays = coursesArray.concat()
+             return combinedArrays;
+         } else if(users.length === 1){
+             return coursesArray
+         } 
+
      })
 }
 
