@@ -1,4 +1,4 @@
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema
     .createTable("users", tbl => {
       tbl.increments();
@@ -16,7 +16,7 @@ exports.up = function(knex) {
       tbl.boolean("owner").defaultTo(false);
       tbl.boolean("admin").defaultTo(false);
       tbl.boolean("moderator").defaultTo(false);
-    
+
     })
     .createTable("courses", tbl => {
       tbl.increments();
@@ -282,9 +282,36 @@ exports.up = function(knex) {
         .string("email", 500)
         .unique()
         .notNullable();
-    });
+    })
+    .createTable("sources", tbl => {
+      tbl.increments();
+      tbl
+        .integer("creator_id")
+        .unsigned()
+        .references("id")
+        .inTable("users")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+      tbl.string("name", 1000);
+      tbl.string("description", 10000);
+      tbl.string("link", 1000);
+    })
+    .createTable("tools", tbl => {
+      tbl.increments();
+      tbl
+        .integer("creator_id")
+        .unsigned()
+        .references("id")
+        .inTable("users")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+      tbl.string("name", 1000);
+      tbl.string("description", 10000);
+      tbl.string("link", 1000);
+    })
+
 };
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema
     .dropTableIfExists("email_list")
     .dropTableIfExists("users_section_details")
@@ -301,5 +328,7 @@ exports.down = function(knex) {
     .dropTableIfExists("tags")
     .dropTableIfExists("paths")
     .dropTableIfExists("courses")
-    .dropTableIfExists("users");
+    .dropTableIfExists("users")
+    .dropTableIfExists("sources")
+    .dropTableIfExists("tools");
 };
