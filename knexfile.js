@@ -35,7 +35,7 @@ module.exports = {
 	production: {
 		client: "pg",
 		connection:
-			process.env.HEROKU_POSTGRESQL_COBALT_URL || process.env.DATABASE_URL,
+			process.env.DATABASE_URL,
 		pool: {},
 		migrations: { directory: "./database/migrations" },
 		seeds: { directory: "./database/seeds" }
