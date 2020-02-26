@@ -26,12 +26,8 @@ module.exports = {
 
 	staging: {
 		client: "pg",
-		connection: process.env.DB_URL,
-		useNullAsDefault: true,
-		pool: {
-			min: 2,
-			max: 10
-		},
+		connection: process.env.DATABASE_URL,
+		pool: {},
 		migrations: { directory: "./database/migrations" },
 		seeds: { directory: "./database/seeds" }
 	},
