@@ -328,7 +328,7 @@ exports.down = function (knex) {
     .dropTableIfExists("tags")
     .dropTableIfExists("paths")
     .dropTableIfExists("courses")
-    .dropTableIfExists("users")
+    .dropTableIfExists("tools")
     .dropTableIfExists("sources")
-    .dropTableIfExists("tools");
+    .dropTableIfExists("users");
 };

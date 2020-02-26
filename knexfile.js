@@ -25,19 +25,15 @@ module.exports = {
 	},
 
 	staging: {
-		client: "postgresql",
-		connection: {
-			database: "my_db",
-			user: "username",
-			password: "password"
-		},
+		client: "pg",
+		connection: process.env.DB_URL,
+		useNullAsDefault: true,
 		pool: {
 			min: 2,
 			max: 10
 		},
-		migrations: {
-			tableName: "knex_migrations"
-		}
+		migrations: { directory: "./database/migrations" },
+		seeds: { directory: "./database/seeds" }
 	},
 
 	production: {
