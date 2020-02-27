@@ -224,11 +224,7 @@ router.delete('/:id', (req, res) => {
 
 function validateCourse(req, res, next) {
     if (!req.body) res.status(400).json({ message: "Missing course data" })
-<<<<<<< HEAD
-    else if (!req.body.title) res.status(400).json({ message: "Course name is required" })
-=======
     else if (!req.body.title) res.status(400).json({ message: "Course title is required" })
->>>>>>> b97f77d66adcd8aa78317069cef3b31f713deef9
     else next()
 }
 
