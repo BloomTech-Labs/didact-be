@@ -14,21 +14,21 @@ router.get('/', (req, res) => {
                     let filter = req.headers.filter
                     let query = req.headers.query
                     if (filter === 'topic' || filter === 'title' || filter === 'description') {
-                        Paths.findPathsByFilter(user.id, filter, query)
+                        Paths.findPathsByFilter(filter, query)
                             .then(response => {
                                 res.status(200).json(response)
                             }).catch(err => {
                                 res.status(500).json(err)
                             })
                     } else if (filter === 'tag') {
-                        Paths.findPathsByTag(user.id, query)
+                        Paths.findPathsByTag(query)
                             .then(response => {
                                 res.status(200).json(response)
                             }).catch(err => {
                                 res.status(500).json(err)
                             })
                     } else if (filter === 'creator') {
-                        Paths.findPathsByOwner(user.id, query)
+                        Paths.findPathsByOwner(query)
                             .then(response => {
                                 res.status(200).json(response)
                             }).catch(err => {
@@ -57,41 +57,12 @@ router.get('/yours', (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                //Here is the query and filter check. Should be receiving this info
-                //from the search bar on the front-end.
-                if (req.headers.query && req.headers.filter) {
-                    let filter = req.headers.filter
-                    let query = req.headers.query
-                    if (filter === 'topic' || filter === 'title' || filter === 'description') {
-                        Paths.findYourPathsByFilter(user.id, filter, query)
-                            .then(response => {
-                                res.status(200).json(response)
-                            }).catch(err => {
-                                res.status(500).json(err)
-                            })
-                    } else if (filter === 'tag') {
-                        Paths.findYourPathsByTag(user.id, query)
-                            .then(response => {
-                                res.status(200).json(response)
-                            }).catch(err => {
-                                res.status(500).json(err)
-                            })
-                    } else if (filter === 'creator') {
-                        Paths.findYourPathsByOwner(user.id, query)
-                            .then(response => {
-                                res.status(200).json(response)
-                            }).catch(err => {
-                                res.status(500).json(err)
-                            })
-                    }
-                } else {
                     Paths.findForUserId(user.id)
                         .then(response => {
                             res.status(200).json(response)
                         }).catch(err => {
                             res.status(500).json(err)
                         })
-                }
             }
             else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
         })
