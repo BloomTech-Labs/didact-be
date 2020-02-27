@@ -111,10 +111,9 @@ async function findForNotUserId(userId) {
 //For retrieving all non-user enrolled learning paths 
 //And all user enrolled learning paths respectively
 
-async function findPathsByFilter(userId, filter, query) {
+async function findPathsByFilter(filter, query) {
     let queryTweak = query.toLowerCase();
-    let paths = await findForNotUserId(userId).whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
-    return paths
+    return db("paths").whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
 }
 
 async function findYourPathsByFilter(userId, filter, query) {
@@ -132,7 +131,7 @@ function findPathsByOwner(userId, name) {
         .then(users => {
             //mapping through the list of users we got and retrieving the courses they created
             let pathsArray = Promise.all(users.map(async user => {
-                let paths = await findForNotUserId(userId)
+                let paths = await db("paths")
                     .join('users', 'paths.creator_id', 'users.id')
                     .where('paths.creator_id', user.id)
                     .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
@@ -176,7 +175,7 @@ function findYourPathsByOwner(userId, name) {
 
 function findPathsByTag(userId, tag) {
     let tagTweak = tag.toLowerCase();
-    return findForNotUserId(userId)
+    return db("paths")
     .join('tags_paths', 'tags_paths.path_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
     .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
