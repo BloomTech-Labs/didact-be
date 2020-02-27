@@ -322,7 +322,7 @@ exports.up = function (knex) {
       tbl.string("description", 10000);
       tbl.string("link", 1000);
     })
-    .createTable("sources_users", tbl => {
+    .createTable("tags_sources", tbl => {
       tbl.increments();
       tbl
         .integer("sources_id")
@@ -332,14 +332,14 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
       tbl
-        .integer("users_id")
+        .integer("tags_id")
         .unsigned()
         .references("id")
-        .inTable("users")
+        .inTable("tags")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
     })
-    .createTable("tools_users", tbl => {
+    .createTable("tags_tools", tbl => {
       tbl.increments();
       tbl
         .integer("tools_id")
@@ -349,14 +349,14 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE")
       tbl
-        .integer("users_id")
+        .integer("tags_id")
         .unsigned()
         .references("id")
-        .inTable("users")
+        .inTable("tags")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");;
     })
-    .createTable("articles_users", tbl => {
+    .createTable("tags_articles", tbl => {
       tbl.increments();
       tbl
         .integer("articles_id")
@@ -366,10 +366,10 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE")
       tbl
-        .integer("users_id")
+        .integer("tags_id")
         .unsigned()
         .references("id")
-        .inTable("users")
+        .inTable("tags")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");;
     })
@@ -389,14 +389,14 @@ exports.down = function (knex) {
     .dropTableIfExists("tags_courses")
     .dropTableIfExists("section_details")
     .dropTableIfExists("course_sections")
-    .dropTableIfExists("tags")
     .dropTableIfExists("paths")
     .dropTableIfExists("courses")
-    .dropTableIfExists("sources_users")
-    .dropTableIfExists("tools_users")
-    .dropTableIfExists("articles_users")
+    .dropTableIfExists("tags_sources")
+    .dropTableIfExists("tags_tools")
+    .dropTableIfExists("tags_articles")
     .dropTableIfExists("sources")
     .dropTableIfExists("tools")
     .dropTableIfExists("articles")
+    .dropTableIfExists("tags")
     .dropTableIfExists("users");
 };
