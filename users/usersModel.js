@@ -2,6 +2,8 @@ const db = require('../database/dbConfig');
 const learningPath = require('../learning-paths/learningPathsModel')
 
 module.exports = {
+    find,
+    update,
     add,
     findBy,
     findById,
@@ -12,6 +14,16 @@ module.exports = {
     getEmailList,
     checkEmailListForEmail
 };
+
+function find() {
+    return db("users");
+}
+
+function update(id, changes) {
+    return db("users")
+        .where({ id })
+        .update(changes);
+}
 
 function findBy(filter) {
     return db('users')
@@ -105,14 +117,12 @@ async function GGLfindOrCreate(userObj) {
     }
 }
 
-function addToEmailList(email)
-{
-    return db('email_list').insert({email})
+function addToEmailList(email) {
+    return db('email_list').insert({ email })
 }
 
 function getEmailList() { return db('email_list') }
 
-function checkEmailListForEmail(email)
-{
+function checkEmailListForEmail(email) {
     return db('email_list').where({ email }).first()
 }

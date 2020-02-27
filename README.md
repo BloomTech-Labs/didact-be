@@ -19,6 +19,8 @@ To get the server running locally:
 -    Works with nodejs
 -    Many useful packages
 
+### [![Maintainability](https://api.codeclimate.com/v1/badges/ed4a68d85d49dff7ed3d/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/didact-be/maintainability)
+
 ## [Back-End API Docs](https://didactlms.herokuapp.com/api/docs/)
 
 # Data Model
