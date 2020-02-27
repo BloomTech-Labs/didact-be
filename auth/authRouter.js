@@ -128,6 +128,14 @@ router.post('/login', validateUserLogin, (req, res) => {
 router.post('/', (req, res) => {
     let token = req.body.token
 
+    //     facebookID: null
+    // googleID: null
+    // slackID: null
+    // photo: null
+    // owner: false
+    // admin: true
+    // moderator: false
+
     if (token) {
         jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
             if (err) res.status(401).json({ message: 'Token does not exist' })
