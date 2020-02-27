@@ -158,7 +158,7 @@ router.get('/:id/yours', (req, res) => {
 
 function validateLearningPath(req, res, next) {
     if (!req.body) res.status(400).json({ message: "Missing learning path data" })
-    else if (!req.body.path.name) res.status(400).json({ message: "Learning Path name is required" })
+    else if (!req.body.path.title) res.status(400).json({ message: "Learning Path name is required" })
     else if (!req.body.userPathOrder) res.status(400).json({ message: "userPathOrder is required" })
     else next()
 }
@@ -445,7 +445,7 @@ function verifyLearningPath(req, res, next) {
 
 function validateLearningPathItem(req, res, next) {
     if (!req.body) res.status(400).json({ message: "Missing learning path item data" })
-    else if (!req.body.name) res.status(400).json({ message: "Learning Path Item name is required" })
+    else if (!req.body.title) res.status(400).json({ message: "Learning Path Item name is required" })
     else next()
 }
 

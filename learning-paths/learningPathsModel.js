@@ -56,7 +56,7 @@ async function findForUserId(userId)
 {
     let usersPaths = await db('paths as p')
         .join('users_paths as up', 'up.path_id', '=', 'p.id')
-        .select('p.id', 'p.name', 'p.description', 'p.category', 'p.creator_id', 'up.user_path_order')
+        .select('p.id', 'p.title', 'p.description', 'p.category', 'p.creator_id', 'up.user_path_order')
         .where({'up.user_id': userId})
 
     let yourPaths = []
@@ -284,7 +284,7 @@ async function findCoursesForPath(pathId)
     let courseList = await db('paths as p')
         .join('paths_courses as pc', 'pc.path_id', '=', 'p.id')
         .join('courses as c', 'pc.course_id', '=', 'c.id')
-        .select('c.id', 'c.name', 'pc.path_order', 'c.link', 'c.description', 'c.foreign_instructors', 'c.foreign_rating')
+        .select('c.id', 'c.title', 'pc.path_order', 'c.link', 'c.description', 'c.foreign_instructors', 'c.foreign_rating')
         .where({ 'p.id': pathId })
 
     return courseList
