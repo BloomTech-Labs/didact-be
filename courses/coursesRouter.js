@@ -3,17 +3,30 @@ const axios = require('axios')
 const Courses = require('./coursesModel')
 const Users = require('../users/usersModel')
 
-async function filterByTag(aCourses, tag) {
-    let retArr = []
-    for (let i = 0; i < aCourses.length; i++) {
-        let tags = await Courses.getTagsForCourse(aCourses[i].id)
-        tags = tags.map(el => el.toLowerCase())
-        if (tags.includes(tag.toLowerCase())) await retArr.push(aCourses[i])
-    }
-    return retArr
-}
-
 router.get('/', (req, res) => {
+    if(req.headers.query && req.headers.filter){
+        let filter = req.headers.filter;
+        let query = req.headers.query;
+        if(filter === 'topic' || filter === 'title' || filter === 'description'){
+            Courses.findByFilter(filter, query).then(response => {
+                res.status(200).json(response)
+            }).catch(error => {
+                res.status(500).json(error)
+            })
+        } else if(filter === 'creator' && query){
+            Courses.findCoursesByOwner(query).then(response => {
+                res.status(200).json(response)
+            }).catch(error => {
+                res.status(500).json(error)
+            })
+        } else if(filter === 'tag' && query){
+            Courses.findByTag(query).then(response => {
+                res.status(200).json(response)
+            }).catch(error => {
+                res.status(500).json(error)
+            })
+        } 
+    } else {
     Courses.find()
         .then(response => {
             if (req.body.url) {
@@ -32,6 +45,7 @@ router.get('/', (req, res) => {
         .catch(error => {
             res.status(500).json({ message: 'Error connecting with server' })
         })
+    }
 })
 
 router.get('/allyours', (req, res) => {

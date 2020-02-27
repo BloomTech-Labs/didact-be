@@ -5,6 +5,9 @@ const db = require('../database/dbConfig');
 module.exports = {
     find,
     findById,
+    findByFilter,
+    findCoursesByOwner,
+    findByTag,
     add,
     updateCourseById,
     deleteCourseById,
@@ -36,6 +39,46 @@ module.exports = {
 function find() {
     return db('courses')
 } 
+
+function findCoursesByOwner(name) {
+    let nameTweak = name.toLowerCase();
+
+    //looks for users using search input value by concatting first/last name 
+     return db('users')
+     .whereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
+     .then(users => {
+         //mapping through the list of users we got and retrieving the courses they created
+         let coursesArray = Promise.all(users.map(async user => {
+             let courses = await db('courses')
+             .join('users', 'courses.creator_id', 'users.id')
+             .where('courses.creator_id', user.id)
+             .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
+             return courses;
+         }))
+         if(users.length > 1){
+             //combining array of arrays in the case that multiple users popped up (and therefore multiple arrays from return on line 63)
+             let combinedArrays = coursesArray.concat()
+             return combinedArrays;
+         } else if(users.length === 1){
+             return coursesArray
+         } 
+
+     })
+}
+
+function findByFilter(filter, query) {
+    let queryTweak = query.toLowerCase();
+    return db('courses')
+    .whereRaw(`LOWER(courses.${filter}) ~ ?`, [queryTweak])
+}
+
+function findByTag(tag) {
+    let tagTweak = tag.toLowerCase();
+    return db('courses')
+    .join('tags_courses', 'tags_courses.course_id', 'courses.id')
+    .join('tags', 'tags.id', 'tags_courses.tag_id')
+    .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
+}
 
 async function findById(id)
 {
