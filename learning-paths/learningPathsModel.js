@@ -111,16 +111,16 @@ async function findForNotUserId(userId) {
 //For retrieving all non-user enrolled learning paths 
 //And all user enrolled learning paths respectively
 
-function findPathsByFilter(userId, filter, query) {
+async function findPathsByFilter(userId, filter, query) {
     let queryTweak = query.toLowerCase();
-    return findForNotUserId(userId)
-    .whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
+    let paths = await findForNotUserId(userId).whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
+    return paths
 }
 
-function findYourPathsByFilter(userId, filter, query) {
+async function findYourPathsByFilter(userId, filter, query) {
     let queryTweak = query.toLowerCase();
-    return findForUserId(userId)
-    .where(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
+    let paths = await findForUserId(userId).whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
+    return paths
 }
 
 function findPathsByOwner(userId, name) {
@@ -180,6 +180,9 @@ function findPathsByTag(userId, tag) {
     .join('tags_paths', 'tags_paths.path_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
     .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
+    .then(result => {
+        return result
+    })
 }
 
 function findYourPathsByTag(userId, tag) {
@@ -188,6 +191,9 @@ function findYourPathsByTag(userId, tag) {
     .join('tags_paths', 'tags_paths.path_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
     .whereeRaw('LOWER(tags.name) ~ ?', [tagTweak])
+    .then(result => {
+        return result
+    })
 }
 
 async function findById(id) {
