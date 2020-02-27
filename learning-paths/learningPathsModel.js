@@ -123,13 +123,13 @@ async function findForNotUserId(userId)
 function findPathsByFilter(userId, filter, query) {
     let queryTweak = query.toLowerCase();
     return findForNotUserId(userId)
-    .whereRaw(`LOWER(courses.${filter}) ~ ?`, [queryTweak])
+    .whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
 }
 
 function findYourPathsByFilter(userId, filter, query) {
     let queryTweak = query.toLowerCase();
     return findForUserId(userId)
-    .where(`LOWER(courses.${filter}) ~ ?`, [queryTweak])
+    .where(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
 }
 
 function findPathsByOwner(userId, name) {
@@ -186,7 +186,7 @@ function findYourPathsByOwner(userId, name) {
 function findPathsByTag(userId, tag) {
     let tagTweak = tag.toLowerCase();
     return findForNotUserId(userId)
-    .join('tags_paths', 'tags_paths.course_id', 'paths.id')
+    .join('tags_paths', 'tags_paths.path_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
     .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
 }
@@ -194,7 +194,7 @@ function findPathsByTag(userId, tag) {
 function findYourPathsByTag(userId, tag) {
     let tagTweak = tag.toLowerCase();
     return findForUserId(userId)
-    .join('tags_paths', 'tags_paths.course_id', 'paths.id')
+    .join('tags_paths', 'tags_paths.path_id', 'paths.id')
     .join('tags', 'tags.id', 'tags_paths.tag_id')
     .whereeRaw('LOWER(tags.name) ~ ?', [tagTweak])
 }
