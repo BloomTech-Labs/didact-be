@@ -104,7 +104,7 @@ router.post('/', (req, res) => {
                 Users.findBy({email: decodedToken.email})
                 .then(user =>
                     {
-                        if(user) res.status(200).json({email: decodedToken.email, id: user.id, photo: user.photo || null, first_name: user.first_name, last_name: user.last_name })
+                        if(user) res.status(200).json(user)
                         else res.status(404).json({ message: 'No such user found' })
                     })
                 .catch(err =>
