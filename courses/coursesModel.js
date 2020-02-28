@@ -34,7 +34,8 @@ module.exports = {
     cascadeUp,
     generateUdemyCourse,
     findAllCoursesForUser,
-    checkDbForCourseUrl
+    checkDbForCourseUrl,
+    update
 }
 
 function find() {
@@ -810,4 +811,10 @@ async function checkDbForCourseUrl(link) {
 
     if (!course) return { courseFound: false, id: -1 }
     else return { courseFound: true, id: course.id }
+}
+
+function update(id, changes) {
+    return db("courses")
+        .where({ id })
+        .update(changes);
 }

@@ -182,6 +182,27 @@ router.put('/:id', (req, res) => {
     }
 })
 
+
+//UPDATE A COURSE
+router.put("/all/:id", (req, res) => {
+    const { id } = req.params;
+    const changes = req.body;
+
+    Courses.update(id, changes)
+        .then(course => {
+            if (course) {
+                res.json({ update: course });
+            } else {
+                res
+                    .status(404)
+                    .json({ message: `Could not find a course with id:${id}` });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: "Failed to update course" });
+        });
+});
+
 router.put('/:id/togglecomplete', (req, res) => {
     const courseId = req.params.id
     let email = req.user.email
