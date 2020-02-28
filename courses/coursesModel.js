@@ -48,25 +48,24 @@ function findCoursesByOwner(name) {
         .whereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
         .then(users => {
             //mapping through the list of users we got and retrieving the courses they created
-            let coursesArray = Promise.all(users.map(async user => {
+            users.map(async user => {
                 let courses = await db('courses')
                     .join('users', 'courses.creator_id', 'users.id')
                     .where('courses.creator_id', user.id)
                     .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
                 return courses;
-            }))
-            console.log("USER LENGTH", users.length)
-            console.log("USERS ARRAY", users)
-            if (users.length > 1) {
-                
-                //combining array of arrays in the case that multiple users popped up (and therefore multiple arrays from return on line 63)
-                let combinedArrays = coursesArray.concat()
-                console.log("Array was more than one user, coursesArray = ", combinedArrays)
-                return combinedArrays;
-            } else if (users.length === 1) {
-                console.log("Array was just one user, coursesArray = ", coursesArray)
-                return coursesArray
-            }
+            }).then(result => {
+                if (users.length > 1) {
+                    //combining array of arrays in the case that multiple users popped up (and therefore multiple arrays from return on line 63)
+                    let combinedArrays = result.concat()
+                    console.log("Array was more than one user, coursesArray = ", combinedArrays)
+                    return combinedArrays;
+                } else if (users.length === 1) {
+                    console.log("Array was just one user, coursesArray = ", result)
+                    return result
+                }
+            })
+            
 
         })
 }
@@ -83,6 +82,9 @@ function findByTag(tag) {
         .join('tags_courses', 'tags_courses.course_id', 'courses.id')
         .join('tags', 'tags.id', 'tags_courses.tag_id')
         .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
+        .then(result => {
+            return result
+        })
 }
 
 async function findById(id) {
