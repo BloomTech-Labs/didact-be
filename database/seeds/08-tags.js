@@ -20,6 +20,9 @@ exports.seed = function(knex, Promise)
             },
             {
                 name: "Meetings"
+            },
+            {
+                name: "Development"
             }
         ]
     )
