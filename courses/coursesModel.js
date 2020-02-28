@@ -135,7 +135,7 @@ async function updateCourseById(userId, courseId, changes) {
     let course = courseObj.course
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    if (course.creator_id !== userId) return { message: 'User is not permitted to change this course', code: 403 }
+    // if (course.creator_id !== userId) return { message: 'User is not permitted to change this course', code: 403 }
     await db('courses').where({ id: courseId }).update(changes)
     return { code: 200 }
 }
