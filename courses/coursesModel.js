@@ -55,11 +55,16 @@ function findCoursesByOwner(name) {
                     .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
                 return courses;
             }))
+            console.log("USER LENGTH", users.length)
+            console.log("USERS ARRAY", users)
             if (users.length > 1) {
+                
                 //combining array of arrays in the case that multiple users popped up (and therefore multiple arrays from return on line 63)
                 let combinedArrays = coursesArray.concat()
+                console.log("Array was more than one user, coursesArray = ", combinedArrays)
                 return combinedArrays;
             } else if (users.length === 1) {
+                console.log("Array was just one user, coursesArray = ", coursesArray)
                 return coursesArray
             }
 
