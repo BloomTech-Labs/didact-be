@@ -6,41 +6,42 @@ router.get('/', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
+            console.log("ITGOOOOOOOTHERRRRRREEEEEEE", email, user)
             if (user) {
                 //Here is the query and filter check. Should be receiving this info
                 //from the search bar on the front-end.
-                if(req.headers.query && req.headers.filter){
+                if (req.headers.query && req.headers.filter) {
                     let filter = req.headers.filter
                     let query = req.headers.query
-                    if(filter === 'topic' || filter === 'title' || filter === 'description' ){
-                        Paths.findPathsByFilter(user.id, filter, query)
-                        .then(response => {
-                            res.status(200).json(response)
-                        }).catch(err => {
-                            res.status(500).json(err)
-                        })
-                    } else if(filter === 'tag'){
-                        Paths.findPathsByTag(user.id, query)
-                        .then(response => {
-                            res.status(200).json(response)
-                        }).catch(err => {
-                            res.status(500).json(err)
-                        })
-                    } else if (filter === 'creator'){
-                        Paths.findPathsByOwner(user.id, query)
-                        .then(response => {
-                            res.status(200).json(response)
-                        }).catch(err => {
-                            res.status(500).json(err)
-                        })
-                    } 
+                    if (filter === 'topic' || filter === 'title' || filter === 'description') {
+                        Paths.findPathsByFilter(filter, query)
+                            .then(response => {
+                                res.status(200).json(response)
+                            }).catch(err => {
+                                res.status(500).json(err)
+                            })
+                    } else if (filter === 'tag') {
+                        Paths.findPathsByTag(query)
+                            .then(response => {
+                                res.status(200).json(response)
+                            }).catch(err => {
+                                res.status(500).json(err)
+                            })
+                    } else if (filter === 'creator') {
+                        Paths.findPathsByOwner(query)
+                            .then(response => {
+                                res.status(200).json(response)
+                            }).catch(err => {
+                                res.status(500).json(err)
+                            })
+                    }
                 } else {
                     Paths.findForNotUserId(user.id)
-                    .then(response => {
-                        res.status(200).json(response)
-                    }).catch(err => {
-                        res.status(500).json(err)
-                    })
+                        .then(response => {
+                            res.status(200).json(response)
+                        }).catch(err => {
+                            res.status(500).json(err)
+                        })
                 }
             }
             else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
@@ -56,42 +57,13 @@ router.get('/yours', (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                //Here is the query and filter check. Should be receiving this info
-                //from the search bar on the front-end.
-                if(req.headers.query && req.headers.filter){
-                    let filter = req.headers.filter
-                    let query = req.headers.query
-                    if(filter === 'topic' || filter === 'title' || filter === 'description' ){
-                        Paths.findYourPathsByFilter(user.id, filter, query)
-                        .then(response => {
-                            res.status(200).json(response)
-                        }).catch(err => {
-                            res.status(500).json(err)
-                        })
-                    } else if(filter === 'tag'){
-                        Paths.findYourPathsByTag(user.id, query)
-                        .then(response => {
-                            res.status(200).json(response)
-                        }).catch(err => {
-                            res.status(500).json(err)
-                        })
-                    } else if (filter === 'creator'){
-                        Paths.findYourPathsByOwner(user.id, query)
-                        .then(response => {
-                            res.status(200).json(response)
-                        }).catch(err => {
-                            res.status(500).json(err)
-                        })
-                    } 
-                } else {
                     Paths.findForUserId(user.id)
-                    .then(response => {
+                        .then(response => {
                             res.status(200).json(response)
-                    }).catch(err => {
-                        res.status(500).json(err)
-                    })
+                        }).catch(err => {
+                            res.status(500).json(err)
+                        })
             }
-        }
             else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
         })
         .catch(err => {
@@ -135,30 +107,30 @@ router.get('/:id', (req, res) => {
 router.get('/:id/yours', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
-    .then(user => {
-        if (user) {
-            Paths.findYourPathById(user.id, req.params.id)
-            .then(response => {
-                if (response.code === 404) res.status(404).json({ message: response.message })
-                else if (response.code === 500) res.status(500).json({ message: response.message })
-                else res.status(200).json(response.path)
-            })
-            .catch(error => {
-                res.status(500).json({ message: 'Error connecting with server' })
-            })
-        }
-        else res.status(500).json({ message: 'Error, could not find user to check learning path for' })
+        .then(user => {
+            if (user) {
+                Paths.findYourPathById(user.id, req.params.id)
+                    .then(response => {
+                        if (response.code === 404) res.status(404).json({ message: response.message })
+                        else if (response.code === 500) res.status(500).json({ message: response.message })
+                        else res.status(200).json(response.path)
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: 'Error connecting with server' })
+                    })
+            }
+            else res.status(500).json({ message: 'Error, could not find user to check learning path for' })
         })
-    .catch(err => {
-        console.log('err', err)
-        res.status(500).json({ message: 'aError, could not find user to check learning path for' })
-    })
+        .catch(err => {
+            console.log('err', err)
+            res.status(500).json({ message: 'aError, could not find user to check learning path for' })
+        })
 
 })
 
 function validateLearningPath(req, res, next) {
     if (!req.body) res.status(400).json({ message: "Missing learning path data" })
-    else if (!req.body.path.name) res.status(400).json({ message: "Learning Path name is required" })
+    else if (!req.body.path.title) res.status(400).json({ message: "Learning Path title is required" })
     else if (!req.body.userPathOrder) res.status(400).json({ message: "userPathOrder is required" })
     else next()
 }
@@ -445,7 +417,7 @@ function verifyLearningPath(req, res, next) {
 
 function validateLearningPathItem(req, res, next) {
     if (!req.body) res.status(400).json({ message: "Missing learning path item data" })
-    else if (!req.body.name) res.status(400).json({ message: "Learning Path Item name is required" })
+    else if (!req.body.title) res.status(400).json({ message: "Learning Path Item name is required" })
     else next()
 }
 

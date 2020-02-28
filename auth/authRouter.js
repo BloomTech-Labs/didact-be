@@ -128,13 +128,21 @@ router.post('/login', validateUserLogin, (req, res) => {
 router.post('/', (req, res) => {
     let token = req.body.token
 
+    //     facebookID: null
+    // googleID: null
+    // slackID: null
+    // photo: null
+    // owner: false
+    // admin: true
+    // moderator: false
+
     if (token) {
         jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
             if (err) res.status(401).json({ message: 'Token does not exist' })
             else {
                 Users.findBy({ email: decodedToken.email })
                     .then(user => {
-                        if (user) res.status(200).json({ user, email: decodedToken.email })
+                        if (user) res.status(200).json({ email: decodedToken.email, id: user.id, photo: user.photo, owner: user.owner, admin: user.admin, moderator: user.moderator || null, first_name: user.first_name, last_name: user.last_name })
                         else res.status(404).json({ message: 'No such user found' })
                     })
                     .catch(err => {
