@@ -12,6 +12,15 @@ exports.seed = function(knex, Promise)
             {
                 name: "Free",
             },
+            {
+                name: "Community"
+            },
+            {
+                name: "Udemy"
+            },
+            {
+                name: "Meetings"
+            }
         ]
     )
 }
