@@ -149,12 +149,11 @@ async function deleteCourseById(courseId) {
     return { code: 200 }
 }
 
-async function addCourseTag(userId, courseId, tag) {
+async function addCourseTag(courseId, tag) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    if (course.creator_id !== userId) return { message: 'User is not permitted to add tags to this course', code: 403 }
 
     let tagId = await checkForTag(tag)
     if (tagId === -1) {
@@ -167,13 +166,12 @@ async function addCourseTag(userId, courseId, tag) {
     return { message: 'tag added to course', code: 201 }
 }
 
-async function deleteCourseTag(userId, courseId, tag) {
+async function deleteCourseTag(courseId, tag) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
-    let user = await findUserById(userId)
+
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    if (course.creator_id !== userId && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to remove tags from this course', code: 403 }
 
     let tagId = await checkForTag(tag)
 
@@ -232,12 +230,12 @@ async function updateCourseSection(courseId, sectionId, changes) {
     return { code: 200, message: updatereturn }
 }
 
-async function deleteCourseSection(userId, courseId, sectionId) {
+async function deleteCourseSection(courseId, sectionId) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
-    let user = await findUserById(userId)
+
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    if (course.creator_id !== userId && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to update sections to this course', code: 403 }
+
     await db('course_sections')
         .where({ id: sectionId })
         .del()

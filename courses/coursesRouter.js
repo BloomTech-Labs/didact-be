@@ -182,27 +182,6 @@ router.put('/:id', (req, res) => {
     }
 })
 
-
-//UPDATE A COURSE
-// router.put("/all/:id", (req, res) => {
-//     const { id } = req.params;
-//     const changes = req.body;
-
-//     Courses.update(id, changes)
-//         .then(course => {
-//             if (course) {
-//                 res.json({ update: course });
-//             } else {
-//                 res
-//                     .status(404)
-//                     .json({ message: `Could not find a course with id:${id}` });
-//             }
-//         })
-//         .catch(err => {
-//             res.status(500).json({ message: "Failed to update course" });
-//         });
-// });
-
 router.put('/all/:id', (req, res) => {
     if (!req.body.changes) res.status(400).json({ message: 'Missing course changes' })
     else {
@@ -261,29 +240,19 @@ function validateCourse(req, res, next) {
 
 router.post('/:id/tags', (req, res) => {
     const courseId = req.params.id
-    let email = req.user.email
+
     if (!req.body.tag) res.status(400).json({ message: "Missing tag data" })
     else {
-        Users.findBy({ email })
-            .then(user => {
-                if (user) {
-                    Courses.addCourseTag(user.id, courseId, req.body.tag)
-                        .then(response => {
-                            if (response.code === 201) res.status(201).json({ message: response.message })
-                            else res.status(response.code).json({ message: response.message })
-                        })
-                        .catch(error => {
-                            console.log(error)
-                            res.status(500).json({ message: 'Internal error: Could not add tags to course' })
-                        })
-                }
-                else res.status(500).json({ message: 'Could not find user to add course for' })
+        Courses.addCourseTag(courseId, req.body.tag)
+            .then(response => {
+                if (response.code === 201) res.status(201).json({ message: response.message })
+                else res.status(response.code).json({ message: response.message })
             })
-            .catch(err => {
-                res.status(500).json({ message: 'Could not find user to add course for' })
+            .catch(error => {
+                console.log(error)
+                res.status(500).json({ message: 'Internal error: Could not add tags to course' })
             })
     }
-
 })
 
 router.delete('/:id/tags', (req, res) => {
@@ -292,24 +261,14 @@ router.delete('/:id/tags', (req, res) => {
     }
     else {
         const courseId = req.params.id
-        let email = req.user.email
-        Users.findBy({ email })
-            .then(user => {
-                if (user) {
-                    Courses.deleteCourseTag(user.id, courseId, req.body.tag)
-                        .then(response => {
-                            if (response.code === 200) res.status(200).json({ message: response.message })
-                            else res.status(response.code).json({ message: response.message })
-                        })
-                        .catch(error => {
-                            console.log(error)
-                            res.status(500).json({ message: 'Internal error: Could not remove tags from course' })
-                        })
-                }
-                else res.status(500).json({ message: 'Could not find user to remove tag for' })
+        Courses.deleteCourseTag(courseId, req.body.tag)
+            .then(response => {
+                if (response.code === 200) res.status(200).json({ message: response.message })
+                else res.status(response.code).json({ message: response.message })
             })
-            .catch(err => {
-                res.status(500).json({ message: 'Could not find user to remove tag for' })
+            .catch(error => {
+                console.log(error)
+                res.status(500).json({ message: 'Internal error: Could not remove tags from course' })
             })
     }
 })
@@ -397,10 +356,7 @@ router.post('/:id/sections', (req, res) => {
 router.put('/:id/sections/:section_id', (req, res) => {
     const sectionId = req.params.section_id
     const courseId = req.params.id
-    // let email = req.user.email
-    // Users.findBy({ email })
-    //     .then(user => {
-    //         if (user) {
+
     if (!req.body.changes) res.status(400).json({ message: 'Could not find section in body' })
     else {
         Courses.updateCourseSection(courseId, sectionId, req.body.changes)
@@ -412,10 +368,7 @@ router.put('/:id/sections/:section_id', (req, res) => {
             .catch(err => res.status(500).json(err))
     }
 })
-//             else res.status(500).json({ message: 'Could not find user to update section for' })
-//         })
-//     .catch(err => res.status(500).json({ message: 'Could not find user to update section for' }))
-// })
+
 
 router.put('/:id/sections/:section_id/togglecomplete', (req, res) => {
     const sectionId = req.params.section_id
@@ -439,22 +392,15 @@ router.put('/:id/sections/:section_id/togglecomplete', (req, res) => {
 router.delete('/:id/sections/:section_id', (req, res) => {
     const sectionId = req.params.section_id
     const courseId = req.params.id
-    let email = req.user.email
-    Users.findBy({ email })
-        .then(user => {
-            if (user) {
-                Courses.deleteCourseSection(user.id, courseId, sectionId)
-                    .then(deleteRes => {
-                        deleteRes === 0 ? res.status(404).json({ message: `Section not found with id of ${sectionId}` })
-                            : deleteRes.code === 200 ? res.status(200).json({ message: `Section has been deleted` })
-                                : res.status(403).json({ message: deleteRes.message })
-                    })
-                    .catch(err => res.status(500).json(err))
-            }
-            else res.status(500).json({ message: 'Could not find user to delete section for' })
-        })
-        .catch(err => res.status(500).json({ message: 'Could not find user to delete section for' }))
 
+
+    Courses.deleteCourseSection(courseId, sectionId)
+        .then(deleteRes => {
+            deleteRes === 0 ? res.status(404).json({ message: `Section not found with id of ${sectionId}` })
+                : deleteRes.code === 200 ? res.status(200).json({ message: `Section has been deleted` })
+                    : res.status(403).json({ message: deleteRes.message })
+        })
+        .catch(err => res.status(500).json(err))
 })
 
 router.get('/:id/sections/:s_id', (req, res) => {
