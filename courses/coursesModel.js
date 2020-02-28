@@ -141,16 +141,21 @@ async function updateCourseById(userId, courseId, changes) {
 }
 // NEED TO VERIFY CONDITIONAL HERE
 async function deleteCourseById(userId, courseId) {
-    // let user = await findUserById(userId)
-    let courseObj = await findById(courseId)
-    let course = courseObj.course
+    let user = await findUserById(userId)
+    if (user) {
+        let userId = user.id
+        let courseObj = await findById(courseId)
+        let course = courseObj.course
 
-    // console.log("XXXXXXXXXXXXXXXMODEL", user.admin)
-    console.log("zzzzzzzzzzzzzzMODEL", course.title)
-    if (!course) return { message: 'No course found with that ID', code: 404 }
-    if (course.creator_id !== userId) return { message: 'User is not permitted to change this course', code: 403 }
-    let delReturn = await db('courses').where({ id: courseId }).del()
-    return { code: 200 }
+        // console.log("XXXXXXXXXXXXXXXMODEL", user.admin)
+        console.log("zzzzzzzzzzzzzzMODEL", course.title)
+        if (!course) return { message: 'No course found with that ID', code: 404 }
+        if (course.creator_id !== userId && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to change this course', code: 403 }
+        let delReturn = await db('courses').where({ id: courseId }).del()
+        return { code: 200 }
+    } else {
+        return console.log("Error cannot find user data")
+    }
 }
 
 async function addCourseTag(userId, courseId, tag) {
