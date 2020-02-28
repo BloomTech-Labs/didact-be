@@ -184,24 +184,41 @@ router.put('/:id', (req, res) => {
 
 
 //UPDATE A COURSE
-router.put("/all/:id", (req, res) => {
-    const { id } = req.params;
-    const changes = req.body;
+// router.put("/all/:id", (req, res) => {
+//     const { id } = req.params;
+//     const changes = req.body;
 
-    Courses.update(id, changes)
-        .then(course => {
-            if (course) {
-                res.json({ update: course });
-            } else {
-                res
-                    .status(404)
-                    .json({ message: `Could not find a course with id:${id}` });
-            }
-        })
-        .catch(err => {
-            res.status(500).json({ message: "Failed to update course" });
-        });
-});
+//     Courses.update(id, changes)
+//         .then(course => {
+//             if (course) {
+//                 res.json({ update: course });
+//             } else {
+//                 res
+//                     .status(404)
+//                     .json({ message: `Could not find a course with id:${id}` });
+//             }
+//         })
+//         .catch(err => {
+//             res.status(500).json({ message: "Failed to update course" });
+//         });
+// });
+
+router.put('/all/:id', (req, res) => {
+    if (!req.body.changes) res.status(400).json({ message: 'Missing course changes' })
+    else {
+        const changes = req.body.changes
+        const courseId = req.params.id
+        Courses.updateCourseById(courseId, changes)
+            .then(response => {
+                if (response.code === 404) res.status(404).json({ message: response.message })
+                else res.status(200).json({ message: 'course updated' })
+            })
+            .catch(error => {
+                res.status(500).json({ message: 'Could not edit course' })
+            })
+    }
+})
+
 
 router.put('/:id/togglecomplete', (req, res) => {
     const courseId = req.params.id
