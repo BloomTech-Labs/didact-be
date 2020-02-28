@@ -464,11 +464,7 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
     const courseId = req.params.id
     const sectionId = req.params.section_id
     const detailId = req.params.detail_id
-    // let email = req.user.email
-    // Users.findBy({ email })
-    //     .then(user => {
-    //         // console.log(user)
-    //         if (user) {
+
     if (!req.body.changes) res.status(400).json({ message: 'Could not find changes in body' })
     else {
         Courses.updateSectionDetails(courseId, sectionId, detailId, req.body.changes)
@@ -479,12 +475,7 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
             })
             .catch(err => res.status(500).json(err))
     }
-}
-    //         else res.status(500).json({ message: 'Could not find user to update lesson for' })
-    //     })
-    // .catch(err => res.status(500).json({ message: 'Could not find user to update lesson for' }))
-
-)
+})
 
 
 router.put('/:id/sections/:section_id/details/:detail_id/togglecomplete', (req, res) => {
@@ -512,11 +503,6 @@ router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
     const detailId = req.params.detail_id
     const sectionId = req.params.section_id
     const courseId = req.params.id
-    // let email = req.user.email
-    // Users.findBy({ email })
-    //     .then(user => {
-    //         console.log(user)
-    //         if (user) {
     Courses.deleteSectionDetails(courseId, sectionId, detailId)
         .then(deleteRes => {
             deleteRes.message === 0 ? res.status(404).json({ message: `Detail ${detailId} not found in Section ${sectionId}` })
@@ -524,10 +510,6 @@ router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
                     : res.status(403).json({ message: deleteRes.message })
         })
         .catch(err => res.status(500).json(err))
-}
-    //             else res.status(500).json({ message: 'Could not find user to delete lesson for' })
-    //         })
-    //         .catch(err => res.status(500).json({ message: 'Could not find user to delete lesson for' }))
-)
+})
 
 module.exports = router

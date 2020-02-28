@@ -279,10 +279,10 @@ async function updateSectionDetails(courseId, sectionId, detailId, changes) {
 async function deleteSectionDetails(courseId, sectionId, detailId) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
-    // let user = await findUserById(userId)
+
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    // if (course.creator_id !== userId && user.owner === false && user.admin === false && user.moderator === false) return { code: 403, message: 'User is not permitted to add Details to this Course Section', code: 403 }
+
     await db('section_details')
         .where({ id: detailId, course_sections_id: sectionId })
         .del()
