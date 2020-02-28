@@ -141,9 +141,10 @@ async function updateCourseById(userId, courseId, changes) {
 }
 // NEED TO VERIFY CONDITIONAL HERE
 async function deleteCourseById(userId, courseId) {
+    let user = await findUserById(userId)
     let courseObj = await findById(courseId)
     let course = courseObj.course
-    let user = await findUserById(userId)
+
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
     if (course.creator_id !== userId && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to change this course', code: 403 }

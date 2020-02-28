@@ -212,12 +212,17 @@ router.delete('/:id', (req, res) => {
                         else res.status(200).json({ message: 'course deleted' })
                     })
                     .catch(error => {
+                        console.log("ERROR IN DELETE LINE 215XXXXXXXXXXXXXXX");
                         res.status(500).json({ message: 'Could not delete course' })
                     })
             }
-            else res.status(500).json({ message: 'Could not find user to delete course for' })
+            else {
+                console.log("ERROR IN DELETE LINE 220XXXXXXXXXXXXXXX");
+                res.status(500).json({ message: 'Could not find user to delete course for' })
+            }
         })
         .catch(err => {
+            console.log("ERROR IN DELETE LINE 225XXXXXXXXXXXXXXX final PART")
             res.status(500).json({ message: 'Could not find user to delete course for' })
         })
 })
