@@ -222,39 +222,19 @@ router.put('/:id/togglecomplete', (req, res) => {
 })
 
 router.delete('/:id', (req, res) => {
-
-    // const user_admin = req.decodedJwt.user.admin;
-    // if (user_admin === false) {
-    //     res
-    //         .status(401)
-    //         .json({ message: "You don't have user privileges to delete users" });
-    // } else {
-
-    let email = req.user.email
-    Users.findBy({ email })
-        .then(user => {
-            if (user) {
-                Courses.deleteCourseById(user.id, req.params.id)
-                    .then(response => {
-                        if (response.code === 404) res.status(404).json({ message: response.message })
-                        else if (response.code === 403) res.status(403).json({ message: response.message })
-                        else res.status(200).json({ message: 'course deleted' })
-                    })
-                    .catch(error => {
-                        console.log("ERROR IN DELETE LINE 215XXXXXXXXXXXXXXX");
-                        res.status(500).json({ message: 'Could not delete course' })
-                    })
-            }
-            else {
-                console.log("ERROR IN DELETE LINE 220XXXXXXXXXXXXXXX");
-                res.status(500).json({ message: 'Could not find user to delete course for' })
-            }
+    Courses.deleteCourseById(req.params.id)
+        .then(response => {
+            if (response.code === 404) res.status(404).json({ message: response.message })
+            else res.status(200).json({ message: 'course deleted' })
         })
-        .catch(err => {
-            console.log("ERROR IN DELETE LINE 225XXXXXXXXXXXXXXX final PART")
-            res.status(500).json({ message: 'Could not find user to delete course for' })
+        .catch(error => {
+            console.log("ERROR IN DELETE LINE 231XXXXXXXXXXXXXXX");
+            res.status(500).json({ message: 'Could not delete course' })
         })
 })
+
+
+
 
 function validateCourse(req, res, next) {
     if (!req.body) res.status(400).json({ message: "Missing course data" })
