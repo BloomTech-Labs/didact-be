@@ -40,34 +40,24 @@ function find() {
     return db('courses')
 }
 
-function findCoursesByOwner(name) {
+async function findCoursesByOwner(name) {
     let nameTweak = name.toLowerCase();
+    //looks for users using search input value, checks many possible case sensitivities
+    let users = db('users').orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
+    return findCoursesForUsers(users)
+}
 
-    //looks for users using search input value by concatting first/last name 
-    return db('users')
-        .whereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
-        .then(users => {
-            //mapping through the list of users we got and retrieving the courses they created
-            users.map(async user => {
-                let courses = await db('courses')
-                    .join('users', 'courses.creator_id', 'users.id')
-                    .where('courses.creator_id', user.id)
-                    .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
-                return courses;
-            }).then(result => {
-                if (users.length > 1) {
-                    //combining array of arrays in the case that multiple users popped up (and therefore multiple arrays from return on line 63)
-                    let combinedArrays = result.concat()
-                    console.log("Array was more than one user, coursesArray = ", combinedArrays)
-                    return combinedArrays;
-                } else if (users.length === 1) {
-                    console.log("Array was just one user, coursesArray = ", result)
-                    return result
-                }
-            })
-            
-
+async function findCoursesForUsers(users) {
+    return users.map(async user => {
+        return db("courses")
+        .join('users', 'courses.creator_id', 'users.id')
+        .where('courses.creator_id', user.id)
+        .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
+        .then(result => {
+            console.log(result)
+            return result
         })
+    })
 }
 
 function findByFilter(filter, query) {
