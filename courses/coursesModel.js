@@ -54,7 +54,6 @@ async function findCoursesForUsers(users) {
         .where('courses.creator_id', user.id)
         .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
         .then(result => {
-            console.log(result)
             return result
         })
     })

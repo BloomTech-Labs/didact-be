@@ -127,7 +127,6 @@ async function findPathsForUsers(users) {
         .where('paths.creator_id', user.id)
         .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
         .then(result => {
-            console.log(result)
             return result
         })
     })
