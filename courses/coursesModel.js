@@ -55,9 +55,9 @@ async function findCoursesForUsers(users) {
         .join('users', 'courses.creator_id', 'users.id')
         .where('courses.creator_id', user.id)
         .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
-        .then(result => {
-            return result
-        })
+    }).then(result => {
+        let flattenedArray = result.flatMap(arr => arr)
+        return flattenedArray
     })
 }
 
