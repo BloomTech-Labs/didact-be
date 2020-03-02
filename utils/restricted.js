@@ -8,9 +8,8 @@ module.exports = (req, res, next) => {
     if (token) {
         jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
             if (err) res.status(401).json({ message: 'Invalid Credentials' })
-            else 
-            {
-                req.user = { email: decodedToken.email }
+            else {
+                req.user = { email: decodedToken.email, owner: decodedToken.owner, admin: decodedToken.admin, moderator: decodedToken.moderator }
                 next()
             }
         })

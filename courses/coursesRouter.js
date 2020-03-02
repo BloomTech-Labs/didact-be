@@ -28,24 +28,31 @@ router.get('/', (req, res) => {
             })
         }
     } else {
-        Courses.find()
-            .then(response => {
-                if (req.body.url) {
-                    response = response.filter(el => el.link === req.body.url)
-                    res.status(200).json(response)
-                }
-                else if (req.body.tag) {
-                    filterByTag(response, req.body.tag)
-                        .then(results => {
-                            res.status(200).json(results)
-                        })
-                        .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
-                }
-                else res.status(200).json(response)
-            })
-            .catch(error => {
-                res.status(500).json({ message: 'Error connecting with server' })
-            })
+        const owner = req.user.owner
+        const admin = req.user.admin
+        const moderator = req.user.moderator
+        if (admin === true) {
+            Courses.find()
+                .then(response => {
+                    if (req.body.url) {
+                        response = response.filter(el => el.link === req.body.url)
+                        res.status(200).json(response)
+                    }
+                    else if (req.body.tag) {
+                        filterByTag(response, req.body.tag)
+                            .then(results => {
+                                res.status(200).json(results)
+                            })
+                            .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
+                    }
+                    else res.status(200).json(response)
+                })
+                .catch(error => {
+                    res.status(500).json({ message: 'Error connecting with server' })
+                })
+        } else {
+            res.status(500).json({ message: 'Unauthorized' })
+        }
     }
 })
 
@@ -164,7 +171,7 @@ router.put('/:id', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Courses.updateCourseById(user.id, req.params.id, changes)
+                    Courses.updateCourseById(req.params.id, changes)
                         .then(response => {
                             if (response.code === 404) res.status(404).json({ message: response.message })
                             else if (response.code === 403) res.status(403).json({ message: response.message })
