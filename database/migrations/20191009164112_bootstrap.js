@@ -292,9 +292,9 @@ exports.up = function (knex) {
         .inTable("users")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
-      tbl.string("name", 1000);
-      tbl.string("description", 10000);
-      tbl.string("link", 1000);
+      tbl.string("name", 1000).notNullable();
+      tbl.string("description", 10000).notNullable();
+      tbl.string("link", 1000).notNullable();
     })
     .createTable("tools", tbl => {
       tbl.increments();
@@ -305,9 +305,9 @@ exports.up = function (knex) {
         .inTable("users")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
-      tbl.string("name", 1000);
-      tbl.string("description", 10000);
-      tbl.string("link", 1000);
+      tbl.string("name", 1000).notNullable();
+      tbl.string("description", 10000).notNullable();
+      tbl.string("link", 1000).notNullable();
     })
     .createTable("articles", tbl => {
       tbl.increments();
@@ -318,21 +318,22 @@ exports.up = function (knex) {
         .inTable("users")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
-      tbl.string("name", 1000);
-      tbl.string("description", 10000);
-      tbl.string("link", 1000);
+      tbl.string("topic", 1000).notNullable();
+      tbl.string("title", 1000).notNullable();
+      tbl.string("body", 10000).notNullable();
+      tbl.string("date", 10).notNullable();
     })
     .createTable("tags_sources", tbl => {
       tbl.increments();
       tbl
-        .integer("sources_id")
+        .integer("source_id")
         .unsigned()
         .references("id")
         .inTable("sources")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
       tbl
-        .integer("tags_id")
+        .integer("tag_id")
         .unsigned()
         .references("id")
         .inTable("tags")
@@ -342,14 +343,14 @@ exports.up = function (knex) {
     .createTable("tags_tools", tbl => {
       tbl.increments();
       tbl
-        .integer("tools_id")
+        .integer("tool_id")
         .unsigned()
         .references("id")
         .inTable("tools")
         .onDelete("CASCADE")
         .onUpdate("CASCADE")
       tbl
-        .integer("tags_id")
+        .integer("tag_id")
         .unsigned()
         .references("id")
         .inTable("tags")
@@ -359,14 +360,14 @@ exports.up = function (knex) {
     .createTable("tags_articles", tbl => {
       tbl.increments();
       tbl
-        .integer("articles_id")
+        .integer("article_id")
         .unsigned()
         .references("id")
         .inTable("articles")
         .onDelete("CASCADE")
         .onUpdate("CASCADE")
       tbl
-        .integer("tags_id")
+        .integer("tag_id")
         .unsigned()
         .references("id")
         .inTable("tags")

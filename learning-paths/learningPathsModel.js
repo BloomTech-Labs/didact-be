@@ -7,11 +7,8 @@ module.exports =
     find,
     findById,
     findPathsByFilter,
-    findYourPathsByFilter,
     findPathsByTag,
-    findYourPathsByTag,
     findPathsByOwner,
-    findYourPathsByOwner,
     add,
     updatePathById,
     deletePathById,
@@ -112,83 +109,39 @@ async function findForNotUserId(userId) {
 //For retrieving all non-user enrolled learning paths 
 //And all user enrolled learning paths respectively
 
-function findPathsByFilter(userId, filter, query) {
+async function findPathsByFilter(filter, query) {
     let queryTweak = query.toLowerCase();
-    return findForNotUserId(userId)
-        .whereRaw(`LOWER(courses.${filter}) ~ ?`, [queryTweak])
+    return db("paths").whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak])
 }
 
-function findYourPathsByFilter(userId, filter, query) {
-    let queryTweak = query.toLowerCase();
-    return findForUserId(userId)
-        .where(`LOWER(courses.${filter}) ~ ?`, [queryTweak])
-}
-
-function findPathsByOwner(userId, name) {
+async function findPathsByOwner(name) {
     let nameTweak = name.toLowerCase();
-
     //looks for users using search input value, checks many possible case sensitivities
-    return db('users')
-        .orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
-        .then(users => {
-            //mapping through the list of users we got and retrieving the courses they created
-            let pathsArray = Promise.all(users.map(async user => {
-                let paths = await findForNotUserId(userId)
-                    .join('users', 'paths.creator_id', 'users.id')
-                    .where('paths.creator_id', user.id)
-                    .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
-                return paths;
-            }))
-            if (users.length > 1) {
-                //combining array of arrays in the case that multiple users popped up (and therefore multiple arrays from return on line 63)
-                let combinedArrays = pathsArray.concat()
-                return combinedArrays;
-            } else if (users.length === 1) {
-                return pathsArray
-            }
+    let users = db('users').orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
+    return findPathsForUsers(users)
+}
 
+async function findPathsForUsers(users) {
+    return users.map(async user => {
+        return db("paths")
+        .join('users', 'paths.creator_id', 'users.id')
+        .where('paths.creator_id', user.id)
+        .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
+        .then(result => {
+            return result
         })
+    })
 }
 
-function findYourPathsByOwner(userId, name) {
-    let nameTweak = name.toLowerCase();
-
-    //looks for users using search input value, checks many possible case sensitivities
-    return db('users')
-        .orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak])
-        .then(users => {
-            //mapping through the list of users we got and retrieving the courses they created
-            let pathsArray = Promise.all(users.map(async user => {
-                let paths = await findForUserId(userId)
-                    .join('users', 'paths.creator_id', 'users.id')
-                    .where('paths.creator_id', user.id)
-                    .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
-                return paths;
-            }))
-            if (users.length > 1) {
-                //combining array of arrays in the case that multiple users popped up (and therefore multiple arrays from return on line 63)
-                let combinedArrays = pathsArray.concat()
-                return combinedArrays;
-            } else if (users.length === 1) {
-                return pathsArray
-            }
-        })
-}
-
-function findPathsByTag(userId, tag) {
+function findPathsByTag(tag) {
     let tagTweak = tag.toLowerCase();
-    return findForNotUserId(userId)
-        .join('tags_paths', 'tags_paths.course_id', 'paths.id')
-        .join('tags', 'tags.id', 'tags_paths.tag_id')
-        .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
-}
-
-function findYourPathsByTag(userId, tag) {
-    let tagTweak = tag.toLowerCase();
-    return findForUserId(userId)
-        .join('tags_paths', 'tags_paths.course_id', 'paths.id')
-        .join('tags', 'tags.id', 'tags_paths.tag_id')
-        .whereeRaw('LOWER(tags.name) ~ ?', [tagTweak])
+    return db("paths")
+    .join('tags_paths', 'tags_paths.path_id', 'paths.id')
+    .join('tags', 'tags.id', 'tags_paths.tag_id')
+    .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
+    .then(result => {
+        return result
+    })
 }
 
 async function findById(id) {
