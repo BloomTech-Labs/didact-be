@@ -6,7 +6,6 @@ router.get('/', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
-            console.log("ITGOOOOOOOTHERRRRRREEEEEEE", email, user)
             if (user) {
                 //Here is the query and filter check. Should be receiving this info
                 //from the search bar on the front-end.
