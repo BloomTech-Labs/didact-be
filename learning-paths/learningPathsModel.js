@@ -1,5 +1,6 @@
 const db = require('../database/dbConfig')
 const Courses = require('../courses/coursesModel')
+// const Users = require('../users/usersModel')
 
 module.exports =
 {
@@ -272,7 +273,7 @@ async function togglePathItemCompletion(userId, pathId, itemId) {
         return 0
     }
 }
-
+// FIX CONDITIONS HERE
 async function deletePathItem(userId, pathId, itemId) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
