@@ -28,10 +28,11 @@ router.get('/', (req, res) => {
             })
         }
     } else {
+        const user = req.user
         const owner = req.user.owner
         const admin = req.user.admin
         const moderator = req.user.moderator
-        if (admin === true) {
+        if (user || owner === true || admin === true || moderator === true) {
             Courses.find()
                 .then(response => {
                     if (req.body.url) {
