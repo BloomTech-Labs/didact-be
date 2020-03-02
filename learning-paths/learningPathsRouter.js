@@ -56,12 +56,12 @@ router.get('/yours', (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                    Paths.findForUserId(user.id)
-                        .then(response => {
-                            res.status(200).json(response)
-                        }).catch(err => {
-                            res.status(500).json(err)
-                        })
+                Paths.findForUserId(user.id)
+                    .then(response => {
+                        res.status(200).json(response)
+                    }).catch(err => {
+                        res.status(500).json(err)
+                    })
             }
             else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
         })
@@ -122,7 +122,7 @@ router.get('/:id/yours', (req, res) => {
         })
         .catch(err => {
             console.log('err', err)
-            res.status(500).json({ message: 'aError, could not find user to check learning path for' })
+            res.status(500).json({ message: 'Error, could not find user to check learning path for' })
         })
 
 })

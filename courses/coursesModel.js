@@ -52,12 +52,12 @@ async function findCoursesByOwner(name) {
 async function findCoursesForUsers(users) {
     return users.map(async user => {
         return db("courses")
-        .join('users', 'courses.creator_id', 'users.id')
-        .where('courses.creator_id', user.id)
-        .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
-        .then(result => {
-            return result
-        })
+            .join('users', 'courses.creator_id', 'users.id')
+            .where('courses.creator_id', user.id)
+            .select('courses.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
+            .then(result => {
+                return result
+            })
     })
 }
 
@@ -129,7 +129,7 @@ async function updateCourseById(courseId, changes) {
     await db('courses').where({ id: courseId }).update(changes)
     return { code: 200 }
 }
-// NEED TO VERIFY CONDITIONAL HERE
+
 async function deleteCourseById(courseId) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
@@ -216,7 +216,7 @@ async function updateCourseSection(courseId, sectionId, changes) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    // if (course.creator_id !== userId) return { message: 'User is not permitted to update sections to this course', code: 403 }
+
     let updatereturn = await db('course_sections')
         .where({ id: sectionId })
         .update(changes)
@@ -260,7 +260,7 @@ async function updateSectionDetails(courseId, sectionId, detailId, changes) {
     let course = courseObj.course
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    // if (course.creator_id !== userId) return { message: 'User is not permitted to add Details to this Course Section', code: 403 }
+
     else {
         let addreturn = await db('section_details')
             .where({ id: detailId, course_sections_id: sectionId })

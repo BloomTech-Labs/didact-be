@@ -168,24 +168,15 @@ router.put('/:id', (req, res) => {
     if (!req.body.changes) res.status(400).json({ message: 'Missing course changes' })
     else {
         const changes = req.body.changes
-        let email = req.user.email
-        Users.findBy({ email })
-            .then(user => {
-                if (user) {
-                    Courses.updateCourseById(req.params.id, changes)
-                        .then(response => {
-                            if (response.code === 404) res.status(404).json({ message: response.message })
-                            else if (response.code === 403) res.status(403).json({ message: response.message })
-                            else res.status(200).json({ message: 'course updated' })
-                        })
-                        .catch(error => {
-                            res.status(500).json({ message: 'Could not edit course' })
-                        })
-                }
-                else res.status(500).json({ message: 'Could not find user to edit course for' })
+        const courseId = req.params.id
+        Courses.updateCourseById(courseId, changes)
+            .then(response => {
+                if (response.code === 404) res.status(404).json({ message: response.message })
+
+                else res.status(200).json({ message: 'course updated' })
             })
-            .catch(err => {
-                res.status(500).json({ message: 'Could not find user to edit course for' })
+            .catch(error => {
+                res.status(500).json({ message: 'Could not edit course' })
             })
     }
 })
@@ -232,7 +223,6 @@ router.delete('/:id', (req, res) => {
             else res.status(200).json({ message: 'course deleted' })
         })
         .catch(error => {
-            console.log("ERROR IN DELETE LINE 231XXXXXXXXXXXXXXX");
             res.status(500).json({ message: 'Could not delete course' })
         })
 })
