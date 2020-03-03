@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
                     res.status(200).json(response)
                 }
                 else if (req.body.tag) {
-                    filterByTag(response, req.body.tag)
+                    findByTag(response, req.body.tag)
                         .then(results => {
                             res.status(200).json(results)
                         })

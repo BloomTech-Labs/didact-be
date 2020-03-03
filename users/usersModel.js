@@ -27,14 +27,9 @@ function update(id, changes) {
 
 function findBy(filter) {
     return db('users')
-        // .select('id', 'email', 'first_name', 'last_name')
         .where(filter)
         .first();
 }
-
-// function add(user) {
-//     return db('users').insert(user);
-// }
 
 async function add(user) {
     let userId = await db('users').insert(user, 'id');
