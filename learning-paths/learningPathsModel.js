@@ -345,9 +345,9 @@ async function togglePathCompletion(userId, pathId) {
 // }
 
 async function deletePathById(userId, pathId) {
+    let user = await db('Users').where('users.id', userId)
     let pathObj = await findById(pathId)
     let path = pathObj.path
-    let user = await db('Users').where('user.id', userId)
 
     if (!path) return { message: 'No path found with that ID', code: 404 }
     if (path.creatorId !== userId && user.owner === false && user.admin === false && user.moderator === false) return {
