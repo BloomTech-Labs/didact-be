@@ -205,14 +205,15 @@ router.put('/:id/yours', (req, res) => {
 
 router.delete('/:id', (req, res) => {
 
-    let email = req.user.email
-    Users.findBy({ email })
-        .then(user => {
-            if (user) {
-                Paths.deletePathById(user.id, req.params.id)
+    const userId = req.user.id
+    console.log(req.user)
+    Paths.findById(req.params.id)
+        .then(path => {
+            if (path.creatorId === userId || req.user.owner === true || req.user.admin === true || req.user.moderator === true) {
+                Paths.deletePathById(id, req.params.id)
                     .then(response => {
                         if (response.code === 404) res.status(404).json({ message: response.message })
-                        else if (response.code === 403) res.status(403).json({ message: response.message })
+                        // else if (response.code === 403) res.status(403).json({ message: response.message })
                         else res.status(200).json({ message: 'Learning path deleted' })
                     })
                     .catch(error => {

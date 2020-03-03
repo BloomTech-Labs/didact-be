@@ -274,11 +274,11 @@ async function togglePathItemCompletion(userId, pathId, itemId) {
     }
 }
 // FIX CONDITIONS HERE
-async function deletePathItem(userId, pathId, itemId) {
+async function deletePathItem(pathId, itemId) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
     if (!path) return { message: 'No learning path found with that ID', code: 404 }
-    if (path.creatorId !== userId) return { message: 'User is not permitted to change this path', code: 403 }
+    // if (path.creatorId !== userId) return { message: 'User is not permitted to change this path', code: 403 }
     await db('path_items').where({ id: itemId }).del()
     return { code: 200, message: `path item with id ${itemId} deleted`, id: itemId }
 }
@@ -344,19 +344,35 @@ async function togglePathCompletion(userId, pathId) {
 //     return { code: 200 }
 // }
 
+// async function deletePathById(userId, pathId) {
+//     let user = await db('Users').where('users.id', userId)
+//     let pathObj = await findById(pathId)
+//     let path = pathObj.path
+
+//     if (!path) return { message: 'No path found with that ID', code: 404 }
+//     if (path.creatorId !== userId && user.owner === false && user.admin === false && user.moderator === false) return {
+
+//         message: 'User is not permitted to change this path', code: 403
+//     }
+//     await db('paths').where({ id: pathId }).del()
+//     return { code: 200 }
+// }
+
 async function deletePathById(userId, pathId) {
-    let user = await db('Users').where('users.id', userId)
     let pathObj = await findById(pathId)
     let path = pathObj.path
+    let user = await db('Users').where('user.id', userId)
 
     if (!path) return { message: 'No path found with that ID', code: 404 }
-    if (path.creatorId !== userId && user.owner === false && user.admin === false && user.moderator === false) return {
+    if (path.creatorId !== userId && user.admin === true) return {
 
         message: 'User is not permitted to change this path', code: 403
     }
     await db('paths').where({ id: pathId }).del()
     return { code: 200 }
 }
+
+
 
 async function joinLearningPath(userId, pathId, order) {
     try {
