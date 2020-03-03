@@ -197,11 +197,11 @@ async function findCourseSectionsByCourseId(id) {
     return details
 }
 
-async function addCourseSection(courseId, section) {
+async function addCourseSection(userId, courseId, section) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    // if(course.creator_id !== userId) return {message: 'User is not permitted to add sections to this course', code: 403}
+    if (course.creator_id !== userId) return { message: 'User is not permitted to add sections to this course', code: 403 }
     section.course_id = courseId
     let addReturn = await db('course_sections')
         .insert(section, 'id')
