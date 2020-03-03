@@ -124,24 +124,24 @@ async function findPathsByOwner(name) {
 async function findPathsForUsers(users) {
     return users.map(async user => {
         return db("paths")
-        .join('users', 'paths.creator_id', 'users.id')
-        .where('paths.creator_id', user.id)
-        .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
-        .then(result => {
-            return result
-        })
+            .join('users', 'paths.creator_id', 'users.id')
+            .where('paths.creator_id', user.id)
+            .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
+            .then(result => {
+                return result
+            })
     })
 }
 
 function findPathsByTag(tag) {
     let tagTweak = tag.toLowerCase();
     return db("paths")
-    .join('tags_paths', 'tags_paths.path_id', 'paths.id')
-    .join('tags', 'tags.id', 'tags_paths.tag_id')
-    .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
-    .then(result => {
-        return result
-    })
+        .join('tags_paths', 'tags_paths.path_id', 'paths.id')
+        .join('tags', 'tags.id', 'tags_paths.tag_id')
+        .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
+        .then(result => {
+            return result
+        })
 }
 
 async function findById(id) {
@@ -334,12 +334,12 @@ async function togglePathCompletion(userId, pathId) {
     return { code: 200 }
 }
 
-async function deletePathById(userId, pathId) {
+async function deletePathById(pathId) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
 
     if (!path) return { message: 'No path found with that ID', code: 404 }
-    if (path.creatorId !== userId) return { message: 'User is not permitted to change this path', code: 403 }
+
     await db('paths').where({ id: pathId }).del()
     return { code: 200 }
 }
