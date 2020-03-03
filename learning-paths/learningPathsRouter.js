@@ -205,27 +205,26 @@ router.put('/:id/yours', (req, res) => {
 
 router.delete('/:id', (req, res) => {
 
-    const userId = req.user.id
-    console.log(req.user)
-    Paths.findById(req.params.id)
-        .then(path => {
-            if (path.creatorId === userId || req.user.owner === true || req.user.admin === true || req.user.moderator === true) {
-                Paths.deletePathById(id, req.params.id)
-                    .then(response => {
-                        if (response.code === 404) res.status(404).json({ message: response.message })
-                        // else if (response.code === 403) res.status(403).json({ message: response.message })
-                        else res.status(200).json({ message: 'Learning path deleted' })
-                    })
-                    .catch(error => {
-                        res.status(500).json({ message: 'Could not delete learning path' })
-                    })
-            }
-            else res.status(500).json({ message: 'Could not find user to delete learning path for' })
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user => {
+
+            Paths.deletePathById(user, req.params.id)
+                .then(res => {
+                    console.log("RRRRRRRRRRRRRRRRR", res)
+                    if (res.code === 404) res.status(404).json({ message: res.message })
+                    if (res.code === 403) res.status(403).json({ message: res.message })
+                    else res.status(200).json({ message: 'Learning path deleted' })
+                })
+                .catch(error => {
+                    res.status(500).json({ message: 'Could not delete learning path' })
+                })
         })
         .catch(err => {
             res.status(500).json({ message: 'Could not find user to delete learning path for' })
         })
 })
+
 
 
 //TODO: update docs
