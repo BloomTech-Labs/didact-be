@@ -335,7 +335,7 @@ router.post('/:id/sections', (req, res) => {
                 else {
                     let section = req.body.section
                     section.course_id = courseId
-                    Courses.addCourseSection(user.id, courseId, section)
+                    Courses.addCourseSection(courseId, section)
                         .then(response => {
                             if (response.code === 201) {
                                 res.status(201).json({ message: `Section has been added`, id: response.message })

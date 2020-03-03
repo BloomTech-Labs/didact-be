@@ -197,7 +197,7 @@ async function findCourseSectionsByCourseId(id) {
     return details
 }
 
-async function addCourseSection(userId, courseId, section) {
+async function addCourseSection(courseId, section) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
     if (!course) return { message: 'No course found with that ID', code: 404 }
