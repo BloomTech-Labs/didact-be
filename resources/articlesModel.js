@@ -21,19 +21,19 @@ function add(user_id, content) {
 }
 
 function update(user, article_id, updates) {
-    return db("articles").where("articles.id", source_id)
+    return db("articles").where("articles.id", article_id)
     .then(article => {
-        if(user.id === article.creator_id || user.admin|| user.owner){
-            return db("articles").where("articles.id", source_id).update(updates)
+        if(user.id === article.creator_id || user.admin || user.owner){
+            return db("articles").where("articles.id", article_id).update(updates)
         }
     })
 }
 
 function del(user, article_id) {
-    return db("articles").where({ article_id })
+    return db("articles").where("articles.id", article_id)
     .then(article => {
         if(user.id === article.creator_id || user.admin || user.owner){
-            return db("articles").del().where({ article_id })
+            return db("articles").del().where("articles.id", article_id)
         }
     })
 }

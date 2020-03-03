@@ -29,11 +29,11 @@ function update(user, source_id, updates) {
     })
 }
 
-function del(user, sources_id) {
-    return db("sources").where({ sources_id })
+function del(user, source_id) {
+    return db("sources").where("sources.id", source_id)
     .then(sources => {
         if(user.id === sources.creator_id || user.admin || user.owner){
-            return db("sources").del().where({ sources_id })
+            return db("sources").del().where("sources.id", source_id)
         }
     })
 }

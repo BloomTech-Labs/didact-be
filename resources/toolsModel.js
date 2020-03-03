@@ -21,19 +21,19 @@ function add(user_id, content) {
 }
 
 function update(user, tool_id, updates) {
-    return db("tools").where("tools.id", source_id)
+    return db("tools").where("tools.id", tool_id)
     .then(tool => {
         if(user.id === tool.creator_id || user.admin|| user.owner){
-            return db("tools").where("tools.id", source_id).update(updates)
+            return db("tools").where("tools.id", tool_id).update(updates)
         }
     })
 }
 
 function del(user, tool_id) {
-    return db("tools").where({ tool_id })
+    return db("tools").where("tools.id", tool_id)
     .then(tool => {
         if(user.id === tool.creator_id || user.admin || user.owner){
-            return db("tools").del().where({ tool_id })
+            return db("tools").del().where("tools.id", tool_id)
         }
     })
 }

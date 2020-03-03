@@ -27,7 +27,6 @@ router.post('/', (req, res) => {
     let article = req.body
     Users.findBy({ email })
     .then(user => {
-        if(user) {
             Articles.add(user.id, article)
             .then(response => {
                 res.status(201).json({ Success: "Article has been created.", article})
@@ -35,7 +34,6 @@ router.post('/', (req, res) => {
             .catch(err => {
                 res.status(500).json({ error: "Unable to add article."})
             })
-        }
     })
     .catch(err => {
         res.status(500).json({ error: "Unable to add article."})
