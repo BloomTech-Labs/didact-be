@@ -339,9 +339,10 @@ router.post('/:id/sections', (req, res) => {
                         .then(response => {
                             if (response.code === 201) {
                                 res.status(201).json({ message: `Section has been added`, id: response.message })
-                            } else {
-                                res.status(403).json({ message: response.message })
                             }
+                            // else {
+                            //     res.status(403).json({ message: response.message })
+                            // }
                         })
                         .catch(err => res.status(500).json(err))
                 }
