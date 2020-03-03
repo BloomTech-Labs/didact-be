@@ -327,19 +327,28 @@ router.get('/:id/yoursections', (req, res) => {
 
 router.post('/:id/sections', (req, res) => {
     const courseId = req.params.id
-
-    if (!req.body.section) res.status(400).json({ message: 'Could not find section in body' })
-    else {
-        let section = req.body.section
-        section.course_id = courseId
-        Courses.addCourseSection(courseId, section)
-            .then(response => {
-                if (response.code === 201) {
-                    res.status(201).json({ message: `Section has been added`, id: response.message })
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user => {
+            if (user) {
+                if (!req.body.section) res.status(400).json({ message: 'Could not find section in body' })
+                else {
+                    let section = req.body.section
+                    section.course_id = courseId
+                    Courses.addCourseSection(user.id, courseId, section)
+                        .then(response => {
+                            if (response.code === 201) {
+                                res.status(201).json({ message: `Section has been added`, id: response.message })
+                            } else {
+                                res.status(403).json({ message: response.message })
+                            }
+                        })
+                        .catch(err => res.status(500).json(err))
                 }
-            })
-            .catch(err => res.status(500).json(err))
-    }
+            }
+            else res.status(500).json({ message: 'Could not find user to add section for' })
+        })
+        .catch(err => res.status(500).json({ message: 'Could not find user to add section for' }))
 })
 
 router.put('/:id/sections/:section_id', (req, res) => {
