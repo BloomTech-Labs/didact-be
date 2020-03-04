@@ -334,55 +334,22 @@ async function togglePathCompletion(userId, pathId) {
     return { code: 200 }
 }
 
-// async function deletePathById(pathId) {
-//     let pathObj = await findById(pathId)
-//     let path = pathObj.path
-
-//     if (!path) return { message: 'No path found with that ID', code: 404 }
-
-//     await db('paths').where({ id: pathId }).del()
-//     return { code: 200 }
-// }
-
-// async function deletePathById(userId, pathId) {
-//     let user = await db('Users').where('users.id', userId)
-//     let pathObj = await findById(pathId)
-//     let path = pathObj.path
-
-//     if (!path) return { message: 'No path found with that ID', code: 404 }
-//     if (path.creatorId !== userId && user.owner === false && user.admin === false && user.moderator === false) return {
-
-//         message: 'User is not permitted to change this path', code: 403
-//     }
-//     await db('paths').where({ id: pathId }).del()
-//     return { code: 200 }
-// }
 
 function deletePathById(user, pathId) {
 
     return db('paths').where('paths.id', pathId).then(path => {
 
-        if (!path) return { message: 'No path found with that ID', code: 404 }
-        else if (path.creator_id !== user.id && user.owner === false && user.admin === false && user.moderator === false) {
-            return {
+        if (path.creator_id === user.id || user.owner === true || user.admin === true || user.moderator === true) { return db('paths').where('paths.id', pathId).del(); }
 
+        else if (!path) { return { message: 'No path found with that ID', code: 404 } }
+        else {
+            return {
                 message: 'User is not permitted to change this path', code: 403
             }
-        } else {
-            console.log('IT REACHED HHHHHHHHHHHHHEEEEEEEEEEEEEERE')
-            return db('paths').where('paths.id', pathId).del();
-
         }
     })
 }
-// function del(user, req.params.id) {
-//     return db("paths").where("paths.id", _id)
-//         .then( => {
-//             if (user.id === article.creator_id || user.admin || user.owner) {
-//                 return db("articles").del().where("articles.id", article_id)
-//             }
-//         })
-// }
+
 
 
 async function joinLearningPath(userId, pathId, order) {

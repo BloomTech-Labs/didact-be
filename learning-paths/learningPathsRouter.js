@@ -210,14 +210,14 @@ router.delete('/:id', (req, res) => {
         .then(user => {
 
             Paths.deletePathById(user, req.params.id)
-                .then(res => {
-                    console.log("RRRRRRRRRRRRRRRRR", res)
-                    if (res.code === 404) res.status(404).json({ message: res.message })
-                    if (res.code === 403) res.status(403).json({ message: res.message })
-                    else res.status(200).json({ message: 'Learning path deleted' })
+                .then(result => {
+                    if (res.code === 404) { res.status(404).json({ message: res.message }) }
+                    if (res.code === 403) { res.status(403).json({ message: res.message }) }
+                    else { res.status(200).json({ message: 'deleted learning path' }) }
+
                 })
-                .catch(error => {
-                    res.status(500).json({ message: 'Could not delete learning path' })
+                .catch(err => {
+                    res.status(500).json({ message: 'Could not delete learning path.' })
                 })
         })
         .catch(err => {
