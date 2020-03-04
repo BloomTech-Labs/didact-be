@@ -461,12 +461,27 @@ async function addPathTag(userId, pathId, tag) {
     return { message: 'tag added to path', code: 201 }
 }
 
-async function deletePathTag(userId, pathId, tag) {
+// function deletePathById(user, pathId) {
+
+//     return db('paths').where('paths.id', pathId).then(path => {
+
+//         if (path.creator_id === user.id || user.owner === true || user.admin === true || user.moderator === true) { return db('paths').where('paths.id', pathId).del(); }
+
+//         else if (!path) { return { message: 'No path found with that ID', code: 404 } }
+//         else {
+//             return {
+//                 message: 'User is not permitted to change this path', code: 403
+//             }
+//         }
+//     })
+// }
+
+async function deletePathTag(user, pathId, tag) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
 
     if (!path) return { message: 'No path found with that ID', code: 404 }
-    if (path.creatorId !== userId) return { message: 'User is not permitted to remove tags from this path', code: 403 }
+    if (path.creatorId !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to remove tags from this path', code: 403 }
 
     let tagId = await checkForTag(tag)
 

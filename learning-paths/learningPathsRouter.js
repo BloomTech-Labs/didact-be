@@ -203,6 +203,7 @@ router.put('/:id/yours', (req, res) => {
         })
 })
 
+//This code is working, used in deleting learningpaths via specified id
 router.delete('/:id', (req, res) => {
 
     let email = req.user.email
@@ -254,7 +255,7 @@ router.post('/:id/users', (req, res) => {
             })
     }
 })
-
+//Only the user can delete the learning path he is part of
 router.delete('/:id/users', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
@@ -302,7 +303,7 @@ router.post('/:id/tags', (req, res) => {
             })
     }
 })
-
+// verify if working
 router.delete('/:id/tags', (req, res) => {
     if (!req.body.tag) {
         res.status(400).json({ message: "Missing tag data" })
@@ -313,7 +314,7 @@ router.delete('/:id/tags', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Paths.deletePathTag(user.id, pathId, req.body.tag)
+                    Paths.deletePathTag(user, pathId, req.body.tag)
                         .then(response => {
                             if (response.code === 200) res.status(200).json({ message: response.message })
                             else res.status(response.code).json({ message: response.message })
