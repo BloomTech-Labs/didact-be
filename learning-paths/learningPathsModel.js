@@ -236,11 +236,11 @@ async function findYourPathItemsForPath(userId, pathId) {
     return retItems
 }
 
-async function addPathItem(userId, pathId, item) {
+async function addPathItem(user, pathId, item) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
     if (!path) return { message: 'No learning path found with that ID', code: 404 }
-    if (path.creatorId !== userId) return { message: 'User is not permitted to change this path', code: 403 }
+    if (path.creatorId !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to change this path', code: 403 }
     item.path_id = Number(pathId)
     console.log(item)
     let addReturn = await db('path_items').insert(item, 'id')
@@ -273,12 +273,12 @@ async function togglePathItemCompletion(userId, pathId, itemId) {
         return 0
     }
 }
-// FIX CONDITIONS HERE
-async function deletePathItem(pathId, itemId) {
+
+async function deletePathItem(user, pathId, itemId) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
     if (!path) return { message: 'No learning path found with that ID', code: 404 }
-    // if (path.creatorId !== userId) return { message: 'User is not permitted to change this path', code: 403 }
+    if (path.creatorId !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to change this path', code: 403 }
     await db('path_items').where({ id: itemId }).del()
     return { code: 200, message: `path item with id ${itemId} deleted`, id: itemId }
 }
@@ -444,12 +444,12 @@ async function checkForTag(tagName) {
     return tag[0].id
 }
 
-async function addPathTag(userId, pathId, tag) {
+async function addPathTag(user, pathId, tag) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
 
     if (!path) return { message: 'No path found with that ID', code: 404 }
-    if (path.creatorId !== userId) return { message: 'User is not permitted to add tag to this path', code: 403 }
+    if (path.creatorId !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to add tag to this path', code: 403 }
 
     let tagId = await checkForTag(tag)
     if (tagId === -1) {

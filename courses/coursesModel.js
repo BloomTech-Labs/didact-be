@@ -139,11 +139,12 @@ async function deleteCourseById(courseId) {
     return { code: 200 }
 }
 
-async function addCourseTag(courseId, tag) {
+async function addCourseTag(user, courseId, tag) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
+    if (course.creator_id !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to add tags to this course', code: 403 }
 
     let tagId = await checkForTag(tag)
     if (tagId === -1) {
@@ -196,7 +197,7 @@ async function findCourseSectionsByCourseId(id) {
         .where({ 'cs.course_id': id })
     return details
 }
-
+//original code below does not work
 async function addCourseSection(userId, courseId, section) {
     let courseObj = await findById(courseId)
     let course = courseObj.course

@@ -255,7 +255,7 @@ router.post('/:id/users', (req, res) => {
             })
     }
 })
-//Only the user can delete the learning path he is part of
+//Only the user can delete the learning path he is part of, not modified
 router.delete('/:id/users', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
@@ -278,6 +278,7 @@ router.delete('/:id/users', (req, res) => {
         })
 })
 
+//verify if working when we implement tags to, this should work.
 router.post('/:id/tags', (req, res) => {
     const pathId = req.params.id
     let email = req.user.email
@@ -286,7 +287,7 @@ router.post('/:id/tags', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Paths.addPathTag(user.id, pathId, req.body.tag)
+                    Paths.addPathTag(user, pathId, req.body.tag)
                         .then(response => {
                             if (response.code === 201) res.status(201).json({ message: response.message })
                             else res.status(response.code).json({ message: response.message })
@@ -422,10 +423,10 @@ function verifyLearningPath(req, res, next) {
 
 function validateLearningPathItem(req, res, next) {
     if (!req.body) res.status(400).json({ message: "Missing learning path item data" })
-    else if (!req.body.title) res.status(400).json({ message: "Learning Path Item name is required" })
+    else if (!req.body.name) res.status(400).json({ message: "Learning Path Item name is required" })
     else next()
 }
-
+//working code conditionals added
 router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (req, res) => {
     const pathId = req.params.id
     const pathItem = req.body
@@ -433,7 +434,7 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.addPathItem(user.id, pathId, pathItem)
+                Paths.addPathItem(user, pathId, pathItem)
                     .then(response => {
                         if (response.code === 403) res.status(403).json({ message: response.message })
                         else if (response.code === 404) res.status(404).json({ message: response.message })
@@ -497,6 +498,7 @@ router.put('/:id/path-items/:itemId/yours', verifyLearningPath, (req, res) => {
         })
 })
 
+//modified to verify roles, working
 router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     const pathId = req.params.id
     const itemId = req.params.itemId
@@ -504,7 +506,7 @@ router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.deletePathItem(user.id, pathId, itemId)
+                Paths.deletePathItem(user, pathId, itemId)
                     .then(response => {
                         if (response.code === 403) res.status(403).json({ message: response.message })
                         else if (response.code === 404) res.status(404).json({ message: response.message })

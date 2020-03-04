@@ -235,22 +235,32 @@ function validateCourse(req, res, next) {
     else if (!req.body.title) res.status(400).json({ message: "Course title is required" })
     else next()
 }
-
+//working code to add tags to courses
 router.post('/:id/tags', (req, res) => {
     const courseId = req.params.id
-
+    let email = req.user.email
     if (!req.body.tag) res.status(400).json({ message: "Missing tag data" })
     else {
-        Courses.addCourseTag(courseId, req.body.tag)
-            .then(response => {
-                if (response.code === 201) res.status(201).json({ message: response.message })
-                else res.status(response.code).json({ message: response.message })
+        Users.findBy({ email })
+            .then(user => {
+                if (user) {
+                    Courses.addCourseTag(user, courseId, req.body.tag)
+                        .then(response => {
+                            if (response.code === 201) res.status(201).json({ message: response.message })
+                            else res.status(response.code).json({ message: response.message })
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            res.status(500).json({ message: 'Internal error: Could not add tags to course' })
+                        })
+                }
+                else res.status(500).json({ message: 'Could not find user to add course for' })
             })
-            .catch(error => {
-                console.log(error)
-                res.status(500).json({ message: 'Internal error: Could not add tags to course' })
+            .catch(err => {
+                res.status(500).json({ message: 'Could not find user to add course for' })
             })
     }
+
 })
 
 router.delete('/:id/tags', (req, res) => {
@@ -325,6 +335,7 @@ router.get('/:id/yoursections', (req, res) => {
         })
 })
 
+//the original code does not work
 router.post('/:id/sections', (req, res) => {
     const courseId = req.params.id
     let email = req.user.email
