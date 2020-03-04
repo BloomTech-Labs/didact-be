@@ -360,7 +360,7 @@ router.post('/:id/courses/:courseId', (req, res) => {
             })
     }
 })
-// This removes the courses that was added to a learning path
+// Working. This removes the courses that was added to a learning path
 router.delete('/:id/courses/:courseId', (req, res) => {
     const pathId = req.params.id
     const courseId = req.params.courseId
@@ -370,6 +370,10 @@ router.delete('/:id/courses/:courseId', (req, res) => {
             if (user) {
                 Paths.removePathCourse(user, pathId, courseId)
                     .then(response => {
+                        if (response.code === 404) res.status(404).json({ message: response.message, pathCourses: response.pathCourses })
+
+                        if (response.code === 403) res.status(403).json({ message: response.message, pathCourses: response.pathCourses })
+
                         if (response.code === 200) res.status(200).json({ message: response.message, pathCourses: response.pathCourses })
                         else res.status(response.code).json({ message: response.message })
                     })

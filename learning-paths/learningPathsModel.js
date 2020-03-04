@@ -341,7 +341,7 @@ function deletePathById(user, pathId) {
 
         if (path.creator_id === user.id || user.owner === true || user.admin === true || user.moderator === true) { return db('paths').where('paths.id', pathId).del(); }
 
-        else if (!path) { return { message: 'No path found with that ID', code: 404 } }
+        else if (!path) { return { message: 'No path or course found with that ID', code: 404 } }
         else {
             return {
                 message: 'User is not permitted to change this path', code: 403
@@ -461,20 +461,6 @@ async function addPathTag(userId, pathId, tag) {
     return { message: 'tag added to path', code: 201 }
 }
 
-// function deletePathById(user, pathId) {
-
-//     return db('paths').where('paths.id', pathId).then(path => {
-
-//         if (path.creator_id === user.id || user.owner === true || user.admin === true || user.moderator === true) { return db('paths').where('paths.id', pathId).del(); }
-
-//         else if (!path) { return { message: 'No path found with that ID', code: 404 } }
-//         else {
-//             return {
-//                 message: 'User is not permitted to change this path', code: 403
-//             }
-//         }
-//     })
-// }
 
 async function deletePathTag(user, pathId, tag) {
     let pathObj = await findById(pathId)
@@ -517,11 +503,13 @@ async function addPathCourse(userId, pathId, courseId, path_order) {
     }
 }
 
+//working perfectly
 async function removePathCourse(user, pathId, courseId) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
     if (!path) return { message: 'No path found with that ID', code: 404 }
-    if (path.creatorId !== userId && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to add course to this path', code: 403 }
+    if (path.creatorId !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to add course to this path', code: 403 }
+
     let courseExists = await findCourseById(courseId)
     if (!courseExists) return { message: 'Course not found', code: 404 }
     else {
