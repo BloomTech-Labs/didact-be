@@ -517,11 +517,11 @@ async function addPathCourse(userId, pathId, courseId, path_order) {
     }
 }
 
-async function removePathCourse(userId, pathId, courseId) {
+async function removePathCourse(user, pathId, courseId) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
     if (!path) return { message: 'No path found with that ID', code: 404 }
-    if (path.creatorId !== userId) return { message: 'User is not permitted to add course to this path', code: 403 }
+    if (path.creatorId !== userId && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to add course to this path', code: 403 }
     let courseExists = await findCourseById(courseId)
     if (!courseExists) return { message: 'Course not found', code: 404 }
     else {

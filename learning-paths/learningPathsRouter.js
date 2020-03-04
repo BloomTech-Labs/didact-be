@@ -360,7 +360,7 @@ router.post('/:id/courses/:courseId', (req, res) => {
             })
     }
 })
-
+// This removes the courses that was added to a learning path
 router.delete('/:id/courses/:courseId', (req, res) => {
     const pathId = req.params.id
     const courseId = req.params.courseId
@@ -368,7 +368,7 @@ router.delete('/:id/courses/:courseId', (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.removePathCourse(user.id, pathId, courseId)
+                Paths.removePathCourse(user, pathId, courseId)
                     .then(response => {
                         if (response.code === 200) res.status(200).json({ message: response.message, pathCourses: response.pathCourses })
                         else res.status(response.code).json({ message: response.message })
