@@ -13,7 +13,7 @@ function get() {
 }
 
 function getById(id) {
-    return db("tools").where({ id })
+    return db("tools").where({ id }).first();
 }
 
 function add(user_id, content) {

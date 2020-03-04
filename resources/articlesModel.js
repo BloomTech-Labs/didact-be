@@ -8,12 +8,15 @@ module.exports = {
     del
 }
 
-function get() {
-    return db("articles")
+async function get() {
+    let articles = await db("articles")
+    let externalArticles = await db("external_articles")
+    let finalArray = articles.concat(externalArticles);
+    return await finalArray
 }
 
 function getById(id) {
-    return db("articles").where({ id })
+    return db("articles").where({ id }).first()
 }
 
 function add(user_id, content) {

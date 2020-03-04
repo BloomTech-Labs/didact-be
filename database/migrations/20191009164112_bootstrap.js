@@ -323,6 +323,20 @@ exports.up = function (knex) {
       tbl.string("body", 10000).notNullable();
       tbl.string("date", 10).notNullable();
     })
+    .createTable("external_articles", tbl => {
+      tbl.increments();
+      tbl
+        .integer("creator_id")
+        .unsigned()
+        .references("id")
+        .inTable("users")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+      tbl.string("topic", 1000).notNullable();
+      tbl.string("title", 1000).notNullable();
+      tbl.string("description", 1000).notNullable();
+      tbl.string("link", 1000).notNullable();
+    })
     .createTable("tags_sources", tbl => {
       tbl.increments();
       tbl
@@ -374,7 +388,23 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");;
     })
-
+    .createTable("tags_external_articles", tbl => {
+      tbl.increments();
+      tbl
+        .integer("external_article_id")
+        .unsigned()
+        .references("id")
+        .inTable("articles")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE")
+      tbl
+        .integer("tag_id")
+        .unsigned()
+        .references("id")
+        .inTable("tags")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");;
+    })
 };
 exports.down = function (knex) {
   return knex.schema
