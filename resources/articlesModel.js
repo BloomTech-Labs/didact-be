@@ -3,6 +3,7 @@ const db = require('../database/dbConfig.js')
 module.exports = {
     get,
     getById,
+    getExternalById,
     add,
     addExternal,
     update,
@@ -20,6 +21,10 @@ async function get() {
 
 function getById(id) {
     return db("articles").where({ id }).first()
+}
+
+function getExternalById(id) {
+    return db("external_articles").where({ id }).first()
 }
 
 function add(user_id, content) {
