@@ -20,7 +20,7 @@ async function get() {
 }
 
 function getById(id) {
-    return db("articles").where({ id }).first()
+    return db("articles").where({ id }).first().join("users", "users.id", "articles.id").select("users.first_name", "users.last_name", "articles.*")
 }
 
 function getExternalById(id) {
