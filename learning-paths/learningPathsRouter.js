@@ -155,7 +155,7 @@ router.post('/', validateLearningPath, (req, res) => {
             res.status(500).json({ message: 'Could not find user to add learning path for' })
         })
 })
-
+//need to verify if working
 router.put('/:id', (req, res) => {
     if (!req.body.changes) res.status(400).json({ message: 'Missing learning path changes' })
     else {
@@ -164,7 +164,7 @@ router.put('/:id', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Paths.updatePathById(user.id, req.params.id, changes)
+                    Paths.updatePathById(user, req.params.id, changes)
                         .then(response => {
                             if (response.code === 404) res.status(404).json({ message: response.message })
                             else if (response.code === 403) res.status(403).json({ message: response.message })
@@ -181,13 +181,13 @@ router.put('/:id', (req, res) => {
             })
     }
 })
-// TODO
+// TODO need to verify this code
 router.put('/:id/yours', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.togglePathCompletion(user.id, req.params.id)
+                Paths.togglePathCompletion(user, req.params.id)
                     .then(response => {
                         if (response.code === 404) res.status(404).json({ message: response.message })
                         else res.status(200).json({ message: 'Learning path completion toggled' })
@@ -388,7 +388,7 @@ router.delete('/:id/courses/:courseId', (req, res) => {
             res.status(500).json({ message: 'Could not find user to remove course for' })
         })
 })
-
+// verify if working
 router.put('/:id/order', (req, res) => {
     const pathId = req.params.id
     let email = req.user.email
@@ -398,7 +398,7 @@ router.put('/:id/order', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Paths.updateContentOrder(user.id, pathId, content)
+                    Paths.updateContentOrder(user, pathId, content)
                         .then(response => {
                             if (response === 200) res.status(200).json({ message: response.message })
                             else res.status(response.code).json({ message: response.message })
@@ -450,7 +450,7 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
             res.status(500).json({ message: 'Could not find user to add learning path Item for' })
         })
 })
-
+//verify if working
 router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     const pathId = req.params.id
     const itemId = req.params.itemId
@@ -459,7 +459,7 @@ router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.updatePathItem(user.id, pathId, itemId, changes)
+                Paths.updatePathItem(user, pathId, itemId, changes)
                     .then(response => {
                         if (response.code === 403) res.status(403).json({ message: response.message })
                         else if (response.code === 404) res.status(404).json({ message: response.message })
@@ -475,7 +475,7 @@ router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
             res.status(500).json({ message: 'Could not find user to update learning path Item for' })
         })
 })
-
+//verify if working
 router.put('/:id/path-items/:itemId/yours', verifyLearningPath, (req, res) => {
     const pathId = req.params.id
     const itemId = req.params.itemId
@@ -483,7 +483,7 @@ router.put('/:id/path-items/:itemId/yours', verifyLearningPath, (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.togglePathItemCompletion(user.id, pathId, itemId)
+                Paths.togglePathItemCompletion(user, pathId, itemId)
                     .then(response => {
                         res.status(200).json({ message: 'Learning path item completion has been toggled' })
                     })

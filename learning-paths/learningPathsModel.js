@@ -249,24 +249,24 @@ async function addPathItem(user, pathId, item) {
     return { code: 201, message: `item added to path`, id: addReturn[0] }
 }
 
-async function updatePathItem(userId, pathId, itemId, changes) {
+async function updatePathItem(user, pathId, itemId, changes) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
     if (!path) return { message: 'No learning path found with that ID', code: 404 }
-    if (path.creatorId !== userId) return { message: 'User is not permitted to change this path', code: 403 }
+    if (path.creatorId !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to change this path', code: 403 }
     await db('path_items').where({ id: itemId }).update(changes)
     return { code: 200, message: `path item with id ${itemId} updated`, id: itemId }
 }
 
-async function togglePathItemCompletion(userId, pathId, itemId) {
+async function togglePathItemCompletion(user, pathId, itemId) {
     try {
         let currentPathItem = await db('users_path_items as upi')
-            .where({ 'upi.user_id': userId, 'upi.path_item_id': itemId }).first()
+            .where({ 'upi.user_id': user.id, 'upi.path_item_id': itemId }).first()
         console.log(`curpathit`, currentPathItem)
         await db('users_path_items as upi')
-            .where({ 'upi.user_id': userId, 'upi.path_item_id': itemId })
+            .where({ 'upi.user_id': user.id, 'upi.path_item_id': itemId })
             .update({ ...currentPathItem, manually_completed: !currentPathItem.manually_completed })
-        Courses.cascadeUp(userId, itemId, 'pathItem')
+        Courses.cascadeUp(user.id, itemId, 'pathItem')
         return 1
     }
     catch (error) {
@@ -294,41 +294,41 @@ async function add(userId, path, order) {
     }
 }
 
-async function updatePathById(userId, pathId, changes) {
+async function updatePathById(user, pathId, changes) {
     let pathObj = await findById(pathId)
     let path = pathObj.path
     if (!path) return { message: 'No learning path found with that ID', code: 404 }
-    if (path.creatorId !== userId) return { message: 'User is not permitted to change this path', code: 403 }
+    if (path.creatorId !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to change this path', code: 403 }
     await db('paths').where({ id: pathId }).update(changes)
     return { code: 200 }
 }
 
-async function togglePathCompletion(userId, pathId) {
+async function togglePathCompletion(user, pathId) {
     // First we update the path's manual completion
     let pathObj = await findById(pathId)
     let path = pathObj.path
     if (!path) return { message: 'No learning path found with that ID', code: 404 }
     let curUserPath = await db('users_paths as up')
-        .where({ 'up.user_id': userId, 'up.path_id': pathId }).first()
+        .where({ 'up.user_id': user.id, 'up.path_id': pathId }).first()
 
     let isCompleted = !curUserPath.manually_completed
 
     await db('users_paths as up')
-        .where({ 'up.user_id': userId, 'up.path_id': pathId })
+        .where({ 'up.user_id': user.id, 'up.path_id': pathId })
         .update({ ...curUserPath, manually_completed: !curUserPath.manually_completed })
 
     // Next, we update the path items in the path to be automatically completed
     let pathItems = await findPathItemsForPath(pathId)
     for (let i = 0; i < pathItems.length; i++) {
         await db('users_path_items as ups')
-            .where({ 'ups.user_id': userId, 'ups.path_item_id': pathItems[i].id })
+            .where({ 'ups.user_id': user.id, 'ups.path_item_id': pathItems[i].id })
             .update({ automatically_completed: !curUserPath.manually_completed })
     }
 
     // Next we update the courses in the path to be automatically completed
     let pathCourses = await findCoursesForPath(pathId)
     for (let i = 0; i < pathCourses.length; i++) {
-        await Courses.autoCourseCompleteToggle(userId, pathCourses[i].id, isCompleted)
+        await Courses.autoCourseCompleteToggle(user.id, pathCourses[i].id, isCompleted)
     }
 
     return { code: 200 }
@@ -533,19 +533,19 @@ async function updateCourseOrder(userId, pathId, courseId, path_order) {
     }
 }
 
-async function updateContentOrder(userId, pathId, content) {
+async function updateContentOrder(user, pathId, content) {
     try {
         let pathObj = await findById(pathId)
         let path = pathObj.path
 
         if (!path) return { message: 'No path found with that ID', code: 404 }
-        if (path.creatorId !== userId) return { message: 'User is not permitted to add course to this path', code: 403 }
+        if (path.creatorId !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to add course to this path', code: 403 }
         for (let i = 0; i < content.length; i++) {
             if (content[i].path_id && content[i].path_id === Number(pathId)) {
-                await updatePathItem(userId, pathId, content[i].id, { path_order: content[i].path_order })
+                await updatePathItem(user.id, pathId, content[i].id, { path_order: content[i].path_order })
             }
             else {
-                await updateCourseOrder(userId, pathId, content[i].id, content[i].path_order)
+                await updateCourseOrder(user.id, pathId, content[i].id, content[i].path_order)
             }
         }
         return { message: 'Learning Path order updated', code: 200 }
