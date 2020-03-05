@@ -28,32 +28,25 @@ router.get('/', (req, res) => {
             })
         }
     } else {
-        const user = req.user
-        const owner = req.user.owner
-        const admin = req.user.admin
-        const moderator = req.user.moderator
-        if (user || owner === true || admin === true || moderator === true) {
-            Courses.find()
-                .then(response => {
-                    if (req.body.url) {
-                        response = response.filter(el => el.link === req.body.url)
-                        res.status(200).json(response)
-                    }
-                    else if (req.body.tag) {
-                        filterByTag(response, req.body.tag)
-                            .then(results => {
-                                res.status(200).json(results)
-                            })
-                            .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
-                    }
-                    else res.status(200).json(response)
-                })
-                .catch(error => {
-                    res.status(500).json({ message: 'Error connecting with server' })
-                })
-        } else {
-            res.status(500).json({ message: 'Unauthorized' })
-        }
+
+        Courses.find()
+            .then(response => {
+                if (req.body.url) {
+                    response = response.filter(el => el.link === req.body.url)
+                    res.status(200).json(response)
+                }
+                else if (req.body.tag) {
+                    findByTag(response, req.body.tag)
+                        .then(results => {
+                            res.status(200).json(results)
+                        })
+                        .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
+                }
+                else res.status(200).json(response)
+            })
+            .catch(error => {
+                res.status(500).json({ message: 'Error connecting with server' })
+            })
     }
 })
 
