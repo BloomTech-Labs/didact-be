@@ -130,6 +130,12 @@ async function findPathsForUsers(users) {
             .then(result => {
                 return result
             })
+        .join('users', 'paths.creator_id', 'users.id')
+        .where('paths.creator_id', user.id)
+        .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name') 
+    }).then(result => {
+        let flattenedArray = result.flatMap(arr => arr)
+        return flattenedArray
     })
 }
 
