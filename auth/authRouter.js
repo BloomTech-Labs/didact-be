@@ -187,6 +187,7 @@ router.post('/contactmessage', restricted, (req, res) => {
 function generateToken(user) {
     const payload = {
         email: user.email,
+        id: user.id,
         owner: user.owner,
         admin: user.admin,
         moderator: user.moderator

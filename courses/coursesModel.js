@@ -129,7 +129,7 @@ async function updateCourseById(courseId, changes) {
     await db('courses').where({ id: courseId }).update(changes)
     return { code: 200 }
 }
-// NEED TO VERIFY CONDITIONAL HERE
+
 async function deleteCourseById(courseId) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
@@ -139,11 +139,12 @@ async function deleteCourseById(courseId) {
     return { code: 200 }
 }
 
-async function addCourseTag(courseId, tag) {
+async function addCourseTag(user, courseId, tag) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
+    if (course.creator_id !== user.id && user.owner === false && user.admin === false && user.moderator === false) return { message: 'User is not permitted to add tags to this course', code: 403 }
 
     let tagId = await checkForTag(tag)
     if (tagId === -1) {
@@ -196,15 +197,12 @@ async function findCourseSectionsByCourseId(id) {
         .where({ 'cs.course_id': id })
     return details
 }
-
+//original code below does not work
 async function addCourseSection(userId, courseId, section) {
-    const owner = req.user.owner
-    const admin = req.user.admin
-    const moderator = req.user.moderator
     let courseObj = await findById(courseId)
     let course = courseObj.course
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    if (course.creator_id !== userId && owner === false && admin === false && moderator === false) return { message: 'User is not permitted to add sections to this course', code: 403 }
+    if (course.creator_id !== userId) return { message: 'User is not permitted to add sections to this course', code: 403 }
     section.course_id = courseId
     let addReturn = await db('course_sections')
         .insert(section, 'id')
@@ -216,7 +214,7 @@ async function updateCourseSection(courseId, sectionId, changes) {
     let courseObj = await findById(courseId)
     let course = courseObj.course
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    // if (course.creator_id !== userId) return { message: 'User is not permitted to update sections to this course', code: 403 }
+
     let updatereturn = await db('course_sections')
         .where({ id: sectionId })
         .update(changes)
@@ -260,7 +258,7 @@ async function updateSectionDetails(courseId, sectionId, detailId, changes) {
     let course = courseObj.course
 
     if (!course) return { message: 'No course found with that ID', code: 404 }
-    // if (course.creator_id !== userId) return { message: 'User is not permitted to add Details to this Course Section', code: 403 }
+
     else {
         let addreturn = await db('section_details')
             .where({ id: detailId, course_sections_id: sectionId })
