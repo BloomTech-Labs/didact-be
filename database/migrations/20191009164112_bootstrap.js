@@ -336,6 +336,7 @@ exports.up = function (knex) {
       tbl.string("title", 1000).notNullable().unique();
       tbl.string("description", 1000).notNullable();
       tbl.string("link", 1000).notNullable();
+      tbl.string("date", 10).notNullable();
     })
     .createTable("tags_sources", tbl => {
       tbl.increments();
