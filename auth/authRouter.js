@@ -10,12 +10,12 @@ const secrets = require('../config/secret')
 
 const Users = require('../users/usersModel')
 
-//GET list of all users conditions added to check role as owner
+//GET list of all users conditions added to check role as owner or admin
 router.get("/users", restricted, (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
-            if (user.owner === true) {
+            if (user.owner === true || user.admin === true) {
                 Users.find()
                     .then(users => {
                         res.json(users);
@@ -35,13 +35,13 @@ router.get("/users", restricted, (req, res) => {
 })
 
 //UPDATE user by specific id
-router.put("/:id", (req, res) => {
+router.put("/:id", restricted, (req, res) => {
     const { id } = req.params;
     const changes = req.body;
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
-            if (user.owner === true) {
+            if (user.owner === true || user.admin === true) {
                 Users.update(id, changes)
                     .then(user => {
                         if (user) {

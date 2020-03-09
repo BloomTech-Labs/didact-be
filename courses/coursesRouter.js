@@ -387,7 +387,10 @@ router.post('/:id/sections', (req, res) => {
                                 res.status(403).json({ message: response.message })
                             }
                         })
-                        .catch(err => res.status(500).json(err))
+                        .catch(err => {
+                            console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHH", err);
+                            res.status(500).json(err)
+                        })
                 }
             }
             else res.status(500).json({ message: 'Could not find user to add section for' })
