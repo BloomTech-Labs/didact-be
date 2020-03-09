@@ -56,12 +56,12 @@ router.get('/yours', (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                    Paths.findForUserId(user.id)
-                        .then(response => {
-                            res.status(200).json(response)
-                        }).catch(err => {
-                            res.status(500).json(err)
-                        })
+                Paths.findForUserId(user.id)
+                    .then(response => {
+                        res.status(200).json(response)
+                    }).catch(err => {
+                        res.status(500).json(err)
+                    })
             }
             else res.status(500).json({ message: 'Error, could not find user to check learning paths for' })
         })
@@ -122,7 +122,7 @@ router.get('/:id/yours', (req, res) => {
         })
         .catch(err => {
             console.log('err', err)
-            res.status(500).json({ message: 'aError, could not find user to check learning path for' })
+            res.status(500).json({ message: 'Error, could not find user to check learning path for' })
         })
 
 })
@@ -155,7 +155,7 @@ router.post('/', validateLearningPath, (req, res) => {
             res.status(500).json({ message: 'Could not find user to add learning path for' })
         })
 })
-
+//need to verify if working
 router.put('/:id', (req, res) => {
     if (!req.body.changes) res.status(400).json({ message: 'Missing learning path changes' })
     else {
@@ -164,7 +164,7 @@ router.put('/:id', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Paths.updatePathById(user.id, req.params.id, changes)
+                    Paths.updatePathById(user, req.params.id, changes)
                         .then(response => {
                             if (response.code === 404) res.status(404).json({ message: response.message })
                             else if (response.code === 403) res.status(403).json({ message: response.message })
@@ -181,13 +181,13 @@ router.put('/:id', (req, res) => {
             })
     }
 })
-// TODO
+// TODO need to verify this code
 router.put('/:id/yours', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.togglePathCompletion(user.id, req.params.id)
+                Paths.togglePathCompletion(user, req.params.id)
                     .then(response => {
                         if (response.code === 404) res.status(404).json({ message: response.message })
                         else res.status(200).json({ message: 'Learning path completion toggled' })
@@ -203,28 +203,30 @@ router.put('/:id/yours', (req, res) => {
         })
 })
 
+//This code is working, used in deleting learningpaths via specified id
 router.delete('/:id', (req, res) => {
 
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
-            if (user) {
-                Paths.deletePathById(user.id, req.params.id)
-                    .then(response => {
-                        if (response.code === 404) res.status(404).json({ message: response.message })
-                        else if (response.code === 403) res.status(403).json({ message: response.message })
-                        else res.status(200).json({ message: 'Learning path deleted' })
-                    })
-                    .catch(error => {
-                        res.status(500).json({ message: 'Could not delete learning path' })
-                    })
-            }
-            else res.status(500).json({ message: 'Could not find user to delete learning path for' })
+
+            Paths.deletePathById(user, req.params.id)
+                .then(result => {
+                    if (res.code === 404) { res.status(404).json({ message: res.message }) }
+                    if (res.code === 403) { res.status(403).json({ message: res.message }) }
+                    else { res.status(200).json({ message: 'deleted learning path' }) }
+
+                })
+                .catch(err => {
+                    res.status(500).json({ message: 'Could not delete learning path.' })
+                })
         })
         .catch(err => {
             res.status(500).json({ message: 'Could not find user to delete learning path for' })
         })
 })
+
+
 
 //TODO: update docs
 router.post('/:id/users', (req, res) => {
@@ -253,7 +255,7 @@ router.post('/:id/users', (req, res) => {
             })
     }
 })
-
+//Only the user can delete the learning path he is part of, not modified
 router.delete('/:id/users', (req, res) => {
     let email = req.user.email
     Users.findBy({ email })
@@ -276,6 +278,7 @@ router.delete('/:id/users', (req, res) => {
         })
 })
 
+//verify if working when we implement tags to, this should work.
 router.post('/:id/tags', (req, res) => {
     const pathId = req.params.id
     let email = req.user.email
@@ -284,7 +287,7 @@ router.post('/:id/tags', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Paths.addPathTag(user.id, pathId, req.body.tag)
+                    Paths.addPathTag(user, pathId, req.body.tag)
                         .then(response => {
                             if (response.code === 201) res.status(201).json({ message: response.message })
                             else res.status(response.code).json({ message: response.message })
@@ -301,7 +304,7 @@ router.post('/:id/tags', (req, res) => {
             })
     }
 })
-
+// verify if working
 router.delete('/:id/tags', (req, res) => {
     if (!req.body.tag) {
         res.status(400).json({ message: "Missing tag data" })
@@ -312,7 +315,7 @@ router.delete('/:id/tags', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Paths.deletePathTag(user.id, pathId, req.body.tag)
+                    Paths.deletePathTag(user, pathId, req.body.tag)
                         .then(response => {
                             if (response.code === 200) res.status(200).json({ message: response.message })
                             else res.status(response.code).json({ message: response.message })
@@ -358,7 +361,7 @@ router.post('/:id/courses/:courseId', (req, res) => {
             })
     }
 })
-
+// Working. This removes the courses that was added to a learning path
 router.delete('/:id/courses/:courseId', (req, res) => {
     const pathId = req.params.id
     const courseId = req.params.courseId
@@ -366,8 +369,12 @@ router.delete('/:id/courses/:courseId', (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.removePathCourse(user.id, pathId, courseId)
+                Paths.removePathCourse(user, pathId, courseId)
                     .then(response => {
+                        if (response.code === 404) res.status(404).json({ message: response.message, pathCourses: response.pathCourses })
+
+                        if (response.code === 403) res.status(403).json({ message: response.message, pathCourses: response.pathCourses })
+
                         if (response.code === 200) res.status(200).json({ message: response.message, pathCourses: response.pathCourses })
                         else res.status(response.code).json({ message: response.message })
                     })
@@ -381,7 +388,7 @@ router.delete('/:id/courses/:courseId', (req, res) => {
             res.status(500).json({ message: 'Could not find user to remove course for' })
         })
 })
-
+// verify if working
 router.put('/:id/order', (req, res) => {
     const pathId = req.params.id
     let email = req.user.email
@@ -391,7 +398,7 @@ router.put('/:id/order', (req, res) => {
         Users.findBy({ email })
             .then(user => {
                 if (user) {
-                    Paths.updateContentOrder(user.id, pathId, content)
+                    Paths.updateContentOrder(user, pathId, content)
                         .then(response => {
                             if (response === 200) res.status(200).json({ message: response.message })
                             else res.status(response.code).json({ message: response.message })
@@ -416,10 +423,10 @@ function verifyLearningPath(req, res, next) {
 
 function validateLearningPathItem(req, res, next) {
     if (!req.body) res.status(400).json({ message: "Missing learning path item data" })
-    else if (!req.body.title) res.status(400).json({ message: "Learning Path Item name is required" })
+    else if (!req.body.name) res.status(400).json({ message: "Learning Path Item name is required" })
     else next()
 }
-
+//working code conditionals added
 router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (req, res) => {
     const pathId = req.params.id
     const pathItem = req.body
@@ -427,7 +434,7 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.addPathItem(user.id, pathId, pathItem)
+                Paths.addPathItem(user, pathId, pathItem)
                     .then(response => {
                         if (response.code === 403) res.status(403).json({ message: response.message })
                         else if (response.code === 404) res.status(404).json({ message: response.message })
@@ -443,7 +450,7 @@ router.post('/:id/path-items', verifyLearningPath, validateLearningPathItem, (re
             res.status(500).json({ message: 'Could not find user to add learning path Item for' })
         })
 })
-
+//verify if working
 router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     const pathId = req.params.id
     const itemId = req.params.itemId
@@ -452,7 +459,7 @@ router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.updatePathItem(user.id, pathId, itemId, changes)
+                Paths.updatePathItem(user, pathId, itemId, changes)
                     .then(response => {
                         if (response.code === 403) res.status(403).json({ message: response.message })
                         else if (response.code === 404) res.status(404).json({ message: response.message })
@@ -468,7 +475,7 @@ router.put('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
             res.status(500).json({ message: 'Could not find user to update learning path Item for' })
         })
 })
-
+//verify if working
 router.put('/:id/path-items/:itemId/yours', verifyLearningPath, (req, res) => {
     const pathId = req.params.id
     const itemId = req.params.itemId
@@ -476,7 +483,7 @@ router.put('/:id/path-items/:itemId/yours', verifyLearningPath, (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.togglePathItemCompletion(user.id, pathId, itemId)
+                Paths.togglePathItemCompletion(user, pathId, itemId)
                     .then(response => {
                         res.status(200).json({ message: 'Learning path item completion has been toggled' })
                     })
@@ -491,6 +498,7 @@ router.put('/:id/path-items/:itemId/yours', verifyLearningPath, (req, res) => {
         })
 })
 
+//modified to verify roles, working
 router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     const pathId = req.params.id
     const itemId = req.params.itemId
@@ -498,7 +506,7 @@ router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
     Users.findBy({ email })
         .then(user => {
             if (user) {
-                Paths.deletePathItem(user.id, pathId, itemId)
+                Paths.deletePathItem(user, pathId, itemId)
                     .then(response => {
                         if (response.code === 403) res.status(403).json({ message: response.message })
                         else if (response.code === 404) res.status(404).json({ message: response.message })
