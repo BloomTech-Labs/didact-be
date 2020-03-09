@@ -4,10 +4,19 @@ const Courses = require("./coursesModel");
 const Users = require("../users/usersModel");
 
 router.get("/", (req, res) => {
-  if (req.headers.query && req.headers.filter) {
+  let emptyArray = { thing: [] };
+  if (req.headers.filter) {
     let filter = req.headers.filter;
     let query = req.headers.query;
-    if (filter === "topic" || filter === "title" || filter === "description") {
+
+    if (!query || query === undefined) {
+      console.log("triggered");
+      res.status(200).json(emptyArray.thing);
+    } else if (
+      filter === "topic" ||
+      filter === "title" ||
+      filter === "description"
+    ) {
       Courses.findByFilter(filter, query)
         .then(response => {
           res.status(200).json(response);
@@ -222,11 +231,9 @@ router.put("/:id/togglecomplete", (req, res) => {
               res.status(updateRes.code).json({ message: updateRes.message });
           })
           .catch(err =>
-            res
-              .status(500)
-              .json({
-                message: "Internal Error: Could not toggle course completion"
-              })
+            res.status(500).json({
+              message: "Internal Error: Could not toggle course completion"
+            })
           );
       } else
         res
@@ -292,11 +299,9 @@ router.post("/:id/tags", (req, res) => {
             })
             .catch(error => {
               console.log(error);
-              res
-                .status(500)
-                .json({
-                  message: "Internal error: Could not add tags to course"
-                });
+              res.status(500).json({
+                message: "Internal error: Could not add tags to course"
+              });
             });
         } else
           res
@@ -329,11 +334,9 @@ router.delete("/:id/tags", (req, res) => {
             })
             .catch(error => {
               console.log(error);
-              res
-                .status(500)
-                .json({
-                  message: "Internal error: Could not remove tags from course"
-                });
+              res.status(500).json({
+                message: "Internal error: Could not remove tags from course"
+              });
             });
         } else
           res
@@ -361,11 +364,9 @@ router.get("/:id/sections", (req, res) => {
             res.status(500).json(err);
           });
       } else {
-        res
-          .status(404)
-          .json({
-            message: `could not find a course with an id of ${courseId}`
-          });
+        res.status(404).json({
+          message: `could not find a course with an id of ${courseId}`
+        });
       }
     })
     .catch(err => {
@@ -390,11 +391,9 @@ router.get("/:id/yoursections", (req, res) => {
                   res.status(500).json(err);
                 });
             } else {
-              res
-                .status(404)
-                .json({
-                  message: `could not find a course with an id of ${courseId}`
-                });
+              res.status(404).json({
+                message: `could not find a course with an id of ${courseId}`
+              });
             }
           })
           .catch(err => {
@@ -426,12 +425,10 @@ router.post("/:id/sections", (req, res) => {
           Courses.addCourseSection(user.id, courseId, section)
             .then(response => {
               if (response.code === 201) {
-                res
-                  .status(201)
-                  .json({
-                    message: `Section has been added`,
-                    id: response.message
-                  });
+                res.status(201).json({
+                  message: `Section has been added`,
+                  id: response.message
+                });
               } else {
                 res.status(403).json({ message: response.message });
               }
@@ -468,11 +465,9 @@ router.put("/:id/sections/:section_id", (req, res) => {
           )
             .then(updateRes => {
               updateRes === 0
-                ? res
-                    .status(404)
-                    .json({
-                      message: `Section not found with id of ${sectionId}`
-                    })
+                ? res.status(404).json({
+                    message: `Section not found with id of ${sectionId}`
+                  })
                 : updateRes.code === 200
                 ? res.status(200).json({ message: `Section has been updated` })
                 : res.status(403).json({ message: updateRes.message });
@@ -506,11 +501,9 @@ router.put("/:id/sections/:section_id/togglecomplete", (req, res) => {
               res.status(updateRes.code).json({ message: updateRes.message });
           })
           .catch(err =>
-            res
-              .status(500)
-              .json({
-                message: "Internal Error: Could not toggle section completion"
-              })
+            res.status(500).json({
+              message: "Internal Error: Could not toggle section completion"
+            })
           );
       } else
         res
@@ -534,11 +527,9 @@ router.delete("/:id/sections/:section_id", (req, res) => {
         Courses.deleteCourseSection(user.id, courseId, sectionId)
           .then(deleteRes => {
             deleteRes === 0
-              ? res
-                  .status(404)
-                  .json({
-                    message: `Section not found with id of ${sectionId}`
-                  })
+              ? res.status(404).json({
+                  message: `Section not found with id of ${sectionId}`
+                })
               : deleteRes.code === 200
               ? res.status(200).json({ message: `Section has been deleted` })
               : res.status(403).json({ message: deleteRes.message });
@@ -606,12 +597,10 @@ router.post("/:id/sections/:s_id", (req, res) => {
           Courses.addSectionDetails(user.id, courseId, details)
             .then(response => {
               if (response.code === 200) {
-                res
-                  .status(201)
-                  .json({
-                    message: `Section Detail has been added`,
-                    id: response.message
-                  });
+                res.status(201).json({
+                  message: `Section Detail has been added`,
+                  id: response.message
+                });
               } else {
                 res.status(403).json({ message: response.message });
               }
@@ -649,11 +638,9 @@ router.put("/:id/sections/:section_id/details/:detail_id", (req, res) => {
           )
             .then(updateRes => {
               updateRes.message === 0
-                ? res
-                    .status(404)
-                    .json({
-                      message: `Detail ${detailId} not found in Section ${sectionId}`
-                    })
+                ? res.status(404).json({
+                    message: `Detail ${detailId} not found in Section ${sectionId}`
+                  })
                 : updateRes.code === 200
                 ? res
                     .status(200)
@@ -698,11 +685,9 @@ router.put(
                 res.status(updateRes.code).json({ message: updateRes.message });
             })
             .catch(err =>
-              res
-                .status(500)
-                .json({
-                  message: "Internal Error: Could not toggle lesson completion"
-                })
+              res.status(500).json({
+                message: "Internal Error: Could not toggle lesson completion"
+              })
             );
         } else
           res
@@ -729,11 +714,9 @@ router.delete("/:id/sections/:section_id/details/:detail_id", (req, res) => {
         Courses.deleteSectionDetails(user.id, courseId, sectionId, detailId)
           .then(deleteRes => {
             deleteRes.message === 0
-              ? res
-                  .status(404)
-                  .json({
-                    message: `Detail ${detailId} not found in Section ${sectionId}`
-                  })
+              ? res.status(404).json({
+                  message: `Detail ${detailId} not found in Section ${sectionId}`
+                })
               : deleteRes.code === 200
               ? res.status(200).json({ message: `Detail has been deleted` })
               : res.status(403).json({ message: deleteRes.message });
