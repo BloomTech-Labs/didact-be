@@ -1,3 +1,4 @@
+
 const router = require('express').Router()
 const axios = require('axios')
 const Courses = require('./coursesModel')
@@ -126,35 +127,14 @@ router.get('/:id/yours', (req, res) => {
 router.get('/:id', (req, res) => {
     const id = req.params.id
     Courses.findById(id)
+
         .then(response => {
-            if (response.code === 404) res.status(404).json({ message: response.message })
-            else res.status(200).json(response.course)
+          res.status(200).json(response);
         })
         .catch(error => {
-            res.status(500).json({ message: 'Error connecting with server' })
-        })
-})
-
-router.post('/', validateCourse, (req, res) => {
-    const course = req.body
-    let email = req.user.email
-    Users.findBy({ email })
-        .then(user => {
-            if (user) {
-                Courses.add(user.id, course)
-                    .then(response => {
-                        res.status(201).json({ id: response[0] })
-                    })
-                    .catch(error => {
-                        res.status(500).json({ message: 'Could not add course' })
-                    })
-            }
-            else res.status(500).json({ message: 'Could not find user to add course for' })
-        })
-        .catch(err => {
-            res.status(500).json({ message: 'Could not find user to add course for' })
-        })
-
+          res.status(500).json(error);
+        });
+    } 
 })
 
 router.put('/:id', (req, res) => {
@@ -220,14 +200,13 @@ router.delete('/:id', (req, res) => {
         })
 })
 
-
-
-
 function validateCourse(req, res, next) {
-    if (!req.body) res.status(400).json({ message: "Missing course data" })
-    else if (!req.body.title) res.status(400).json({ message: "Course title is required" })
-    else next()
+  if (!req.body) res.status(400).json({ message: "Missing course data" });
+  else if (!req.body.title)
+    res.status(400).json({ message: "Course title is required" });
+  else next();
 }
+
 //working code to add tags to courses
 router.post('/:id/tags', (req, res) => {
     const courseId = req.params.id
@@ -266,27 +245,71 @@ router.delete('/:id/tags', (req, res) => {
             .then(response => {
                 if (response.code === 200) res.status(200).json({ message: response.message })
                 else res.status(response.code).json({ message: response.message })
-            })
+                       })
             .catch(error => {
-                console.log(error)
-                res.status(500).json({ message: 'Internal error: Could not remove tags from course' })
-            })
-    }
-})
+              console.log(error);
+              res
+                .status(500)
+                .json({
+                  message: "Internal error: Could not remove tags from course"
+                });
+            });
+        } else
+          res
+            .status(500)
+            .json({ message: "Could not find user to remove tag for" });
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({ message: "Could not find user to remove tag for" });
+      });
+  }
+});
 
-router.get('/:id/sections', (req, res) => {
-    const courseId = req.params.id
-    Courses.findById(courseId)
-        .then(response => {
-            console.log(response.course)
+router.get("/:id/sections", (req, res) => {
+  const courseId = req.params.id;
+  Courses.findById(courseId)
+    .then(response => {
+      console.log(response.course);
+      if (response.code === 200) {
+        Courses.findCourseSectionsByCourseId(courseId)
+          .then(sections => res.status(200).json({ sections }))
+          .catch(err => {
+            console.log("500 err from get sections", err);
+            res.status(500).json(err);
+          });
+      } else {
+        res
+          .status(404)
+          .json({
+            message: `could not find a course with an id of ${courseId}`
+          });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.get("/:id/yoursections", (req, res) => {
+  const courseId = req.params.id;
+  let email = req.user.email;
+  Users.findBy({ email })
+    .then(user => {
+      if (user) {
+        Courses.findById(courseId)
+          .then(response => {
             if (response.code === 200) {
-                Courses.findCourseSectionsByCourseId(courseId)
-                    .then(sections => res.status(200).json({ sections }))
-                    .catch(err => {
-                        console.log('500 err from get sections', err)
-                        res.status(500).json(err)
-                    })
+              Courses.findYourCourseSectionsByCourseId(user.id, courseId)
+                .then(sections => res.status(200).json({ sections }))
+                .catch(err => {
+                  console.log("500 err from get sections", err);
+                  res.status(500).json(err);
+                });
             } else {
+
                 res.status(404).json({ message: `could not find a course with an id of ${courseId}` })
             }
         })
@@ -515,3 +538,4 @@ router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
 })
 
 module.exports = router
+
