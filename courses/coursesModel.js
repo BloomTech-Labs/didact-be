@@ -796,6 +796,7 @@ async function checkDbForCourseUrl(link) {
     else return { courseFound: true, id: course.id }
 }
 
+
 function update(id, changes) {
     return db("courses")
         .where({ id })
