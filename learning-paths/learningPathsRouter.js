@@ -522,7 +522,7 @@ router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
             res.status(500).json({ message: 'Could not find user to delete learning path Item for' })
         })
 })
-
+//no conditionals needed
 router.put('/', (req, res) => {
     let email = req.user.email
     if (!req.body.pathOrderArray) res.status(400).json({ message: "must send pathOrderArray" })
