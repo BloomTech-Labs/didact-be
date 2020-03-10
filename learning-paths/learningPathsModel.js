@@ -126,6 +126,7 @@ async function findPathsByOwner(name) {
 }
 
 async function findPathsForUsers(users) {
+<<<<<<< HEAD
   return users
     .map(async user => {
       return db("paths")
@@ -136,6 +137,22 @@ async function findPathsForUsers(users) {
           "users.first_name as creator_first_name",
           "users.last_name as creator_last_name"
         );
+=======
+    return users.map(async user => {
+        return db("paths")
+            .join('users', 'paths.creator_id', 'users.id')
+            .where('paths.creator_id', user.id)
+            .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
+            .then(result => {
+                return result
+            })
+            .join('users', 'paths.creator_id', 'users.id')
+            .where('paths.creator_id', user.id)
+            .select('paths.*', 'users.first_name as creator_first_name', 'users.last_name as creator_last_name')
+    }).then(result => {
+        let flattenedArray = result.flatMap(arr => arr)
+        return flattenedArray
+>>>>>>> 0bd7425cb4d966d3676dc8bf0199e8a001f1a660
     })
     .then(result => {
       let flattenedArray = result.flatMap(arr => arr);

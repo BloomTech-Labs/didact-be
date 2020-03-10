@@ -665,6 +665,7 @@ router.put("/:id/path-items/:itemId/yours", verifyLearningPath, (req, res) => {
 });
 
 //modified to verify roles, working
+<<<<<<< HEAD
 router.delete("/:id/path-items/:itemId", verifyLearningPath, (req, res) => {
   const pathId = req.params.id;
   const itemId = req.params.itemId;
@@ -715,6 +716,53 @@ router.put("/", (req, res) => {
                 res.status(200).json({ message: response.message });
               else
                 res.status(response.code).json({ message: response.message });
+=======
+router.delete('/:id/path-items/:itemId', verifyLearningPath, (req, res) => {
+    const pathId = req.params.id
+    const itemId = req.params.itemId
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user => {
+            if (user) {
+                Paths.deletePathItem(user, pathId, itemId)
+                    .then(response => {
+                        if (response.code === 403) res.status(403).json({ message: response.message })
+                        else if (response.code === 404) res.status(404).json({ message: response.message })
+                        else res.status(200).json({ message: response.message, id: response.id })
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: 'Could not delete learning path Item' })
+                    })
+            }
+            else res.status(500).json({ message: 'Could not find user to delete learning path Item for' })
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Could not find user to delete learning path Item for' })
+        })
+})
+//no conditionals needed
+router.put('/', (req, res) => {
+    let email = req.user.email
+    if (!req.body.pathOrderArray) res.status(400).json({ message: "must send pathOrderArray" })
+    else {
+        let pathOrderArray = req.body.pathOrderArray
+        Users.findBy({ email })
+            .then(user => {
+                if (user) {
+                    Paths.updatePathOrder(user.id, pathOrderArray)
+                        .then(response => {
+                            if (response === 200) res.status(200).json({ message: response.message })
+                            else res.status(response.code).json({ message: response.message })
+                        })
+                        .catch(error => {
+                            res.status(500).json({ message: 'Internal error: Could not update learning path order' })
+                        })
+                }
+                else res.status(500).json({ message: 'Could not find user to update learning path order for' })
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Could not find user to update learning path order for' })
+>>>>>>> 0bd7425cb4d966d3676dc8bf0199e8a001f1a660
             })
             .catch(error => {
               res.status(500).json({

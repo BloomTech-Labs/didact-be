@@ -10,42 +10,55 @@ const secrets = require('../config/secret')
 
 const Users = require('../users/usersModel')
 
-//GET list of all users
-router.get("/users", (req, res) => {
-    Users.find()
-        .then(users => {
-            res.json(users);
-        })
-        .catch(err => {
-            console.log(
-                err,
-                "credentials are invalid or missing"
-            );
-            res
-                .status(500)
-                .json({ error: "Error unable to retrieve list of users" });
-        });
-});
-
-//UPDATE user by specific id
-router.put("/:id", (req, res) => {
-    const { id } = req.params;
-    const changes = req.body;
-
-    Users.update(id, changes)
+//GET list of all users conditions added to check role as owner or admin
+router.get("/users", restricted, (req, res) => {
+    let email = req.user.email
+    Users.findBy({ email })
         .then(user => {
-            if (user) {
-                res.json({ update: user });
-            } else {
-                res
-                    .status(404)
-                    .json({ message: `Could not find user with id:${id}` });
+            if (user.owner === true || user.admin === true) {
+                Users.find()
+                    .then(users => {
+                        res.json(users);
+                    })
+                    .catch(err => {
+                        console.log(
+                            err,
+                            "credentials are invalid or missing"
+                        );
+                        res
+                            .status(500)
+                            .json({ error: "Error unable to retrieve list of users" });
+                    });
             }
         })
-        .catch(err => {
-            res.status(500).json({ message: "Failed to update user" });
-        });
-});
+        .catch(err => res.status(500).json({ message: 'Could not find user in database' }))
+})
+
+//UPDATE user by specific id
+router.put("/:id", restricted, (req, res) => {
+    const { id } = req.params;
+    const changes = req.body;
+    let email = req.user.email
+    Users.findBy({ email })
+        .then(user => {
+            if (user.owner === true || user.admin === true) {
+                Users.update(id, changes)
+                    .then(user => {
+                        if (user) {
+                            res.json({ update: user });
+                        } else {
+                            res
+                                .status(404)
+                                .json({ message: `Could not find user with id:${id}` });
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).json({ message: "Failed to update user" });
+                    });
+            }
+        })
+        .catch(err => res.status(500).json({ message: 'Could not find user in database' }))
+})
 
 router.post('/emaillist', (req, res) => {
     if (!req.body.email) res.status(400).json({ message: 'Must send email' })
