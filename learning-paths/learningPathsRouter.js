@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
           let filter = req.headers.filter;
           let query = req.headers.query;
           let emptyArray = { thing: [] };
-          if (!query || query === undefined) {
+          if (!query || query === undefined || query === null) {
             console.log("triggered");
             res.status(200).json(emptyArray.thing);
           } else if (
@@ -55,18 +55,14 @@ router.get("/", (req, res) => {
             });
         }
       } else
-        res
-          .status(500)
-          .json({
-            message: "Error, could not find user to check learning paths for"
-          });
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({
+        res.status(500).json({
           message: "Error, could not find user to check learning paths for"
         });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Error, could not find user to check learning paths for"
+      });
     });
 });
 
@@ -83,18 +79,14 @@ router.get("/yours", (req, res) => {
             res.status(500).json(err);
           });
       } else
-        res
-          .status(500)
-          .json({
-            message: "Error, could not find user to check learning paths for"
-          });
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({
+        res.status(500).json({
           message: "Error, could not find user to check learning paths for"
         });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Error, could not find user to check learning paths for"
+      });
     });
 });
 
@@ -108,26 +100,19 @@ router.get("/yours-owned", (req, res) => {
             res.status(200).json(response);
           })
           .catch(err => {
-            res
-              .status(500)
-              .json({
-                message:
-                  "Error, could not find user to check learning paths for"
-              });
+            res.status(500).json({
+              message: "Error, could not find user to check learning paths for"
+            });
           });
       } else
-        res
-          .status(500)
-          .json({
-            message: "Error, could not find user to check learning paths for"
-          });
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({
+        res.status(500).json({
           message: "Error, could not find user to check learning paths for"
         });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Error, could not find user to check learning paths for"
+      });
     });
 });
 
@@ -162,19 +147,15 @@ router.get("/:id/yours", (req, res) => {
             res.status(500).json({ message: "Error connecting with server" });
           });
       } else
-        res
-          .status(500)
-          .json({
-            message: "Error, could not find user to check learning path for"
-          });
+        res.status(500).json({
+          message: "Error, could not find user to check learning path for"
+        });
     })
     .catch(err => {
       console.log("err", err);
-      res
-        .status(500)
-        .json({
-          message: "Error, could not find user to check learning path for"
-        });
+      res.status(500).json({
+        message: "Error, could not find user to check learning path for"
+      });
     });
 });
 
@@ -267,19 +248,14 @@ router.put("/:id/yours", (req, res) => {
               .json({ message: "Could not toggle learning path completion" });
           });
       } else
-        res
-          .status(500)
-          .json({
-            message:
-              "Could not find user to toggle learning path completion for"
-          });
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({
+        res.status(500).json({
           message: "Could not find user to toggle learning path completion for"
         });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Could not find user to toggle learning path completion for"
+      });
     });
 });
 
@@ -390,11 +366,9 @@ router.post("/:id/tags", (req, res) => {
             })
             .catch(error => {
               console.log(error);
-              res
-                .status(500)
-                .json({
-                  message: "Internal error: Could not add tag to learning path"
-                });
+              res.status(500).json({
+                message: "Internal error: Could not add tag to learning path"
+              });
             });
         } else
           res
@@ -427,11 +401,9 @@ router.delete("/:id/tags", (req, res) => {
             })
             .catch(error => {
               console.log(error);
-              res
-                .status(500)
-                .json({
-                  message: "Internal error: Could not remove tags from path"
-                });
+              res.status(500).json({
+                message: "Internal error: Could not remove tags from path"
+              });
             });
         } else
           res
@@ -461,23 +433,18 @@ router.post("/:id/courses/:courseId", (req, res) => {
             .then(response => {
               console.log("response", response);
               if (response.code === 200)
-                res
-                  .status(200)
-                  .json({
-                    message: response.message,
-                    pathCourses: response.pathCourses
-                  });
+                res.status(200).json({
+                  message: response.message,
+                  pathCourses: response.pathCourses
+                });
               else
                 res.status(response.code).json({ message: response.message });
             })
             .catch(error => {
               console.log(error);
-              res
-                .status(500)
-                .json({
-                  message:
-                    "Internal error: Could not add course to learning path"
-                });
+              res.status(500).json({
+                message: "Internal error: Could not add course to learning path"
+              });
             });
         } else
           res
@@ -502,36 +469,28 @@ router.delete("/:id/courses/:courseId", (req, res) => {
         Paths.removePathCourse(user, pathId, courseId)
           .then(response => {
             if (response.code === 404)
-              res
-                .status(404)
-                .json({
-                  message: response.message,
-                  pathCourses: response.pathCourses
-                });
+              res.status(404).json({
+                message: response.message,
+                pathCourses: response.pathCourses
+              });
 
             if (response.code === 403)
-              res
-                .status(403)
-                .json({
-                  message: response.message,
-                  pathCourses: response.pathCourses
-                });
+              res.status(403).json({
+                message: response.message,
+                pathCourses: response.pathCourses
+              });
 
             if (response.code === 200)
-              res
-                .status(200)
-                .json({
-                  message: response.message,
-                  pathCourses: response.pathCourses
-                });
+              res.status(200).json({
+                message: response.message,
+                pathCourses: response.pathCourses
+              });
             else res.status(response.code).json({ message: response.message });
           })
           .catch(error => {
-            res
-              .status(500)
-              .json({
-                message: "Internal error: Could not remove courses from path"
-              });
+            res.status(500).json({
+              message: "Internal error: Could not remove courses from path"
+            });
           });
       } else
         res
@@ -565,27 +524,20 @@ router.put("/:id/order", (req, res) => {
                 res.status(response.code).json({ message: response.message });
             })
             .catch(error => {
-              res
-                .status(500)
-                .json({
-                  message:
-                    "Internal error: Could not update learning path content order"
-                });
+              res.status(500).json({
+                message:
+                  "Internal error: Could not update learning path content order"
+              });
             });
         } else
-          res
-            .status(500)
-            .json({
-              message:
-                "Could not find user to update learning path content order"
-            });
-      })
-      .catch(err => {
-        res
-          .status(500)
-          .json({
+          res.status(500).json({
             message: "Could not find user to update learning path content order"
           });
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: "Could not find user to update learning path content order"
+        });
       });
   }
 });
@@ -634,18 +586,14 @@ router.post(
                 .json({ message: "Could not add learning path Item" });
             });
         } else
-          res
-            .status(500)
-            .json({
-              message: "Could not find user to add learning path Item for"
-            });
-      })
-      .catch(err => {
-        res
-          .status(500)
-          .json({
+          res.status(500).json({
             message: "Could not find user to add learning path Item for"
           });
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: "Could not find user to add learning path Item for"
+        });
       });
   }
 );
@@ -675,18 +623,14 @@ router.put("/:id/path-items/:itemId", verifyLearningPath, (req, res) => {
               .json({ message: "Could not update learning path Item" });
           });
       } else
-        res
-          .status(500)
-          .json({
-            message: "Could not find user to update learning path Item for"
-          });
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({
+        res.status(500).json({
           message: "Could not find user to update learning path Item for"
         });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Could not find user to update learning path Item for"
+      });
     });
 });
 //verify if working
@@ -699,11 +643,9 @@ router.put("/:id/path-items/:itemId/yours", verifyLearningPath, (req, res) => {
       if (user) {
         Paths.togglePathItemCompletion(user, pathId, itemId)
           .then(response => {
-            res
-              .status(200)
-              .json({
-                message: "Learning path item completion has been toggled"
-              });
+            res.status(200).json({
+              message: "Learning path item completion has been toggled"
+            });
           })
           .catch(error => {
             res
@@ -711,18 +653,14 @@ router.put("/:id/path-items/:itemId/yours", verifyLearningPath, (req, res) => {
               .json({ message: "Could not complete learning path Item" });
           });
       } else
-        res
-          .status(500)
-          .json({
-            message: "Could not find user to complete learning path Item for"
-          });
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({
+        res.status(500).json({
           message: "Could not find user to complete learning path Item for"
         });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Could not find user to complete learning path Item for"
+      });
     });
 });
 
@@ -751,18 +689,14 @@ router.delete("/:id/path-items/:itemId", verifyLearningPath, (req, res) => {
               .json({ message: "Could not delete learning path Item" });
           });
       } else
-        res
-          .status(500)
-          .json({
-            message: "Could not find user to delete learning path Item for"
-          });
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({
+        res.status(500).json({
           message: "Could not find user to delete learning path Item for"
         });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Could not find user to delete learning path Item for"
+      });
     });
 });
 
@@ -783,26 +717,19 @@ router.put("/", (req, res) => {
                 res.status(response.code).json({ message: response.message });
             })
             .catch(error => {
-              res
-                .status(500)
-                .json({
-                  message:
-                    "Internal error: Could not update learning path order"
-                });
+              res.status(500).json({
+                message: "Internal error: Could not update learning path order"
+              });
             });
         } else
-          res
-            .status(500)
-            .json({
-              message: "Could not find user to update learning path order for"
-            });
-      })
-      .catch(err => {
-        res
-          .status(500)
-          .json({
+          res.status(500).json({
             message: "Could not find user to update learning path order for"
           });
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: "Could not find user to update learning path order for"
+        });
       });
   }
 });

@@ -465,7 +465,6 @@ async function addUserPathItem(userId, pathItemId) {
     let existingEntry = await db("users_path_items")
       .where({ user_id: userId, path_item_id: pathItemId })
       .first();
-    console.log("existingEntry", existingEntry);
     if (!existingEntry) {
       await db("users_path_items").insert({
         user_id: userId,

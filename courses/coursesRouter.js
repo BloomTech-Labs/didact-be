@@ -8,8 +8,7 @@ router.get("/", (req, res) => {
   if (req.headers.filter) {
     let filter = req.headers.filter;
     let query = req.headers.query;
-
-    if (!query || query === undefined) {
+    if (!query || query === undefined || query === null) {
       console.log("triggered");
       res.status(200).json(emptyArray.thing);
     } else if (
