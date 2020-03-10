@@ -142,13 +142,16 @@ async function findPathsForUsers(users) {
 function findPathsByTag(tag) {
     let tagTweak = tag.toLowerCase();
     return db("paths")
-        .join('tags_paths', 'tags_paths.path_id', 'paths.id')
-        .join('tags', 'tags.id', 'tags_paths.tag_id')
-        .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
-        .then(result => {
-            return result
-        })
+
+    .join('tags_paths', 'tags_paths.path_id', 'paths.id')
+    .join('tags', 'tags.id', 'tags_paths.tag_id')
+    .whereRaw('LOWER(tags.name) ~ ?', [tagTweak])
+    .select('paths.*', 'tags.name as tag')
+    .then(result => {
+        return result
+    })
 }
+
 
 async function findById(id) {
     try {

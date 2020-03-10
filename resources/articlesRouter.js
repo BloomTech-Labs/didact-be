@@ -75,6 +75,16 @@ router.delete('/:id', (req, res) => {
     })
 })
 
+router.get('/external/:id', (req, res) => {
+    Articles.getExternalById(req.params.id)
+    .then(result => {
+        res.status(200).json(result)
+    })
+    .catch(err => {
+        res.status(500).json(err)
+    })
+})
+
 router.post('/external', (req, res) => {
     let email = req.user.email 
     let article = req.body

@@ -3,6 +3,7 @@ const db = require('../database/dbConfig.js')
 module.exports = {
     get,
     getById,
+    getExternalById,
     add,
     addExternal,
     update,
@@ -12,14 +13,18 @@ module.exports = {
 }
 
 async function get() {
-    let articles = await db("articles").join("users", "users.id", "articles.id").select("users.first_name", "users.last_name", "articles.*")
+    let articles = await db("articles").join("users", "users.id", "articles.creator_id").select("users.first_name", "users.last_name", "articles.*")
     let externalArticles = await db("external_articles")
     let finalArray = articles.concat(externalArticles);
     return await finalArray
 }
 
 function getById(id) {
-    return db("articles").where({ id }).first()
+    return db("articles").join("users", "users.id", "articles.creator_id").select("users.first_name", "users.last_name", "articles.*").where("articles.id", id).first()
+}
+
+function getExternalById(id) {
+    return db("external_articles").where({ id }).first()
 }
 
 function add(user_id, content) {
