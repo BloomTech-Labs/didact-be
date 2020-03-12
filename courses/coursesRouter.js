@@ -1,161 +1,123 @@
-const router = require('express').Router()
-const axios = require('axios')
-const Courses = require('./coursesModel')
-const Users = require('../users/usersModel')
-const restricted = require('../utils/restricted')
+const router = require("express").Router();
+const axios = require("axios");
+const Courses = require("./coursesModel");
+const Users = require("../users/usersModel");
 
-router.get('/', (req, res) => {
-    if (req.headers.query && req.headers.filter) {
-        let filter = req.headers.filter;
-        let query = req.headers.query;
-        if (filter === 'topic' || filter === 'title' || filter === 'description') {
-            Courses.findByFilter(filter, query).then(response => {
-                res.status(200).json(response)
-            }).catch(error => {
-                res.status(500).json(error)
-            })
-        } else if (filter === 'creator' && query) {
-            Courses.findCoursesByOwner(query).then(response => {
-                res.status(200).json(response)
-            }).catch(error => {
-                res.status(500).json(error)
-            })
-        } else if (filter === 'tag' && query) {
-            Courses.findByTag(query).then(response => {
-                res.status(200).json(response)
-            }).catch(error => {
-                res.status(500).json(error)
-            })
-        }
-    } else {
+router.get("/", (req, res) => {
+  let emptyArray = { thing: [] };
+  if (req.headers.filter) {
+    let filter = req.headers.filter;
+    let query = req.headers.query;
 
-        Courses.find()
-            .then(response => {
-                if (req.body.url) {
-                    response = response.filter(el => el.link === req.body.url)
-                    res.status(200).json(response)
-                }
-                else if (req.body.tag) {
-                    findByTag(response, req.body.tag)
-                        .then(results => {
-                            res.status(200).json(results)
-                        })
-                        .catch(err => res.status(500).json({ message: 'Error connecting with server' }))
-                }
-                else res.status(200).json(response)
-            })
-            .catch(error => {
-                res.status(500).json({ message: 'Error connecting with server' })
-            })
-    }
-})
-
-router.get('/allyours', (req, res) => {
-    let email = req.user.email
-    Users.findBy({ email })
-        .then(user => {
-            if (user) {
-                Courses.findAllCoursesForUser(user.id)
-                    .then(response => {
-                        if (response.code === 404) res.status(404).json({ message: response.message })
-                        else res.status(200).json(response)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                        res.status(500).json({ message: 'Could not get all courses' })
-                    })
-            }
-            else res.status(500).json({ message: 'Could not find user to get all courses for' })
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json(err)
-        })
-})
-
-router.post('/checkdb', (req, res) => {
-    let email = req.user.email
-    if (!req.body.link) res.status(400).json({ message: 'link is required' })
-    else {
-        Users.findBy({ email })
-            .then(user => {
-                if (user) {
-                    Courses.checkDbForCourseUrl(req.body.link)
-                        .then(response => {
-                            res.status(200).json({ courseFound: response.courseFound, id: response.id })
-                        })
-                        .catch(error => {
-                            console.log(error)
-                            res.status(500).json({ message: 'Could not get courses' })
-                        })
-                }
-                else res.status(500).json({ message: 'Could not find user to get courses for' })
-            })
-            .catch(err => {
-                console.log(err)
-                res.status(500).json({ message: 'Could not find user' })
-            })
-
-    }
-})
-
-router.get('/:id/yours', (req, res) => {
-    const id = req.params.id
-    let email = req.user.email
-    Users.findBy({ email })
-        .then(user => {
-            if (user) {
-                Courses.findYoursById(user.id, id)
-                    .then(response => {
-                        if (response.code === 404) res.status(404).json({ message: response.message })
-                        else res.status(200).json(response)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                        res.status(500).json({ message: 'Error connecting with server' })
-                    })
-            }
-            else res.status(500).json({ message: 'Could not find user to get course for' })
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json(err)
-        })
-})
-
-router.get('/:id', (req, res) => {
-    const id = req.params.id
-    Courses.findById(id)
+    if (!query || query === undefined) {
+      console.log("triggered");
+      res.status(200).json(emptyArray.thing);
+    } else if (
+      filter === "topic" ||
+      filter === "title" ||
+      filter === "description"
+    ) {
+      Courses.findByFilter(filter, query)
         .then(response => {
-            if (response.code === 404) res.status(404).json({ message: response.message })
-            else res.status(200).json(response.course)
+          res.status(200).json(response);
         })
         .catch(error => {
-            res.status(500).json({ message: 'Error connecting with server' })
+          res.status(500).json(error);
+        });
+    } else if (filter === "creator" && query) {
+      Courses.findCoursesByOwner(query)
+        .then(response => {
+          res.status(200).json(response);
         })
-})
+        .catch(error => {
+          res.status(500).json(error);
+        });
+    } else if (filter === "tag" && query) {
+      Courses.findByTag(query)
+        .then(response => {
+          res.status(200).json(response);
+        })
+        .catch(error => {
+          res.status(500).json(error);
+        });
+    }
+  } else {
+    Courses.find()
+      .then(response => {
+        if (req.body.url) {
+          response = response.filter(el => el.link === req.body.url);
+          res.status(200).json(response);
+        } else if (req.body.tag) {
+          findByTag(response, req.body.tag)
+            .then(results => {
+              res.status(200).json(results);
+            })
+            .catch(err =>
+              res.status(500).json({ message: "Error connecting with server" })
+            );
+        } else res.status(200).json(response);
+      })
+      .catch(error => {
+        res.status(500).json({ message: "Error connecting with server" });
+      });
+  }
+});
 
-router.post('/', validateCourse, (req, res) => {
-    const course = req.body
-    let email = req.user.email
+router.get("/allyours", (req, res) => {
+  let email = req.user.email;
+  Users.findBy({ email })
+    .then(user => {
+      if (user) {
+        Courses.findAllCoursesForUser(user.id)
+          .then(response => {
+            if (response.code === 404)
+              res.status(404).json({ message: response.message });
+            else res.status(200).json(response);
+          })
+          .catch(error => {
+            console.log(error);
+            res.status(500).json({ message: "Could not get all courses" });
+          });
+      } else
+        res
+          .status(500)
+          .json({ message: "Could not find user to get all courses for" });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.post("/checkdb", (req, res) => {
+  let email = req.user.email;
+  if (!req.body.link) res.status(400).json({ message: "link is required" });
+  else {
     Users.findBy({ email })
-        .then(user => {
-            if (user) {
-                Courses.add(user.id, course)
-                    .then(response => {
-                        res.status(201).json({ id: response[0] })
-                    })
-                    .catch(error => {
-                        res.status(500).json({ message: 'Could not add course' })
-                    })
-            }
-            else res.status(500).json({ message: 'Could not find user to add course for' })
-        })
-        .catch(err => {
-            res.status(500).json({ message: 'Could not find user to add course for' })
-        })
+         .then(user => {
+        if (user) {
+          Courses.checkDbForCourseUrl(req.body.link)
+            .then(response => {
+              res
+                .status(200)
+                .json({ courseFound: response.courseFound, id: response.id });
+            })
+            .catch(error => {
+              console.log(error);
+              res.status(500).json({ message: "Could not get courses" });
+            });
+        } else
+          res
+            .status(500)
+            .json({ message: "Could not find user to get courses for" });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({ message: "Could not find user" });
+      });
+  }
+});
 
-})
 //added conditional to model
 router.put('/:id', (req, res) => {
     if (!req.body.changes) res.status(400).json({ message: 'Missing course changes' })
@@ -228,7 +190,6 @@ router.put('/:id/togglecomplete', (req, res) => {
 })
 //conditionals added
 router.delete('/:id', (req, res) => {
-
     let email = req.user.email
     Users.findBy({ email })
         .then(user => {
@@ -250,14 +211,54 @@ router.delete('/:id', (req, res) => {
         })
 })
 
+router.get("/:id/yours", (req, res) => {
+  const id = req.params.id;
+  let email = req.user.email;
+  Users.findBy({ email })
+    .then(user => {
+      if (user) {
+        Courses.findYoursById(user.id, id)
+          .then(response => {
+            if (response.code === 404)
+              res.status(404).json({ message: response.message });
+            else res.status(200).json(response);
+          })
+          .catch(error => {
+            console.log(error);
+            res.status(500).json({ message: "Error connecting with server" });
+          });
+      } else
+        res
+          .status(500)
+          .json({ message: "Could not find user to get course for" });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 
-
+router.get("/:id", (req, res) => {
+  const id = req.params.id;
+  Courses.findById(id)
+    .then(response => {
+      console.log(response);
+      if (response.code === 404)
+        res.status(404).json({ message: response.message });
+      else res.status(200).json(response.course);
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Error connecting with server" });
+    });
+});
 
 function validateCourse(req, res, next) {
-    if (!req.body) res.status(400).json({ message: "Missing course data" })
-    else if (!req.body.title) res.status(400).json({ message: "Course title is required" })
-    else next()
+  if (!req.body) res.status(400).json({ message: "Missing course data" });
+  else if (!req.body.title)
+    res.status(400).json({ message: "Course title is required" });
+  else next();
 }
+
 //working code to add tags to courses
 router.post('/:id/tags', (req, res) => {
     const courseId = req.params.id
@@ -313,28 +314,31 @@ router.delete('/:id/tags', (req, res) => {
             })
     }
 })
-//conditions not needed
-router.get('/:id/sections', (req, res) => {
-    const courseId = req.params.id
-    Courses.findById(courseId)
-        .then(response => {
-            console.log(response.course)
-            if (response.code === 200) {
-                Courses.findCourseSectionsByCourseId(courseId)
-                    .then(sections => res.status(200).json({ sections }))
-                    .catch(err => {
-                        console.log('500 err from get sections', err)
-                        res.status(500).json(err)
-                    })
-            } else {
-                res.status(404).json({ message: `could not find a course with an id of ${courseId}` })
-            }
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json(err)
-        })
-})
+
+router.get("/:id/sections", (req, res) => {
+  const courseId = req.params.id;
+  Courses.findById(courseId)
+    .then(response => {
+      console.log(response.course);
+      if (response.code === 200) {
+        Courses.findCourseSectionsByCourseId(courseId)
+          .then(sections => res.status(200).json({ sections }))
+          .catch(err => {
+            console.log("500 err from get sections", err);
+            res.status(500).json(err);
+          });
+      } else {
+        res.status(404).json({
+          message: `could not find a course with an id of ${courseId}`
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 //conditionals not needed
 router.get('/:id/yoursections', (req, res) => {
     const courseId = req.params.id
@@ -491,6 +495,8 @@ router.get('/:id/yoursections/:s_id', (req, res) => {
         .catch(err => res.status(500).json({ message: 'Could not find user to get section for' }))
 
 })
+    
+
 //conditionals added
 router.post('/:id/sections/:s_id', (req, res) => {
     const courseSectionsId = req.params.s_id
@@ -545,28 +551,6 @@ router.put('/:id/sections/:section_id/details/:detail_id', (req, res) => {
 
 })
 
-//not modified, only the user can change it to complete
-router.put('/:id/sections/:section_id/details/:detail_id/togglecomplete', (req, res) => {
-    const courseId = req.params.id
-    const sectionId = req.params.section_id
-    const detailId = req.params.detail_id
-    let email = req.user.email
-    Users.findBy({ email })
-        .then(user => {
-            // console.log(user)
-            if (user) {
-                Courses.manualLessonCompleteToggle(user.id, courseId, sectionId, detailId)
-                    .then(updateRes => {
-                        if (updateRes.code === 200) res.status(200).json({ message: updateRes.message })
-                        else res.status(updateRes.code).json({ message: updateRes.message })
-                    })
-                    .catch(err => res.status(500).json({ message: 'Internal Error: Could not toggle lesson completion' }))
-            }
-            else res.status(500).json({ message: 'Could not find user to update lesson for' })
-        })
-        .catch(err => res.status(500).json({ message: 'Could not find user to update lesson for' }))
-})
-
 router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
     const detailId = req.params.detail_id
     const sectionId = req.params.section_id
@@ -589,4 +573,46 @@ router.delete('/:id/sections/:section_id/details/:detail_id', (req, res) => {
         .catch(err => res.status(500).json({ message: 'Could not find user to delete lesson for' }))
 })
 
-module.exports = router
+router.put(
+  "/:id/sections/:section_id/details/:detail_id/togglecomplete",
+  (req, res) => {
+    const courseId = req.params.id;
+    const sectionId = req.params.section_id;
+    const detailId = req.params.detail_id;
+    let email = req.user.email;
+    Users.findBy({ email })
+      .then(user => {
+        // console.log(user)
+        if (user) {
+          Courses.manualLessonCompleteToggle(
+            user.id,
+            courseId,
+            sectionId,
+            detailId
+          )
+            .then(updateRes => {
+              if (updateRes.code === 200)
+                res.status(200).json({ message: updateRes.message });
+              else
+                res.status(updateRes.code).json({ message: updateRes.message });
+            })
+            .catch(err =>
+              res.status(500).json({
+                message: "Internal Error: Could not toggle lesson completion"
+              })
+            );
+        } else
+          res
+            .status(500)
+            .json({ message: "Could not find user to update lesson for" });
+      })
+      .catch(err =>
+        res
+          .status(500)
+          .json({ message: "Could not find user to update lesson for" })
+      );
+  }
+);
+
+
+module.exports = router;

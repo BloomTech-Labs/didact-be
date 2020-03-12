@@ -319,7 +319,7 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
       tbl.string("topic", 1000).notNullable();
-      tbl.string("title", 1000).notNullable();
+      tbl.string("title", 1000).notNullable().unique();
       tbl.string("body", 10000).notNullable();
       tbl.string("date", 10).notNullable();
     })
@@ -333,9 +333,10 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
       tbl.string("topic", 1000).notNullable();
-      tbl.string("title", 1000).notNullable();
+      tbl.string("title", 1000).notNullable().unique();
       tbl.string("description", 1000).notNullable();
       tbl.string("link", 1000).notNullable();
+      tbl.string("date", 10).notNullable();
     })
     .createTable("tags_sources", tbl => {
       tbl.increments();
@@ -425,8 +426,10 @@ exports.down = function (knex) {
     .dropTableIfExists("tags_sources")
     .dropTableIfExists("tags_tools")
     .dropTableIfExists("tags_articles")
+    .dropTableIfExists("tags_external_articles")
     .dropTableIfExists("sources")
     .dropTableIfExists("tools")
+    .dropTableIfExists("external_articles")
     .dropTableIfExists("articles")
     .dropTableIfExists("tags")
     .dropTableIfExists("users");
