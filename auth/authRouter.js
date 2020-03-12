@@ -34,14 +34,25 @@ router.get("/users", restricted, (req, res) => {
         .catch(err => res.status(500).json({ message: 'Could not find user in database' }))
 })
 
+//GET user by id
+router.get("/users/:id", (req, res) => {
+    Users.findById(req.params.id)
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            res.status(500).json(err)
+        })
+})
+
 //UPDATE user by specific id
 router.put("/:id", restricted, (req, res) => {
     const { id } = req.params;
     const changes = req.body;
     let email = req.user.email
     Users.findBy({ email })
-        .then(user => {
-            if (user.owner === true || user.admin === true) {
+        .then(person => {
+            if (person.owner === true || person.admin === true) {
                 Users.update(id, changes)
                     .then(user => {
                         if (user) {
