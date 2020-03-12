@@ -51,8 +51,8 @@ router.put("/:id", restricted, (req, res) => {
     const changes = req.body;
     let email = req.user.email
     Users.findBy({ email })
-        .then(user => {
-            if (user.owner === true || user.admin === true) {
+        .then(person => {
+            if (person.owner === true || person.admin === true) {
                 Users.update(id, changes)
                     .then(user => {
                         if (user) {
