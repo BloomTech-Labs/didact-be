@@ -4,6 +4,8 @@ const Courses = require("./coursesModel");
 const Users = require("../users/usersModel");
 
 router.get("/", (req, res) => {
+  //Here is the query and filter check. Should be receiving this info
+  //from the search bar on the front-end.
   let emptyArray = { thing: [] };
   //Here is the query and filter check. Should be receiving this info
   //from the search bar on the front-end.
@@ -576,7 +578,6 @@ router.get("/:id/sections/:s_id", (req, res) => {
 
 router.get("/:id/yoursections/:s_id", (req, res) => {
   const courseSectionsId = req.params.s_id;
-
   let email = req.user.email;
   Users.findBy({ email })
     .then(user => {

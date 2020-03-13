@@ -819,9 +819,6 @@ async function autoCourseCompleteToggle(userId, courseId, isPathCompleted) {
       }
     }
 
-    //automatically complete path above course if all courses complete
-
-    // Find Path IDs for all paths that have the course, that the user is on.
     let pathIds = await findPathIdsForUserIdCourseId(userId, courseId);
     for (let i = 0; i < pathIds.length; i++) {
       // Find all courses in those paths, then check if all complete. If so, auto-complete the path

@@ -154,7 +154,6 @@ router.get("/:id/yours", (req, res) => {
         });
     })
     .catch(err => {
-      console.log("err", err);
       res.status(500).json({
         message: "Error, could not find user to check learning path for"
       });
@@ -301,7 +300,6 @@ router.post("/:id/users", (req, res) => {
         if (user) {
           Paths.joinLearningPath(user.id, req.params.id, order)
             .then(response => {
-              console.log("b", response);
               response == 1
                 ? res.status(200).json({ message: "Joined learning path" })
                 : res
@@ -309,7 +307,6 @@ router.post("/:id/users", (req, res) => {
                     .json({ message: "Could not join learning path" });
             })
             .catch(error => {
-              console.log("a");
               res.status(500).json({ message: "Could not join learning path" });
             });
         } else
@@ -332,11 +329,9 @@ router.delete("/:id/users", (req, res) => {
       if (user) {
         Paths.quitLearningPath(user.id, req.params.id)
           .then(response => {
-            console.log("b");
             res.status(200).json({ message: "Quit learning path" });
           })
           .catch(error => {
-            console.log("a");
             res.status(500).json({ message: "Could not quit learning path" });
           });
       } else
@@ -368,7 +363,6 @@ router.post("/:id/tags", (req, res) => {
                 res.status(response.code).json({ message: response.message });
             })
             .catch(error => {
-              console.log(error);
               res.status(500).json({
                 message: "Internal error: Could not add tag to learning path"
               });
@@ -403,7 +397,6 @@ router.delete("/:id/tags", (req, res) => {
                 res.status(response.code).json({ message: response.message });
             })
             .catch(error => {
-              console.log(error);
               res.status(500).json({
                 message: "Internal error: Could not remove tags from path"
               });
@@ -434,7 +427,6 @@ router.post("/:id/courses/:courseId", (req, res) => {
         if (user) {
           Paths.addPathCourse(user.id, pathId, courseId, order)
             .then(response => {
-              console.log("response", response);
               if (response.code === 200)
                 res.status(200).json({
                   message: response.message,
@@ -444,7 +436,6 @@ router.post("/:id/courses/:courseId", (req, res) => {
                 res.status(response.code).json({ message: response.message });
             })
             .catch(error => {
-              console.log(error);
               res.status(500).json({
                 message: "Internal error: Could not add course to learning path"
               });

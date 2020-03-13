@@ -173,7 +173,6 @@ async function findById(id) {
     // if(creatorId) path.creatorId = creatorId
     return { path, code: 200 };
   } catch (error) {
-    console.log("error from findById", error);
     return { message: error, code: 500 };
   }
 }
@@ -204,7 +203,6 @@ async function findYourPathById(userId, pathId) {
     // if(creatorId) path.creatorId = creatorId
     return { path, code: 200 };
   } catch (error) {
-    console.log("error from findById", error);
     return { message: error, code: 500 };
   }
 }
@@ -460,7 +458,6 @@ async function joinLearningPath(userId, pathId, order) {
     await pathCourses.forEach(el => addUserCourse(userId, el.id));
     return 1;
   } catch (error) {
-    console.log(`error from join learning path`, error);
     return 0;
   }
 }
@@ -478,7 +475,6 @@ async function addUserPathItem(userId, pathItemId) {
     }
     return 1;
   } catch (error) {
-    console.log("error from addUserPathItem", error);
     return 0;
   }
 }
@@ -488,7 +484,6 @@ async function addUserCourse(userId, courseId) {
     let existingEntry = await db("users_courses")
       .where({ user_id: userId, course_id: courseId })
       .first();
-    // console.log("existingEntry", existingEntry);
     if (!existingEntry) {
       await db("users_courses").insert({
         user_id: userId,
@@ -499,7 +494,6 @@ async function addUserCourse(userId, courseId) {
     }
     return 1;
   } catch (error) {
-    console.log("error from addUserCourse", error);
     return 0;
   }
 }
@@ -509,7 +503,6 @@ async function addUserSection(userId, sectionId) {
     let existingEntry = await db("users_sections")
       .where({ user_id: userId, section_id: sectionId })
       .first();
-    // console.log("existingEntry", existingEntry);
     if (!existingEntry) {
       await db("users_sections").insert({
         user_id: userId,
@@ -522,7 +515,6 @@ async function addUserSection(userId, sectionId) {
     }
     return 1;
   } catch (error) {
-    console.log("error from addUserSection", error);
     return 0;
   }
 }
@@ -532,7 +524,6 @@ async function addUserSectionDetail(userId, sectionDetailId) {
     let existingEntry = await db("users_section_details")
       .where({ user_id: userId, section_detail_id: sectionDetailId })
       .first();
-    // console.log("existingEntry", existingEntry);
     if (!existingEntry) {
       await db("users_section_details").insert({
         user_id: userId,
@@ -541,7 +532,6 @@ async function addUserSectionDetail(userId, sectionDetailId) {
     }
     return 1;
   } catch (error) {
-    // console.log("error from addUserSectionDetail", error);
     return 0;
   }
 }
@@ -742,7 +732,6 @@ async function updatePathOrder(userId, pathOrderArray) {
     }
     return { code: 200, message: "User's path order updated" };
   } catch (error) {
-    console.log("error", error);
     return {
       code: 500,
       message: "Internal error: Could not update learning path order"
@@ -772,7 +761,7 @@ async function updateUsersCoursesOnCourseAdd(courseId, pathId) {
         user_id: pathUsersIds[i],
         course_id: courseId
       });
-    } catch (error) { }
+    } catch (error) {}
   }
 }
 
