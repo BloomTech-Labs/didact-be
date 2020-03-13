@@ -46,6 +46,7 @@ async function findCoursesByOwner(name) {
   let users = db(
     "users"
   ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]);
+  //inserts users into function and awaits result
   return await findCoursesForUsers(users);
 }
 
@@ -62,6 +63,7 @@ async function findCoursesForUsers(users) {
         );
     })
     .then(result => {
+      //flattening nested array return
       let flattenedArray = result.flatMap(arr => arr);
       return flattenedArray;
     });
@@ -69,6 +71,7 @@ async function findCoursesForUsers(users) {
 
 function findByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
+  //checking fully lowered case value for "filter" field on courses
   return db("courses").whereRaw(`LOWER(courses.${filter}) ~ ?`, [queryTweak]);
 }
 
@@ -129,10 +132,12 @@ async function add(userId, courseObj) {
 }
 
 async function updateCourseById(user, courseId, changes) {
+  //passes entire user object from route
   let courseObj = await findById(courseId);
   let course = courseObj.course;
 
   if (!course) return { message: "No course found with that ID", code: 404 };
+  //checks if user owns course or is super-user
   if (
     course.creator_id !== user.id &&
     user.owner === false &&
@@ -189,7 +194,6 @@ async function addCourseTag(user, courseId, tag) {
   let tagId = await checkForTag(tag);
   if (tagId === -1) {
     tagId = await db("tags").insert({ name: tag }, "id");
-    console.log("tagId from add", tagId[0]);
     await db("tags_courses").insert({ tag_id: tagId[0], course_id: courseId });
   } else
     await db("tags_courses").insert({ tag_id: tagId, course_id: courseId });
@@ -200,7 +204,6 @@ async function addCourseTag(user, courseId, tag) {
 async function deleteCourseTag(user, courseId, tag) {
   let courseObj = await findById(courseId);
   let course = courseObj.course;
-
   if (!course) return { message: "No course found with that ID", code: 404 };
   if (
     course.creator_id !== user.id &&
@@ -226,7 +229,6 @@ async function deleteCourseTag(user, courseId, tag) {
 async function checkForTag(tagName) {
   let tag = await db("tags").where({ name: tagName });
   if (tag.length === 0) return -1;
-  console.log("tag.id", tag[0].id);
   return tag[0].id;
 }
 
@@ -329,7 +331,6 @@ async function addSectionDetails(user, courseId, details) {
     };
   else {
     let addreturn = await db("section_details").insert(details, "id");
-    // console.log('addreturn', addreturn)
     await updateUsersLessonsOnLessonAdd(
       addreturn[0],
       details.course_sections_id
@@ -404,7 +405,6 @@ async function lessonCascadeUp(userId, contentId) {
     );
     userSectionDetails.forEach(el => {
       if (!el.manually_completed && !el.automatically_completed) {
-        console.log(el);
       }
     });
     await db("users_sections as us")
@@ -455,7 +455,6 @@ async function courseCascadeUp(userId, contentId) {
       .join("paths_courses as pc", "pc.course_id", "=", "c.id")
       .select("pc.path_id")
       .where({ "c.id": contentId });
-    console.log("pathIds, pathIds.length", pathIds, pathIds.length);
     for (let i = 0; i < pathIds.length; i++) {
       let tempPathCourses = await findUserCoursesByPathId(
         userId,
@@ -497,7 +496,6 @@ async function itemCascadeUp(userId, contentId) {
       el => el.automatically_completed || el.manually_completed
     );
     let isComplete = isCoursesComplete && isItemsComplete;
-    console.log("isComplete", isComplete);
     await db("users_paths as up")
       .where({ "up.path_id": pathId.path_id, "up.user_id": userId })
       .update({ automatically_completed: isComplete });
@@ -561,7 +559,6 @@ async function manualLessonCompleteToggle(
     notIsCompleted = !(
       userLesson.manually_completed || userLesson.automatically_completed
     );
-    console.log("notIsCompleted", notIsCompleted);
     userLesson.manually_completed = notIsCompleted;
     if (!notIsCompleted) userLesson.automatically_completed = notIsCompleted;
     await db("users_section_details")
@@ -571,7 +568,6 @@ async function manualLessonCompleteToggle(
 
     return { code: 200, message: "Lesson completion toggled" };
   } catch (error) {
-    console.log(error);
     return {
       code: 500,
       message: "Internal Error: Could not toggle lesson completion"
@@ -614,7 +610,6 @@ async function manualSectionCompleteToggle(userId, courseId, sectionId) {
       .where({ "cs.id": sectionId, "usd.user_id": userId });
 
     for (let i = 0; i < usersSectionDetails.length; i++) {
-      // console.log('toggling lessons in section', usersSectionDetails[i].section_detail_id)
       await db("users_section_details")
         .where({
           user_id: userId,
@@ -628,7 +623,6 @@ async function manualSectionCompleteToggle(userId, courseId, sectionId) {
 
     return { code: 200, message: "Section completion toggled" };
   } catch (error) {
-    console.log(error);
     return {
       code: 500,
       message: "Internal Error: Could not toggle section completion"
@@ -638,7 +632,6 @@ async function manualSectionCompleteToggle(userId, courseId, sectionId) {
 
 async function findUserCoursesByPathId(userId, pathId) {
   try {
-    console.log("userId, pathId", userId, pathId);
     return await db("paths as p")
       .join("paths_courses as pc", "pc.path_id", "=", "p.id")
       .join("users_courses as uc", "uc.course_id", "=", "pc.course_id")
@@ -682,7 +675,6 @@ async function manualCourseCompleteToggle(userId, courseId) {
       .where({ "c.id": courseId, "us.user_id": userId });
 
     for (let i = 0; i < usersSections.length; i++) {
-      // console.log('toggling sections in course. Section ID:', usersSections[i].section_id)
       await db("users_sections")
         .where({ user_id: userId, section_id: usersSections[i].section_id })
         .update({ automatically_completed: userCourse.manually_completed });
@@ -703,7 +695,6 @@ async function manualCourseCompleteToggle(userId, courseId) {
       for (let j = 0; j < usersSectionDetails.length; j++) {
         let lessonAutComp =
           usersSections[i].manually_completed || userCourse.manually_completed;
-        // console.log('toggling lessons in section. Lesson ID:', usersSectionDetails[j].section_detail_id)
         await db("users_section_details")
           .where({
             user_id: userId,
@@ -712,27 +703,10 @@ async function manualCourseCompleteToggle(userId, courseId) {
           .update({ automatically_completed: lessonAutComp });
       }
     }
-
-    //automatically complete path above course if all courses complete
-
-    // Find Path IDs for all paths that have the course, that the user is on.
-    // let pathIds = await findPathIdsForUserIdCourseId(userId, courseId)
-    // for(let i=0; i<pathIds.length; i++)
-    // {
-    //     // Find all courses in those paths, then check if all complete. If so, auto-complete the path
-    //     let userCourses = await findUserCoursesByPathId(userId, pathIds[i].id)
-    //     console.log('blah', userCourses)
-    //     let isComplete = userCourses.every(el => el.automatically_completed || el.manually_completed)
-    //     if(isComplete) await db('users_paths as up')
-    //         .where({'up.path_id': pathIds[i].id, 'up.user_id': userId})
-    //         .update({automatically_completed: true})
-
-    // }
     await cascadeUp(userId, courseId, "course");
 
     return { code: 200, message: "Course completion toggled" };
   } catch (error) {
-    console.log(error);
     return {
       code: 500,
       message: "Internal Error: Could not toggle course completion"
@@ -818,7 +792,6 @@ async function autoCourseCompleteToggle(userId, courseId, isPathCompleted) {
       .where({ "c.id": courseId, "us.user_id": userId });
 
     for (let i = 0; i < usersSections.length; i++) {
-      // console.log('toggling sections in course. Section ID:', usersSections[i].section_id)
       await db("users_sections")
         .where({ user_id: userId, section_id: usersSections[i].section_id })
         .update({ automatically_completed: isPathCompleted });
@@ -837,7 +810,6 @@ async function autoCourseCompleteToggle(userId, courseId, isPathCompleted) {
         .where({ "cs.id": sectionId, "usd.user_id": userId });
 
       for (let j = 0; j < usersSectionDetails.length; j++) {
-        // console.log('toggling lessons in section. Lesson ID:', usersSectionDetails[j].section_detail_id)
         await db("users_section_details")
           .where({
             user_id: userId,
@@ -854,7 +826,6 @@ async function autoCourseCompleteToggle(userId, courseId, isPathCompleted) {
     for (let i = 0; i < pathIds.length; i++) {
       // Find all courses in those paths, then check if all complete. If so, auto-complete the path
       let userCourses = await findUserCoursesByPathId(userId, pathIds[i].id);
-      console.log("blah", userCourses);
       let isComplete = userCourses.every(
         el => el.automatically_completed || el.manually_completed
       );
@@ -870,7 +841,6 @@ async function autoCourseCompleteToggle(userId, courseId, isPathCompleted) {
 
     return { code: 200, message: "Course completion toggled" };
   } catch (error) {
-    console.log(error);
     return {
       code: 500,
       message: "Internal Error: Could not toggle course completion"
@@ -947,7 +917,6 @@ async function generateUdemyCourse(userId, link, results, details) {
 
   for (let i = 0; i < results.length; i++) {
     if (results[i]._class === "chapter") {
-      console.log("section title", results[i].title);
       let section = {
         name: results[i].title,
         description: results[i].description,
@@ -956,7 +925,6 @@ async function generateUdemyCourse(userId, link, results, details) {
       sectionOrder++, (lessonOrder = 1);
       sectionId = await addCourseSection(userId, courseId, section);
       sectionId = sectionId.message[0];
-      console.log("sectionId", sectionId);
     } else if (results[i]._class === "lecture") {
       let asset_type = "";
       if (results[i].asset && results[i].asset.asset_type)
