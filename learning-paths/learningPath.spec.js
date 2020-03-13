@@ -64,3 +64,15 @@ describe("GET learning-paths array of objects", () => {
     expect(res.body[0]).toHaveProperty("courses");
   });
 });
+
+// describe("server", function() {
+//   describe("DELETE learning path", function() {
+//     it("should delete learning path", function() {
+//       return request(server)
+//         .delete(`/api/learning-paths/:id`)
+//         .then(res => {
+//           expect(res.status).toBe(200);
+//         });
+//     });
+//   });
+// });
