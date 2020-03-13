@@ -4,12 +4,13 @@ const Users = require("../users/usersModel");
 
 router.get("/", (req, res) => {
   let email = req.user.email;
+  //checking if user making request exists in database using the token (email value) on their request header
   Users.findBy({ email })
     .then(user => {
       if (user) {
         //Here is the query and filter check. Should be receiving this info
         //from the search bar on the front-end.
-        if (req.headers.query && req.headers.filter) {
+        if (req.headers.filter) {
           let filter = req.headers.filter;
           let query = req.headers.query;
           let emptyArray = { thing: [] };
@@ -45,6 +46,7 @@ router.get("/", (req, res) => {
               });
           }
         } else {
+          //passing user id to get paths that user is not on
           Paths.findForNotUserId(user.id)
             .then(response => {
               res.status(200).json(response);
@@ -70,6 +72,7 @@ router.get("/yours", (req, res) => {
   Users.findBy({ email })
     .then(user => {
       if (user) {
+        //passing in user id to get paths user is on
         Paths.findForUserId(user.id)
           .then(response => {
             res.status(200).json(response);
@@ -203,6 +206,7 @@ router.put("/:id", (req, res) => {
     Users.findBy({ email })
       .then(user => {
         if (user) {
+          //passes entire user object into model to check user permissions in the database
           Paths.updatePathById(user, req.params.id, changes)
             .then(response => {
               if (response.code === 404)
