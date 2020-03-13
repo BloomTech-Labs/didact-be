@@ -108,7 +108,7 @@ router.post('/register', validateUserRegister, duplicateUser, (req, res) => {
     user.password = hash
     Users.add(user)
         .then(response => {
-            console.log('register response', response)
+            // console.log('register response', response)
             user.id = response[0]
             // Maybe can be removed, just use user.email
             Users.findBy({ email: user.email })
