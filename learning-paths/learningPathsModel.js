@@ -113,6 +113,7 @@ async function findForNotUserId(userId) {
 
 async function findPathsByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
+  //checking fully lowered case value for "filter" field on courses
   return db("paths").whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak]);
 }
 
@@ -122,6 +123,7 @@ async function findPathsByOwner(name) {
   let users = db(
     "users"
   ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]);
+  //inserts users into function and awaits result
   return await findPathsForUsers(users);
 }
 
@@ -138,6 +140,7 @@ async function findPathsForUsers(users) {
         );
     })
     .then(result => {
+      //flattening nested array return
       let flattenedArray = result.flatMap(arr => arr);
       return flattenedArray;
     });
@@ -260,10 +263,12 @@ async function findYourPathItemsForPath(userId, pathId) {
 }
 
 async function addPathItem(user, pathId, item) {
+  //passes entire user object from route
   let pathObj = await findById(pathId);
   let path = pathObj.path;
   if (!path)
     return { message: "No learning path found with that ID", code: 404 };
+  //checks if user owns course or is super-user
   if (
     path.creatorId !== user.id &&
     user.owner === false &&

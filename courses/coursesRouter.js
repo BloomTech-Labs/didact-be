@@ -7,6 +7,8 @@ router.get("/", (req, res) => {
   //Here is the query and filter check. Should be receiving this info
   //from the search bar on the front-end.
   let emptyArray = { thing: [] };
+  //Here is the query and filter check. Should be receiving this info
+  //from the search bar on the front-end.
   if (req.headers.filter) {
     let filter = req.headers.filter;
     let query = req.headers.query;
@@ -65,9 +67,11 @@ router.get("/", (req, res) => {
 
 router.get("/allyours", (req, res) => {
   let email = req.user.email;
+  //checking if user making request exists in database using the token (email value) on their request header
   Users.findBy({ email })
     .then(user => {
       if (user) {
+        //passing user id into model to get courses belonging to user
         Courses.findAllCoursesForUser(user.id)
           .then(response => {
             if (response.code === 404)
@@ -139,7 +143,6 @@ router.post("/checkdb", (req, res) => {
   }
 });
 
-//added conditional to model
 router.put("/:id", (req, res) => {
   if (!req.body.changes)
     res.status(400).json({ message: "Missing course changes" });
@@ -172,7 +175,7 @@ router.put("/:id", (req, res) => {
       });
   }
 });
-//conditionals updated
+
 router.put("/all/:id", (req, res) => {
   if (!req.body.changes)
     res.status(400).json({ message: "Missing course changes" });
@@ -201,7 +204,7 @@ router.put("/all/:id", (req, res) => {
       });
   }
 });
-//conditionals not needed
+
 router.put("/:id/togglecomplete", (req, res) => {
   const courseId = req.params.id;
   let email = req.user.email;
@@ -231,7 +234,7 @@ router.put("/:id/togglecomplete", (req, res) => {
         .json({ message: "Could not find user to update course for" })
     );
 });
-//conditionals added
+
 router.delete("/:id", (req, res) => {
   let email = req.user.email;
   Users.findBy({ email })
@@ -305,7 +308,6 @@ function validateCourse(req, res, next) {
   else next();
 }
 
-//working code to add tags to courses
 router.post("/:id/tags", (req, res) => {
   const courseId = req.params.id;
   let email = req.user.email;
@@ -394,7 +396,6 @@ router.get("/:id/sections", (req, res) => {
     });
 });
 
-//conditionals not needed
 router.get("/:id/yoursections", (req, res) => {
   const courseId = req.params.id;
   let email = req.user.email;
@@ -535,7 +536,7 @@ router.put("/:id/sections/:section_id/togglecomplete", (req, res) => {
         .json({ message: "Could not find user to update section for" })
     );
 });
-//conditionals added
+
 router.delete("/:id/sections/:section_id", (req, res) => {
   const sectionId = req.params.section_id;
   const courseId = req.params.id;
@@ -598,7 +599,6 @@ router.get("/:id/yoursections/:s_id", (req, res) => {
     );
 });
 
-//conditionals added
 router.post("/:id/sections/:s_id", (req, res) => {
   const courseSectionsId = req.params.s_id;
   const courseId = req.params.id;
@@ -633,7 +633,7 @@ router.post("/:id/sections/:s_id", (req, res) => {
       res.status(500).json({ message: "Could not find user to add lesson for" })
     );
 });
-//conditionals added
+
 router.put("/:id/sections/:section_id/details/:detail_id", (req, res) => {
   const courseId = req.params.id;
   const sectionId = req.params.section_id;

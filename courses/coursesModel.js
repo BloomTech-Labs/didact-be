@@ -46,6 +46,7 @@ async function findCoursesByOwner(name) {
   let users = db(
     "users"
   ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]);
+  //inserts users into function and awaits result
   return await findCoursesForUsers(users);
 }
 
@@ -62,6 +63,7 @@ async function findCoursesForUsers(users) {
         );
     })
     .then(result => {
+      //flattening nested array return
       let flattenedArray = result.flatMap(arr => arr);
       return flattenedArray;
     });
@@ -69,6 +71,7 @@ async function findCoursesForUsers(users) {
 
 function findByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
+  //checking fully lowered case value for "filter" field on courses
   return db("courses").whereRaw(`LOWER(courses.${filter}) ~ ?`, [queryTweak]);
 }
 
@@ -129,10 +132,12 @@ async function add(userId, courseObj) {
 }
 
 async function updateCourseById(user, courseId, changes) {
+  //passes entire user object from route
   let courseObj = await findById(courseId);
   let course = courseObj.course;
 
   if (!course) return { message: "No course found with that ID", code: 404 };
+  //checks if user owns course or is super-user
   if (
     course.creator_id !== user.id &&
     user.owner === false &&
@@ -199,7 +204,6 @@ async function addCourseTag(user, courseId, tag) {
 async function deleteCourseTag(user, courseId, tag) {
   let courseObj = await findById(courseId);
   let course = courseObj.course;
-
   if (!course) return { message: "No course found with that ID", code: 404 };
   if (
     course.creator_id !== user.id &&
@@ -699,7 +703,6 @@ async function manualCourseCompleteToggle(userId, courseId) {
           .update({ automatically_completed: lessonAutComp });
       }
     }
-
     await cascadeUp(userId, courseId, "course");
 
     return { code: 200, message: "Course completion toggled" };
