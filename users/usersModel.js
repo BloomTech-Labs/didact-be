@@ -33,7 +33,7 @@ function findBy(filter) {
 
 async function add(user) {
     let userId = await db('users').insert(user, 'id');
-    console.log(userId)
+    // console.log(userId)
     await learningPath.joinLearningPath(userId[0], 1, 1)
     return userId
 }

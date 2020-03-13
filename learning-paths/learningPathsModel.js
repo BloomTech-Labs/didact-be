@@ -488,7 +488,7 @@ async function addUserCourse(userId, courseId) {
     let existingEntry = await db("users_courses")
       .where({ user_id: userId, course_id: courseId })
       .first();
-    console.log("existingEntry", existingEntry);
+    // console.log("existingEntry", existingEntry);
     if (!existingEntry) {
       await db("users_courses").insert({
         user_id: userId,
@@ -509,7 +509,7 @@ async function addUserSection(userId, sectionId) {
     let existingEntry = await db("users_sections")
       .where({ user_id: userId, section_id: sectionId })
       .first();
-    console.log("existingEntry", existingEntry);
+    // console.log("existingEntry", existingEntry);
     if (!existingEntry) {
       await db("users_sections").insert({
         user_id: userId,
@@ -532,7 +532,7 @@ async function addUserSectionDetail(userId, sectionDetailId) {
     let existingEntry = await db("users_section_details")
       .where({ user_id: userId, section_detail_id: sectionDetailId })
       .first();
-    console.log("existingEntry", existingEntry);
+    // console.log("existingEntry", existingEntry);
     if (!existingEntry) {
       await db("users_section_details").insert({
         user_id: userId,
@@ -541,7 +541,7 @@ async function addUserSectionDetail(userId, sectionDetailId) {
     }
     return 1;
   } catch (error) {
-    console.log("error from addUserSectionDetail", error);
+    // console.log("error from addUserSectionDetail", error);
     return 0;
   }
 }
@@ -772,7 +772,7 @@ async function updateUsersCoursesOnCourseAdd(courseId, pathId) {
         user_id: pathUsersIds[i],
         course_id: courseId
       });
-    } catch (error) {}
+    } catch (error) { }
   }
 }
 
