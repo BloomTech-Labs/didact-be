@@ -1,7 +1,21 @@
+// require the discord.js module
+const Discord = require("discord.js");
+
+// create a new Discord client
+const client = new Discord.Client();
+
+// when the client is ready, run this code
+// this event will only trigger one time after logging in
+client.once("ready", () => {
+  console.log("Ready!");
+});
+
+// login to Discord with your app's token
+client.login(process.env.BOT_TOKEN);
+
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-
 const authRouter = require("../auth/authRouter");
 const facebookAuth = require("../auth/facebookAuth");
 const googleAuth = require("../auth/googleAuth");
@@ -9,9 +23,9 @@ const coursesRouter = require("../courses/coursesRouter");
 const tagsRouter = require("../tags/tagsRouter");
 const udemyCoursesRouter = require("../courses/udemyCoursesRouter");
 const learningPathsRouter = require("../learning-paths/learningPathsRouter");
-const articlesRouter = require('../resources/articlesRouter');
-const toolsRouter = require('../resources/toolsRouter');
-const sourcesRouter = require('../resources/sourcesRouter');
+const articlesRouter = require("../resources/articlesRouter");
+const toolsRouter = require("../resources/toolsRouter");
+const sourcesRouter = require("../resources/sourcesRouter");
 
 const server = express();
 
