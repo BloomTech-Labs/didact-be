@@ -21,7 +21,7 @@ client.on("message", message => {
       .split(/[\W\s\.]/)
       .join("-")
       .toLowerCase();
-    GuildChannelManager.create(pathName, "text");
+    //fetch guild and use .channels.create() to make new channel
   }
 });
 
