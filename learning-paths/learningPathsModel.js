@@ -1,6 +1,6 @@
 const db = require("../database/dbConfig");
 const Courses = require("../courses/coursesModel");
-// const Users = require('../users/usersModel')
+const client = require("../discord/didactBot.js");
 
 module.exports = {
   find,
@@ -446,6 +446,28 @@ function deletePathById(user, pathId) {
 }
 
 async function joinLearningPath(userId, pathId, order) {
+  //Discord Check => Looking for # of followers to path to determine
+  //if channel should be created
+  db("users_paths")
+    .where("users_paths.path_id", pathId)
+    .join("paths", "paths.id", "users_paths.path_id")
+    .select("users_paths.user_id", "paths.title")
+    .then(followerArray => {
+      const pathName = followerArray[0].title;
+      const followCount = followerArray.length;
+      //this is using the client object from our discordBot.js file
+      //and fetching a webhook (similar to a bot) created on the discord app. this webhook
+      //allows us to send a message without using discord
+      client
+        .fetchWebhook(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN)
+        .then(webhook => {
+          webhook.send(`!birth ${pathName}`);
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+
+  //Code to insert new entry to record user joining a path in users_paths table
   try {
     await db("users_paths").insert({
       user_id: userId,
