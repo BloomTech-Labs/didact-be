@@ -451,19 +451,22 @@ async function joinLearningPath(userId, pathId, order) {
   db("users_paths")
     .where("users_paths.path_id", pathId)
     .join("paths", "paths.id", "users_paths.path_id")
-    .select("users_paths.user_id", "paths.title")
+    .select("users_paths.user_id", "paths.title", "paths.topic")
     .then(followerArray => {
       const pathName = followerArray[0].title;
+      const pathTopic = followerArray[0].topic;
       const followCount = followerArray.length;
+      // if (followCount >= 5) {
       //this is using the client object from our discordBot.js file
       //and fetching a webhook (similar to a bot) created on the discord app. this webhook
       //allows us to send a message without using discord
       client
         .fetchWebhook(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN)
         .then(webhook => {
-          webhook.send(`!birth ${pathName}`);
+          webhook.send(`!birth ${pathName} ### ${pathTopic}`);
         })
         .catch(err => console.log(err));
+      // }
     })
     .catch(err => console.log(err));
 

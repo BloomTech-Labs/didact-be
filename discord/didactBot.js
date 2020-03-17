@@ -12,16 +12,18 @@ client.once("ready", () => {
 
 client.on("message", message => {
   const createChannel = "!birth";
-  if (
-    message.content.startsWith(createChannel) &&
-    message.author.hasPermission()
-  ) {
-    const pathName = message.content
+  if (message.content.startsWith(createChannel)) {
+    const messageString = message.content
       .slice(createChannel.length)
-      .split(/[\W\s\.]/)
-      .join("-")
       .toLowerCase();
-    //fetch guild and use .channels.create() to make new channel
+    const stringSlice = messageString.search("###");
+    const pathTopic = messageString.slice(stringSlice + 3).trim();
+    const pathName = messageString
+      .slice(0, stringSlice)
+      .split(/[\W\s\.]/)
+      .join("-");
+    console.log(`Path name: ${pathName} Path topic: ${pathTopic}`);
+    message.channel.send(`Path name: ${pathName} Path topic: ${pathTopic}`);
   }
 });
 
