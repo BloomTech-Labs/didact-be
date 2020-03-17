@@ -8,6 +8,7 @@ exports.up = function (knex) {
         .unique();
       tbl.string("first_name", 255).notNullable();
       tbl.string("last_name", 255).notNullable();
+      tbl.string("image", 500);
       tbl.string("password", 255);
       tbl.string("facebookID");
       tbl.string("googleID");

@@ -48,7 +48,7 @@ server.get("/", (req, res) => {
 });
 
 // server.use("*", cloudConfig);
-// server.get('/uploads', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
+// server.get('/upload', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
 server.post('/upload', multerUploads, (req, res) => {
   if (req.file) {
     const file = dataUri(req).content;
