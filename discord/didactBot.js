@@ -20,6 +20,7 @@ client.on("message", message => {
     const pathTopic = messageString.slice(stringSlice + 3).trim();
     const pathName = messageString
       .slice(0, stringSlice)
+      .trim()
       .split(/[\W\s\.]/)
       .join("-");
     console.log(`Path name: ${pathName} Path topic: ${pathTopic}`);
