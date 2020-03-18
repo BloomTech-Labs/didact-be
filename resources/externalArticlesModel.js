@@ -1,6 +1,11 @@
+const db = require("../database/dbConfig");
+
 module.exports = {
   get,
   getById,
+  findByFilter,
+  findByOwner,
+  findByTag,
   add,
   update,
   del
@@ -43,7 +48,9 @@ function del(user, external_article_id) {
 
 function findByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
-  return db("articles").whereRaw(`LOWER(articles.${filter}) ~ ?`, [queryTweak]);
+  return db(
+    "external_articles"
+  ).whereRaw(`LOWER(external_articles.${filter}) ~ ?`, [queryTweak]);
 }
 
 function findByTag(tag) {
@@ -51,7 +58,7 @@ function findByTag(tag) {
   return db("external_articles")
     .join(
       "tags_external_articles",
-      "tags_external_articles.path_id",
+      "tags_external_articles.external_article_id",
       "external_articles.id"
     )
     .join("tags", "tags.id", "tags_external_articles.tag_id")

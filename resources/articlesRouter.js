@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
     let filter = req.headers.filter;
     let query = req.headers.query;
     if (!query || query === undefined || query === null) {
-      res.status(200).json(emptyArray.thing);
+      res.status(200).send([]);
     } else if (
       filter === "topic" ||
       filter === "title" ||

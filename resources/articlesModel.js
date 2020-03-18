@@ -61,7 +61,7 @@ function findByFilter(filter, query) {
 function findByTag(tag) {
   let tagTweak = tag.toLowerCase();
   return db("articles")
-    .join("tags_articles", "tags_articles.path_id", "articles.id")
+    .join("tags_articles", "tags_articles.article_id", "articles.id")
     .join("tags", "tags.id", "tags_articles.tag_id")
     .whereRaw("LOWER(tags.name) ~ ?", [tagTweak])
     .select("articles.*", "tags.name as tag")
