@@ -21,7 +21,7 @@ router.get("/", (req, res) => {
             filter === "title" ||
             filter === "description"
           ) {
-            Paths.findPathsByFilter(filter, query)
+            Paths.findByFilter(filter, query)
               .then(response => {
                 res.status(200).json(response);
               })
@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
                 res.status(500).json(err);
               });
           } else if (filter === "tag") {
-            Paths.findPathsByTag(query)
+            Paths.findByTag(query)
               .then(response => {
                 res.status(200).json(response);
               })
@@ -37,7 +37,7 @@ router.get("/", (req, res) => {
                 res.status(500).json(err);
               });
           } else if (filter === "creator") {
-            Paths.findPathsByOwner(query)
+            Paths.findByOwner(query)
               .then(response => {
                 res.status(200).json(response);
               })

@@ -5,7 +5,7 @@ module.exports = {
   find,
   findById,
   findByFilter,
-  findCoursesByOwner,
+  findByOwner,
   findByTag,
   add,
   updateCourseById,
@@ -40,17 +40,17 @@ function find() {
   return db("courses");
 }
 
-async function findCoursesByOwner(name) {
+async function findByOwner(name) {
   let nameTweak = name.toLowerCase();
   //looks for users using search input value, checks many possible case sensitivities
   let users = db(
     "users"
   ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]);
   //inserts users into function and awaits result
-  return await findCoursesForUsers(users);
+  return await findForUsers(users);
 }
 
-async function findCoursesForUsers(users) {
+async function findForUsers(users) {
   return users
     .map(async user => {
       return db("courses")

@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
           res.status(500).json(error);
         });
     } else if (filter === "creator" && query) {
-      Courses.findCoursesByOwner(query)
+      Courses.findByOwner(query)
         .then(response => {
           res.status(200).json(response);
         })
