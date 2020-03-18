@@ -55,6 +55,9 @@ function del(user, article_id) {
 
 function findByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
+  if (filter === "description") {
+    filter = "body";
+  }
   return db("articles").whereRaw(`LOWER(articles.${filter}) ~ ?`, [queryTweak]);
 }
 

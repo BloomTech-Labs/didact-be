@@ -6,13 +6,9 @@ router.get("/", (req, res) => {
   if (req.headers.filter) {
     let filter = req.headers.filter;
     let query = req.headers.query;
-    if (!query || query === undefined || query === null) {
+    if (!query || query === undefined || query === null || filter === "topic") {
       res.status(200).send([]);
-    } else if (
-      filter === "topic" ||
-      filter === "title" ||
-      filter === "description"
-    ) {
+    } else if (filter === "title" || filter === "description") {
       Sources.findByFilter(filter, query)
         .then(response => {
           res.status(200).json(response);

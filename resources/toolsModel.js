@@ -51,13 +51,16 @@ function del(user, tool_id) {
 
 function findByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
+  if (filter === "title") {
+    filter = "name";
+  }
   return db("tools").whereRaw(`LOWER(tools.${filter}) ~ ?`, [queryTweak]);
 }
 
 function findByTag(tag) {
   let tagTweak = tag.toLowerCase();
   return db("tools")
-    .join("tags_tools", "tags_tools.article_id", "tools.id")
+    .join("tags_tools", "tags_tools.tool_id", "tools.id")
     .join("tags", "tags.id", "tags_tools.tag_id")
     .whereRaw("LOWER(tags.name) ~ ?", [tagTweak])
     .select("tools.*", "tags.name as tag")
