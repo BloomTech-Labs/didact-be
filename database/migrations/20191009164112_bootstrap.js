@@ -29,12 +29,11 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
       tbl.string("image", 500);
       tbl.string("bio", 1000);
-      tbl.string("interest", 150);
+      tbl.string("interests", 150);
       tbl.string("facebookLink", 500);
       tbl.string("githubLink", 500);
       tbl.string("discordLink", 500);
       tbl.string("twitterLink", 500);
-      tbl.string("discordLink", 500);
       tbl.string("linkedInLink", 500);
       tbl.string("externalEdLink", 500);
     })
@@ -43,28 +42,10 @@ exports.up = function(knex) {
       tbl.increments();
       tbl.string("name", 150).notNullable();
       tbl
-        .integer("user_profile.id")
+        .integer("user_profile_id")
         .unsigned()
         .references("id")
         .inTable("user_profile")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
-    })
-
-    .createTable("tags_interests", tbl => {
-      tbl.increments();
-      tbl
-        .integer("interests_id")
-        .unsigned()
-        .references("id")
-        .inTable("interests")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
-      tbl
-        .integer("tag_id")
-        .unsigned()
-        .references("id")
-        .inTable("tags")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
     })
@@ -140,6 +121,23 @@ exports.up = function(knex) {
     .createTable("tags", tbl => {
       tbl.increments();
       tbl.string("name", 150).notNullable();
+    })
+    .createTable("tags_interests", tbl => {
+      tbl.increments();
+      tbl
+        .integer("interests_id")
+        .unsigned()
+        .references("id")
+        .inTable("interests")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+      tbl
+        .integer("tag_id")
+        .unsigned()
+        .references("id")
+        .inTable("tags")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     })
     .createTable("tags_courses", tbl => {
       tbl
