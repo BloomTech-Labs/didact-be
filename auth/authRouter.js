@@ -10,6 +10,10 @@ const secrets = require("../config/secret");
 
 const Users = require("../users/usersModel");
 
+const { cloudConfig, uploader } = require("../api/cloudinaryConfig.js");
+const { multerUploads, dataUri } = require("../uploads/multer");
+const { validateImage } = require("../utils/middleware");
+
 //GET list of all users conditions added to check role as owner or admin
 router.get("/users", restricted, (req, res) => {
   let email = req.user.email;
@@ -41,6 +45,19 @@ router.get("/users/:id", (req, res) => {
     .catch(err => {
       res.status(500).json(err);
     });
+});
+
+router.put("/:id/upload", multerUploads, validateImage, async (req, res) => {
+  const userId = req.params.id;
+  console.log("ZZZZZZZZZZZZZZZZZZZZZZ", req.image);
+  const imageData = req.image;
+
+  try {
+    const edited = await Users.editImage(imageData, userId);
+    res.status(200).json(edited);
+  } catch (err) {
+    res.status(500).json({ error: "Image cannot be updated at this moment" });
+  }
 });
 
 //UPDATE user by specific id
@@ -242,6 +259,77 @@ function generateToken(user) {
 
   return jwt.sign(payload, secrets.jwtSecret, options);
 }
+
+// post pic in cloudinary then save to backend table
+router.post("/picture", multerUploads, (req, res) => {
+  if (req.file) {
+    const file = dataUri(req).content;
+    return uploader
+      .upload(file)
+      .then(result => {
+        const image = result.url;
+        return res.status(200).json({
+          messge: "Your image has been uploaded successfully to cloudinary",
+          data: {
+            image
+          }
+        });
+      })
+      .catch(err =>
+        res.status(400).json({
+          messge: "someting went wrong while processing your request",
+          data: {
+            err
+          }
+        })
+      );
+  }
+});
+
+// router.put(
+//   "/upload/:id",
+
+//   validateImage,
+//   async (req, res) => {
+//     const {id} = req.params.id;
+//     const userData = req.body;
+
+//     try {
+//       const edited = await Users.update(plantData, plantid);
+//       res.status(200).json(edited);
+//     } catch (err) {
+//       res.status(500).json({ error: "Plant cannot be updated at this moment" });
+//     }
+//   }
+// );
+
+//UPDATE user by specific id
+// router.put("/upload/:id", validateImage, restricted, (req, res) => {
+//   const { id } = req.params.id;
+//   const changes = req.body;
+//   let email = req.user.email;
+//   Users.findBy(email)
+//     .then(person => {
+//       if (person.owner === true || person.admin === true) {
+//         Users.update(id, changes)
+//           .then(user => {
+//             if (user) {
+//               res.json({ update: user });
+//             } else {
+//               res
+//                 .status(404)
+//                 .json({ message: `Could not find user with id:${id}` });
+//             }
+//           })
+//           .catch(err => {
+//             res.status(500).json({ message: "Failed to update user" });
+//           });
+//       }
+//     })
+//     .catch(err =>
+//       res.status(500).json({ message: "Could not find user in database" })
+//     );
+// });
 
 function validateUserRegister(req, res, next) {
   if (!req.body) res.status(400).json({ message: "missing user data" });

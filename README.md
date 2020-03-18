@@ -14,10 +14,10 @@ To get the server running locally:
 
 ### Express
 
--    We knew how to use it
--    It's lightweight
--    Works with nodejs
--    Many useful packages
+- We knew how to use it
+- It's lightweight
+- Works with nodejs
+- Many useful packages
 
 ### [![Maintainability](https://api.codeclimate.com/v1/badges/ed4a68d85d49dff7ed3d/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/didact-be/maintainability)
 
@@ -246,30 +246,29 @@ To get the server running locally:
 }
 ```
 
-##  Actions
+## Actions
 
 Function names are such that for most, you know what they do.
 
 #### USERS
 
-  `add(user)` -> adds a user to the database
+`add(user)` -> adds a user to the database
 
-  `findBy(filter)` -> finds users by filter
+`findBy(filter)` -> finds users by filter
 
-  `findById(id)` -> finds user by id
+`findById(id)` -> finds user by id
 
-  `findAll()` -> finds all users
+`findAll()` -> finds all users
 
-  `FBfindOrCreate(userObj)` -> finds or creates a user from facebook userObj
+`FBfindOrCreate(userObj)` -> finds or creates a user from facebook userObj
 
-  `GGLfindOrCreate(userObj)` -> finds or creates a user from google userObj
+`GGLfindOrCreate(userObj)` -> finds or creates a user from google userObj
 
-  `addToEmailList(email)` -> adds email to list
+`addToEmailList(email)` -> adds email to list
 
-  `getEmailList()` -> gets email list
+`getEmailList()` -> gets email list
 
-  `checkEmailListForEmail(email)` -> checks email list for email
-
+`checkEmailListForEmail(email)` -> checks email list for email
 
 <br>
 <br>
@@ -277,64 +276,62 @@ Function names are such that for most, you know what they do.
 
 #### COURSES
 
-  `find()` -> finds courses
+`find()` -> finds courses
 
-  `findById(id)` -> finds course by id
+`findById(id)` -> finds course by id
 
-  `add(userId, courseObj)` -> adds course to db
+`add(userId, courseObj)` -> adds course to db
 
-  `updateCourseById(userId, courseId, changes)` -> 
+`updateCourseById(userId, courseId, changes)` ->
 
-  `deleteCourseById(userId, courseId)` -> 
+`deleteCourseById(userId, courseId)` ->
 
-  `addCourseTag(userId, courseId, tag)` -> 
+`addCourseTag(userId, courseId, tag)` ->
 
-  `deleteCourseTag(userId, courseId, tag)` -> 
+`deleteCourseTag(userId, courseId, tag)` ->
 
-  `getTagsForCourse(courseId)` -> 
+`getTagsForCourse(courseId)` ->
 
-  `findCourseSectionsByCourseId(id)` -> 
+`findCourseSectionsByCourseId(id)` ->
 
-  `findSectionDetailsByCourseSectionsId(id)` -> 
+`findSectionDetailsByCourseSectionsId(id)` ->
 
-  `addCourseSection(userId, courseId, section)` -> 
+`addCourseSection(userId, courseId, section)` ->
 
-  `updateCourseSection(userId, courseId, sectionId, changes)` -> 
+`updateCourseSection(userId, courseId, sectionId, changes)` ->
 
-  `deleteCourseSection(userId, courseId, sectionId)` -> 
+`deleteCourseSection(userId, courseId, sectionId)` ->
 
-  `addSectionDetails(userId, courseId, details)` -> 
+`addSectionDetails(userId, courseId, details)` ->
 
-  `updateSectionDetails(userId, courseId, sectionId, detailId, changes)` -> 
+`updateSectionDetails(userId, courseId, sectionId, detailId, changes)` ->
 
-  `deleteSectionDetails(userId, courseId, sectionId, detailId)` -> 
+`deleteSectionDetails(userId, courseId, sectionId, detailId)` ->
 
-  `manualLessonCompleteToggle(userId, courseId, sectionId, sectionDetailId)` -> 
+`manualLessonCompleteToggle(userId, courseId, sectionId, sectionDetailId)` ->
 
-  `manualSectionCompleteToggle(userId, courseId, sectionId)` -> 
+`manualSectionCompleteToggle(userId, courseId, sectionId)` ->
 
-  `manualCourseCompleteToggle(userId, courseId)` -> 
+`manualCourseCompleteToggle(userId, courseId)` ->
 
-  `getLessonsWithUserCompletion(userId, sectionId)` -> 
+`getLessonsWithUserCompletion(userId, sectionId)` ->
 
-  `findYourCourseSectionsByCourseId(userId, courseId)` -> 
+`findYourCourseSectionsByCourseId(userId, courseId)` ->
 
-  `findYoursById(userId, courseId)` -> 
+`findYoursById(userId, courseId)` ->
 
-  `autoCourseCompleteToggle(userId, courseId, isPathCompleted)` -> 
+`autoCourseCompleteToggle(userId, courseId, isPathCompleted)` ->
 
-  `itemCascadeUp(userId, contentId)` -> checks if learning path is complete when completing an item
+`itemCascadeUp(userId, contentId)` -> checks if learning path is complete when completing an item
 
-  `cascadeUp(userId, contentId, contentType)` -> checks for general upwards completion when completing something
+`cascadeUp(userId, contentId, contentType)` -> checks for general upwards completion when completing something
 
-  `generateUdemyCourse(userId, link, results, details)` -> 
+`generateUdemyCourse(userId, link, results, details)` ->
 
-  `findAllCoursesForUser(userId)` -> 
+`findAllCoursesForUser(userId)` ->
 
-  `checkDbForCourseUrl(link)` -> 
+`checkDbForCourseUrl(link)` ->
 
-
-  
 <br>
 <br>
 <br>
@@ -349,79 +346,79 @@ Function names are such that for most, you know what they do.
 
 #### LEARNING PATHS
 
-`getUsernameByUserId(userId)` -> 
+`getUsernameByUserId(userId)` ->
 
-`find() ` -> 
+`find()` ->
 
-`findForUserId(userId)` -> 
+`findForUserId(userId)` ->
 
-`findForOwner(userId)` -> 
+`findForOwner(userId)` ->
 
-`findForNotUserId(userId)` -> 
+`findForNotUserId(userId)` ->
 
-`findById(id)` -> 
+`findById(id)` ->
 
-`findYourPathById(userId, pathId)` -> 
+`findYourPathById(userId, pathId)` ->
 
-`getTagsForPath(pathId) ` -> 
+`getTagsForPath(pathId)` ->
 
-`getCreatorIdForPath(pathId)` -> 
+`getCreatorIdForPath(pathId)` ->
 
-`findCoursesForPath(pathId)` -> 
+`findCoursesForPath(pathId)` ->
 
-`findPathItemsForPath(pathId)` -> 
+`findPathItemsForPath(pathId)` ->
 
-`findYourPathItemsForPath(userId, pathId)` -> 
+`findYourPathItemsForPath(userId, pathId)` ->
 
-`addPathItem(userId, pathId, item)` -> 
+`addPathItem(userId, pathId, item)` ->
 
-`updatePathItem(userId, pathId, itemId, changes)` -> 
+`updatePathItem(userId, pathId, itemId, changes)` ->
 
-`togglePathItemCompletion(userId, pathId, itemId)` -> 
+`togglePathItemCompletion(userId, pathId, itemId)` ->
 
-`deletePathItem(userId, pathId, itemId)` -> 
+`deletePathItem(userId, pathId, itemId)` ->
 
-`add(userId, path, order)` -> 
+`add(userId, path, order)` ->
 
-`updatePathById(userId, pathId, changes)` -> 
+`updatePathById(userId, pathId, changes)` ->
 
-`togglePathCompletion(userId, pathId)` -> 
+`togglePathCompletion(userId, pathId)` ->
 
-`deletePathById(userId, pathId)` -> 
+`deletePathById(userId, pathId)` ->
 
-`joinLearningPath(userId, pathId, order)` -> 
+`joinLearningPath(userId, pathId, order)` ->
 
-`addUserPathItem(userId, pathItemId)` -> 
+`addUserPathItem(userId, pathItemId)` ->
 
-`addUserCourse(userId, courseId)` -> 
+`addUserCourse(userId, courseId)` ->
 
-`addUserSection(userId, sectionId)` -> 
+`addUserSection(userId, sectionId)` ->
 
-`addUserSectionDetail(userId, sectionDetailId)` -> 
+`addUserSectionDetail(userId, sectionDetailId)` ->
 
-`quitLearningPath(userId, pathId)` -> 
+`quitLearningPath(userId, pathId)` ->
 
-`checkForTag(tagName)` -> 
+`checkForTag(tagName)` ->
 
-`addPathTag(userId, pathId, tag)` -> 
+`addPathTag(userId, pathId, tag)` ->
 
-`deletePathTag(userId, pathId, tag)` -> 
+`deletePathTag(userId, pathId, tag)` ->
 
-`findCourseById(id)` -> 
+`findCourseById(id)` ->
 
-`addPathCourse(userId, pathId, courseId, path_order)` -> 
+`addPathCourse(userId, pathId, courseId, path_order)` ->
 
-`removePathCourse(userId, pathId, courseId)` -> 
+`removePathCourse(userId, pathId, courseId)` ->
 
-`updateCourseOrder(userId, pathId, courseId, path_order)` -> 
+`updateCourseOrder(userId, pathId, courseId, path_order)` ->
 
-`updateContentOrder(userId, pathId, content)` -> 
+`updateContentOrder(userId, pathId, content)` ->
 
-`updatePathOrder(userId, pathOrderArray)` -> 
+`updatePathOrder(userId, pathOrderArray)` ->
 
-`updateUsersCoursesOnCourseAdd(courseId, pathId)` -> 
+`updateUsersCoursesOnCourseAdd(courseId, pathId)` ->
 
-`updateUsersPathItemsOnItemAdd(itemId, pathId)` -> 
+`updateUsersPathItemsOnItemAdd(itemId, pathId)` ->
 
 <br>
 <br>
@@ -433,22 +430,22 @@ In order for the app to function correctly, the user must set up their own envir
 
 create a .env file that includes the following:
 
-   * ADMIN_SECRET - a secret for the seeded users
-   * DB_ENV - production, development, testing, staging
-   * JWT_SECRET - a secret for signing json web tokens
-   * FACEBOOK_APP_ID - facebook id for our app
-   * FACEBOOK_APP_SECRET - facebook secret for auth
-   * GOOGLE_APP_ID - google id for our app
-   * GOOGLE_APP_SECRET - google secret for auth
-   * YOUR_CLIENT_ID - app id for udemy
-   * YOUR_CLIENT_SECRET - app secret for udemy
-   * Authorization - authorization for udemy
-   * REDIRECT_URL - whether we're hitting front-end staging or master deploy
-   * EMAIL - our app email
-   * EMAIL_PASSWORD - our app password
-   * SENDGRID_API_KEY - our app sendgrid api key
-   * SENDGRID_BASE64_CONVERSION - our app sendgrid api key converted to base64
-    
+- ADMIN_SECRET - a secret for the seeded users
+- DB_ENV - production, development, testing, staging
+- JWT_SECRET - a secret for signing json web tokens
+- FACEBOOK_APP_ID - facebook id for our app
+- FACEBOOK_APP_SECRET - facebook secret for auth
+- GOOGLE_APP_ID - google id for our app
+- GOOGLE_APP_SECRET - google secret for auth
+- YOUR_CLIENT_ID - app id for udemy
+- YOUR_CLIENT_SECRET - app secret for udemy
+- Authorization - authorization for udemy
+- REDIRECT_URL - whether we're hitting front-end staging or master deploy
+- EMAIL - our app email
+- EMAIL_PASSWORD - our app password
+- SENDGRID_API_KEY - our app sendgrid api key
+- SENDGRID_BASE64_CONVERSION - our app sendgrid api key converted to base64
+
 ## Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
@@ -457,11 +454,12 @@ Please note we have a [code of conduct](./code_of_conduct.md). Please follow it 
 
 ### Issue/Bug Request
 
- **If you are having an issue with the existing project code, please submit a bug report under the following guidelines:**
- - Check first to see if your issue has already been reported.
- - Check to see if the issue has recently been fixed by attempting to reproduce the issue using the latest master branch in the repository.
- - Create a live example of the problem.
- - Submit a detailed bug report including your environment & browser, steps to reproduce the issue, actual and expected outcomes,  where you believe the issue is originating from, and any potential solutions you have considered.
+**If you are having an issue with the existing project code, please submit a bug report under the following guidelines:**
+
+- Check first to see if your issue has already been reported.
+- Check to see if the issue has recently been fixed by attempting to reproduce the issue using the latest master branch in the repository.
+- Create a live example of the problem.
+- Submit a detailed bug report including your environment & browser, steps to reproduce the issue, actual and expected outcomes, where you believe the issue is originating from, and any potential solutions you have considered.
 
 ### Feature Requests
 
