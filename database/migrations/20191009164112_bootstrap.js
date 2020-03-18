@@ -1,4 +1,4 @@
-exports.up = function (knex) {
+exports.up = function(knex) {
   return knex.schema
     .createTable("users", tbl => {
       tbl.increments();
@@ -8,6 +8,7 @@ exports.up = function (knex) {
         .unique();
       tbl.string("first_name", 255).notNullable();
       tbl.string("last_name", 255).notNullable();
+      tbl.string("image", 500);
       tbl.string("password", 255);
       tbl.string("facebookID");
       tbl.string("googleID");
@@ -16,14 +17,45 @@ exports.up = function (knex) {
       tbl.boolean("owner").defaultTo(false);
       tbl.boolean("admin").defaultTo(false);
       tbl.boolean("moderator").defaultTo(false);
-
     })
+    .createTable("user_profile", tbl => {
+      tbl.increments();
+      tbl
+        .integer("user_id")
+        .unsigned()
+        .references("id")
+        .inTable("users")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+      tbl.string("image", 500);
+      tbl.string("bio", 1000);
+      tbl.string("interests", 150);
+      tbl.string("facebookLink", 500);
+      tbl.string("githubLink", 500);
+      tbl.string("discordLink", 500);
+      tbl.string("twitterLink", 500);
+      tbl.string("linkedInLink", 500);
+      tbl.string("externalEdLink", 500);
+    })
+
+    .createTable("interests", tbl => {
+      tbl.increments();
+      tbl.string("name", 150).notNullable();
+      tbl
+        .integer("user_profile_id")
+        .unsigned()
+        .references("id")
+        .inTable("user_profile")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+    })
+
     .createTable("courses", tbl => {
       tbl.increments();
       tbl.string("title", 255).notNullable();
       tbl.string("link", 1000);
       tbl.string("description", 5000);
-      tbl.string('topic', 1000).notNullable();
+      tbl.string("topic", 1000).notNullable();
       tbl
         .integer("creator_id")
         .unsigned()
@@ -89,6 +121,23 @@ exports.up = function (knex) {
     .createTable("tags", tbl => {
       tbl.increments();
       tbl.string("name", 150).notNullable();
+    })
+    .createTable("tags_interests", tbl => {
+      tbl.increments();
+      tbl
+        .integer("interests_id")
+        .unsigned()
+        .references("id")
+        .inTable("interests")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+      tbl
+        .integer("tag_id")
+        .unsigned()
+        .references("id")
+        .inTable("tags")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     })
     .createTable("tags_courses", tbl => {
       tbl
@@ -319,7 +368,10 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
       tbl.string("topic", 1000).notNullable();
-      tbl.string("title", 1000).notNullable().unique();
+      tbl
+        .string("title", 1000)
+        .notNullable()
+        .unique();
       tbl.string("body", 10000).notNullable();
       tbl.string("date", 10).notNullable();
     })
@@ -333,7 +385,10 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
       tbl.string("topic", 1000).notNullable();
-      tbl.string("title", 1000).notNullable().unique();
+      tbl
+        .string("title", 1000)
+        .notNullable()
+        .unique();
       tbl.string("description", 1000).notNullable();
       tbl.string("link", 1000).notNullable();
       tbl.string("date", 10).notNullable();
@@ -363,14 +418,14 @@ exports.up = function (knex) {
         .references("id")
         .inTable("tools")
         .onDelete("CASCADE")
-        .onUpdate("CASCADE")
+        .onUpdate("CASCADE");
       tbl
         .integer("tag_id")
         .unsigned()
         .references("id")
         .inTable("tags")
         .onDelete("CASCADE")
-        .onUpdate("CASCADE");;
+        .onUpdate("CASCADE");
     })
     .createTable("tags_articles", tbl => {
       tbl.increments();
@@ -380,14 +435,14 @@ exports.up = function (knex) {
         .references("id")
         .inTable("articles")
         .onDelete("CASCADE")
-        .onUpdate("CASCADE")
+        .onUpdate("CASCADE");
       tbl
         .integer("tag_id")
         .unsigned()
         .references("id")
         .inTable("tags")
         .onDelete("CASCADE")
-        .onUpdate("CASCADE");;
+        .onUpdate("CASCADE");
     })
     .createTable("tags_external_articles", tbl => {
       tbl.increments();
@@ -397,17 +452,17 @@ exports.up = function (knex) {
         .references("id")
         .inTable("articles")
         .onDelete("CASCADE")
-        .onUpdate("CASCADE")
+        .onUpdate("CASCADE");
       tbl
         .integer("tag_id")
         .unsigned()
         .references("id")
         .inTable("tags")
         .onDelete("CASCADE")
-        .onUpdate("CASCADE");;
-    })
+        .onUpdate("CASCADE");
+    });
 };
-exports.down = function (knex) {
+exports.down = function(knex) {
   return knex.schema
     .dropTableIfExists("email_list")
     .dropTableIfExists("users_section_details")
@@ -431,6 +486,9 @@ exports.down = function (knex) {
     .dropTableIfExists("tools")
     .dropTableIfExists("external_articles")
     .dropTableIfExists("articles")
+    .dropTableIfExists("tags_interests")
+    .dropTableIfExists("interests")
     .dropTableIfExists("tags")
+    .dropTableIfExists("user_profile")
     .dropTableIfExists("users");
 };

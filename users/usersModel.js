@@ -5,6 +5,7 @@ module.exports = {
   find,
   update,
   add,
+  editImage,
   findBy,
   findById,
   findAll,
@@ -36,6 +37,28 @@ async function add(user) {
   await learningPath.joinLearningPath(userId[0], 1, 1);
   return userId;
 }
+
+function editImage(imageData, userId) {
+  console.log("THIIIIIIIIIIIIISSSSSS", imageData, userId);
+  return db("users")
+    .where("users.id", "=", userId)
+    .update({ image: imageData })
+    .then(success => {
+      return findBy(userId);
+    })
+    .catch(err => {
+      console.log("ERRRRORRRR", err);
+    });
+}
+
+// function updatePlant(plantData, plantid) {
+//   return db("plants")
+//     .where({ id: plantid })
+//     .update(plantData)
+//     .then(success => {
+//       return getPlantById(plantid);
+//     });
+// }
 
 function findById(id) {
   return db("users")
