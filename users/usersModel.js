@@ -7,6 +7,7 @@ module.exports = {
   updateProfile,
   add,
   addProfile,
+  addInitProfile,
   remove,
   editImage,
   findBy,
@@ -61,6 +62,18 @@ async function addProfile(userId, profile) {
   return ids;
 }
 
+async function addInitProfile(user) {
+  const user_id = user.id;
+  const image =
+    "https://res.cloudinary.com/klawd/image/upload/v1584550569/wq3oxtstbdkg8s9jxuhb.png";
+  let ids = await db("user_profile").insert(
+    { image: image, user_id: user_id },
+    "id"
+  );
+  let profileId = ids[0];
+  return ids;
+}
+
 function editImage(imageData, userId) {
   console.log("THIIIIIIIIIIIIISSSSSS", imageData, userId);
   return db("users")
@@ -92,7 +105,7 @@ function findById(id) {
 function findProfileById(id) {
   return db("user_profile")
     .select("*")
-    .where({ id })
+    .where("user_id", id)
     .first();
 }
 
