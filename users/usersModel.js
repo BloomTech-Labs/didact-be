@@ -4,7 +4,10 @@ const learningPath = require("../learning-paths/learningPathsModel");
 module.exports = {
   find,
   update,
+  updateProfile,
   add,
+  addProfile,
+  remove,
   editImage,
   findBy,
   findProfileById,
@@ -27,6 +30,18 @@ function update(id, changes) {
     .update(changes);
 }
 
+function updateProfile(id, changes) {
+  return db("user_profile")
+    .where({ id })
+    .update(changes);
+}
+
+function remove(id) {
+  return db("user_profile")
+    .where("id", id)
+    .del();
+}
+
 function findBy(filter) {
   return db("users")
     .where(filter)
@@ -37,6 +52,12 @@ async function add(user) {
   let userId = await db("users").insert(user, "id");
   await learningPath.joinLearningPath(userId[0], 1, 1);
   return userId;
+}
+
+function addProfile(profile) {
+  return db("user_profile")
+    .insert(profile, "id")
+    .then(ids => ({ id: ids[0] }));
 }
 
 function editImage(imageData, userId) {
