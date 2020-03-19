@@ -54,10 +54,17 @@ async function add(user) {
   return userId;
 }
 
-function addProfile(profile) {
-  return db("user_profile")
-    .insert(profile, "id")
-    .then(ids => ({ id: ids[0] }));
+// function addProfile(profile) {
+//   return db("user_profile")
+//     .insert(profile, "id")
+//     .then(ids => ({ id: ids[0] }));
+// }
+
+async function addProfile(userId, profile) {
+  profile.user_id = userId;
+  let ids = await db("user_profile").insert(profile, "id");
+  let profileId = ids[0];
+  return ids;
 }
 
 function editImage(imageData, userId) {
