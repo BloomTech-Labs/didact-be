@@ -1,13 +1,13 @@
 const db = require("../database/dbConfig");
 const Courses = require("../courses/coursesModel");
-// const Users = require('../users/usersModel')
+const client = require("../discord/didactBot.js");
 
 module.exports = {
   find,
   findById,
-  findPathsByFilter,
-  findPathsByTag,
-  findPathsByOwner,
+  findByFilter,
+  findByTag,
+  findByOwner,
   add,
   updatePathById,
   deletePathById,
@@ -111,23 +111,22 @@ async function findForNotUserId(userId) {
 //For retrieving all non-user enrolled learning paths
 //And all user enrolled learning paths respectively
 
-async function findPathsByFilter(filter, query) {
+function findByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
-  //checking fully lowered case value for "filter" field on courses
   return db("paths").whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak]);
 }
 
-async function findPathsByOwner(name) {
+async function findByOwner(name) {
   let nameTweak = name.toLowerCase();
   //looks for users using search input value, checks many possible case sensitivities
   let users = db(
     "users"
   ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]);
   //inserts users into function and awaits result
-  return await findPathsForUsers(users);
+  return await findForUsers(users);
 }
 
-async function findPathsForUsers(users) {
+async function findForUsers(users) {
   return users
     .map(async user => {
       return db("paths")
@@ -146,7 +145,7 @@ async function findPathsForUsers(users) {
     });
 }
 
-function findPathsByTag(tag) {
+function findByTag(tag) {
   let tagTweak = tag.toLowerCase();
   return db("paths")
     .join("tags_paths", "tags_paths.path_id", "paths.id")
@@ -446,6 +445,31 @@ function deletePathById(user, pathId) {
 }
 
 async function joinLearningPath(userId, pathId, order) {
+  //Discord Check => Looking for # of followers to path to determine
+  //if channel should be created
+  db("users_paths")
+    .where("users_paths.path_id", pathId)
+    .join("paths", "paths.id", "users_paths.path_id")
+    .select("users_paths.user_id", "paths.title", "paths.topic")
+    .then(followerArray => {
+      const pathName = followerArray[0].title;
+      const pathTopic = followerArray[0].topic;
+      const followCount = followerArray.length;
+      if (followCount >= 10) {
+        //this is using the client object from our discordBot.js file
+        //and fetching a webhook (similar to a bot) created on the discord app. this webhook
+        //allows us to send a message without using discord
+        client
+          .fetchWebhook(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN)
+          .then(webhook => {
+            webhook.send(`!birth ${pathName} ### ${pathTopic}`);
+          })
+          .catch(err => console.log(err));
+      }
+    })
+    .catch(err => console.log(err));
+
+  //Code to insert new entry to record user joining a path in users_paths table
   try {
     await db("users_paths").insert({
       user_id: userId,

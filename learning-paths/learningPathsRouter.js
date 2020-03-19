@@ -13,15 +13,14 @@ router.get("/", (req, res) => {
         if (req.headers.filter) {
           let filter = req.headers.filter;
           let query = req.headers.query;
-          let emptyArray = { thing: [] };
           if (!query || query === undefined || query === null) {
-            res.status(200).json(emptyArray.thing);
+            res.status(200).send([]);
           } else if (
             filter === "topic" ||
             filter === "title" ||
             filter === "description"
           ) {
-            Paths.findPathsByFilter(filter, query)
+            Paths.findByFilter(filter, query)
               .then(response => {
                 res.status(200).json(response);
               })
@@ -29,7 +28,7 @@ router.get("/", (req, res) => {
                 res.status(500).json(err);
               });
           } else if (filter === "tag") {
-            Paths.findPathsByTag(query)
+            Paths.findByTag(query)
               .then(response => {
                 res.status(200).json(response);
               })
@@ -37,7 +36,7 @@ router.get("/", (req, res) => {
                 res.status(500).json(err);
               });
           } else if (filter === "creator") {
-            Paths.findPathsByOwner(query)
+            Paths.findByOwner(query)
               .then(response => {
                 res.status(200).json(response);
               })

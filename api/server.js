@@ -1,10 +1,9 @@
+require("../discord/didactBot");
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-
 const { urlencoded, json } = require("body-parser");
 const { resolve } = require("path");
-
 const authRouter = require("../auth/authRouter");
 const facebookAuth = require("../auth/facebookAuth");
 const googleAuth = require("../auth/googleAuth");
@@ -13,6 +12,7 @@ const tagsRouter = require("../tags/tagsRouter");
 const udemyCoursesRouter = require("../courses/udemyCoursesRouter");
 const learningPathsRouter = require("../learning-paths/learningPathsRouter");
 const articlesRouter = require("../resources/articlesRouter");
+const externalArticlesRouter = require("../resources/externalArticlesRouter");
 const toolsRouter = require("../resources/toolsRouter");
 const sourcesRouter = require("../resources/sourcesRouter");
 
@@ -40,6 +40,7 @@ server.use("/api/docs", express.static("./docs"));
 server.use("/api/udemy", restricted, udemyCoursesRouter);
 server.use("/api/learning-paths", restricted, learningPathsRouter);
 server.use("/api/articles", restricted, articlesRouter);
+server.use("/api/external-articles", restricted, externalArticlesRouter);
 server.use("/api/tools", restricted, toolsRouter);
 server.use("/api/sources", restricted, sourcesRouter);
 

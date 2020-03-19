@@ -3,14 +3,12 @@ const db = require("../database/dbConfig.js");
 module.exports = {
   get,
   getById,
-  getExternal,
-  getExternalById,
+  findByTag,
+  findByOwner,
+  findByFilter,
   add,
-  addExternal,
   update,
-  updateExternal,
-  del,
-  delExternal
+  del
 };
 
 async function get() {
@@ -19,21 +17,11 @@ async function get() {
     .select("users.first_name", "users.last_name", "articles.*");
 }
 
-function getExternal() {
-  return db("external_articles");
-}
-
 function getById(id) {
   return db("articles")
     .join("users", "users.id", "articles.creator_id")
     .select("users.first_name", "users.last_name", "articles.*")
     .where("articles.id", id)
-    .first();
-}
-
-function getExternalById(id) {
-  return db("external_articles")
-    .where({ id })
     .first();
 }
 
@@ -65,30 +53,51 @@ function del(user, article_id) {
     });
 }
 
-function addExternal(user_id, content) {
-  return db("external_articles").insert({ creator_id: user_id, ...content });
+function findByFilter(filter, query) {
+  let queryTweak = query.toLowerCase();
+  if (filter === "description") {
+    filter = "body";
+  }
+  return db("articles").whereRaw(`LOWER(articles.${filter}) ~ ?`, [queryTweak]);
 }
 
-function updateExternal(user, external_article_id, updates) {
-  return db("external_articles")
-    .where("external_articles.id", external_article_id)
-    .then(external_article => {
-      if (user.id === external_article.creator_id || user.admin || user.owner) {
-        return db("external_articles")
-          .where("external_articles.id", external_article_id)
-          .update(updates);
-      }
+function findByTag(tag) {
+  let tagTweak = tag.toLowerCase();
+  return db("articles")
+    .join("tags_articles", "tags_articles.article_id", "articles.id")
+    .join("tags", "tags.id", "tags_articles.tag_id")
+    .whereRaw("LOWER(tags.name) ~ ?", [tagTweak])
+    .select("articles.*", "tags.name as tag")
+    .then(result => {
+      return result;
     });
 }
 
-function delExternal(user, external_article_id) {
-  return db("external_articles")
-    .where("external_articles.id", external_article_id)
-    .then(external_article => {
-      if (user.id === external_article.creator_id || user.admin || user.owner) {
-        return db("external_articles")
-          .del()
-          .where("external_articles.id", external_article_id);
-      }
+async function findByOwner(name) {
+  let nameTweak = name.toLowerCase();
+  //looks for users using search input value, checks many possible case sensitivities
+  let users = db(
+    "users"
+  ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]);
+  //inserts users into function and awaits result
+  return await findForUsers(users);
+}
+
+async function findForUsers(users) {
+  return users
+    .map(async user => {
+      return db("articles")
+        .join("users", "articles.creator_id", "users.id")
+        .where("articles.creator_id", user.id)
+        .select(
+          "articles.*",
+          "users.first_name as creator_first_name",
+          "users.last_name as creator_last_name"
+        );
+    })
+    .then(result => {
+      //flattening nested array return
+      let flattenedArray = result.flatMap(arr => arr);
+      return flattenedArray;
     });
 }

@@ -6,14 +6,11 @@ const Users = require("../users/usersModel");
 router.get("/", (req, res) => {
   //Here is the query and filter check. Should be receiving this info
   //from the search bar on the front-end.
-  let emptyArray = { thing: [] };
-  //Here is the query and filter check. Should be receiving this info
-  //from the search bar on the front-end.
   if (req.headers.filter) {
     let filter = req.headers.filter;
     let query = req.headers.query;
     if (!query || query === undefined || query === null) {
-      res.status(200).json(emptyArray.thing);
+      res.status(200).send([]);
     } else if (
       filter === "topic" ||
       filter === "title" ||
@@ -27,7 +24,7 @@ router.get("/", (req, res) => {
           res.status(500).json(error);
         });
     } else if (filter === "creator" && query) {
-      Courses.findCoursesByOwner(query)
+      Courses.findByOwner(query)
         .then(response => {
           res.status(200).json(response);
         })
