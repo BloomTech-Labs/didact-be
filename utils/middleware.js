@@ -8,13 +8,11 @@ const validateImage = async (req, res, next) => {
 
   if (req.file) {
     const file = dataUri(req).content;
-    // console.log('it got HEEEEEEEEEEEEEEERRRRE', file)
     return uploader
       .upload(file)
       .then(result => {
         userData.image = result.url;
         req.image = result.url;
-        console.log("XXXXXXXXXXXXXmiddleware", req.image);
         next();
       })
       .catch(err => {
@@ -22,7 +20,6 @@ const validateImage = async (req, res, next) => {
         next();
       });
   } else {
-    // console.log('FFFFFFFFFFFFFFFFFFFFFFF', file)
     userData.image = null;
     next();
   }

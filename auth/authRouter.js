@@ -47,9 +47,9 @@ router.get("/users/:id", (req, res) => {
     });
 });
 
+//updates photo
 router.put("/:id/upload", multerUploads, validateImage, async (req, res) => {
   const userId = req.params.id;
-  console.log("ZZZZZZZZZZZZZZZZZZZZZZ", req.image);
   const imageData = req.image;
 
   try {
@@ -286,50 +286,75 @@ router.post("/picture", multerUploads, (req, res) => {
   }
 });
 
-// router.put(
-//   "/upload/:id",
+//GET userprofile by id
+router.get("/profile/:id", (req, res) => {
+  Users.findProfileById(req.params.id)
+    .then(result => {
+      res.status(200).json(result);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
 
-//   validateImage,
-//   async (req, res) => {
-//     const {id} = req.params.id;
-//     const userData = req.body;
+//ADD a user profile
+router.post("/profile", restricted, (req, res) => {
+  const profile = req.body;
+  Users.addProfile(profile)
+    .then(userprofile => {
+      res.status(201).json(userprofile);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
 
-//     try {
-//       const edited = await Users.update(plantData, plantid);
-//       res.status(200).json(edited);
-//     } catch (err) {
-//       res.status(500).json({ error: "Plant cannot be updated at this moment" });
-//     }
-//   }
-// );
+//UPDATE userprofile by specific id
+router.put("/profile/:id", restricted, (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+  let email = req.user.email;
+  Users.findBy({ email })
+    .then(person => {
+      if (person.owner === true || person.admin === true) {
+        Users.updateProfile(id, changes)
+          .then(user => {
+            if (user) {
+              res.json({ update: user });
+            } else {
+              res
+                .status(404)
+                .json({ message: `Could not find user with id:${id}` });
+            }
+          })
+          .catch(err => {
+            res.status(500).json({ message: "Failed to update user profile" });
+          });
+      }
+    })
+    .catch(err =>
+      res.status(500).json({ message: "Could not find user in database" })
+    );
+});
 
-//UPDATE user by specific id
-// router.put("/upload/:id", validateImage, restricted, (req, res) => {
-//   const { id } = req.params.id;
-//   const changes = req.body;
-//   let email = req.user.email;
-//   Users.findBy(email)
-//     .then(person => {
-//       if (person.owner === true || person.admin === true) {
-//         Users.update(id, changes)
-//           .then(user => {
-//             if (user) {
-//               res.json({ update: user });
-//             } else {
-//               res
-//                 .status(404)
-//                 .json({ message: `Could not find user with id:${id}` });
-//             }
-//           })
-//           .catch(err => {
-//             res.status(500).json({ message: "Failed to update user" });
-//           });
-//       }
-//     })
-//     .catch(err =>
-//       res.status(500).json({ message: "Could not find user in database" })
-//     );
-// });
+// DELETE profile with specified ID
+router.delete("/:id", restricted, (req, res) => {
+  const { id } = req.params;
+
+  Users.remove(id)
+    .then(deleted => {
+      if (deleted) {
+        res.json({ removed: deleted });
+      } else {
+        res
+          .status(404)
+          .json({ message: `Could not find a user profile with id: ${id}` });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Failed to delete user profile" });
+    });
+});
 
 function validateUserRegister(req, res, next) {
   if (!req.body) res.status(400).json({ message: "missing user data" });
