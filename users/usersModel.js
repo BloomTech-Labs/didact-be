@@ -7,6 +7,7 @@ module.exports = {
   add,
   editImage,
   findBy,
+  findProfileById,
   findById,
   findAll,
   FBfindOrCreate,
@@ -71,6 +72,13 @@ function findById(id) {
       "admin",
       "moderator"
     )
+    .where({ id })
+    .first();
+}
+
+function findProfileById(id) {
+  return db("user_profile")
+    .select("*")
     .where({ id })
     .first();
 }
