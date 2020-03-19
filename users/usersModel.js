@@ -4,8 +4,13 @@ const learningPath = require("../learning-paths/learningPathsModel");
 module.exports = {
   find,
   update,
+  updateProfile,
   add,
+  addProfile,
+  remove,
+  editImage,
   findBy,
+  findProfileById,
   findById,
   findAll,
   FBfindOrCreate,
@@ -25,6 +30,18 @@ function update(id, changes) {
     .update(changes);
 }
 
+function updateProfile(id, changes) {
+  return db("user_profile")
+    .where({ id })
+    .update(changes);
+}
+
+function remove(id) {
+  return db("user_profile")
+    .where("id", id)
+    .del();
+}
+
 function findBy(filter) {
   return db("users")
     .where(filter)
@@ -37,6 +54,34 @@ async function add(user) {
   return userId;
 }
 
+function addProfile(profile) {
+  return db("user_profile")
+    .insert(profile, "id")
+    .then(ids => ({ id: ids[0] }));
+}
+
+function editImage(imageData, userId) {
+  console.log("THIIIIIIIIIIIIISSSSSS", imageData, userId);
+  return db("users")
+    .where("users.id", "=", userId)
+    .update({ image: imageData })
+    .then(success => {
+      return findBy(userId);
+    })
+    .catch(err => {
+      console.log("ERRRRORRRR", err);
+    });
+}
+
+// function updatePlant(plantData, plantid) {
+//   return db("plants")
+//     .where({ id: plantid })
+//     .update(plantData)
+//     .then(success => {
+//       return getPlantById(plantid);
+//     });
+// }
+
 function findById(id) {
   return db("users")
     .select(
@@ -48,6 +93,13 @@ function findById(id) {
       "admin",
       "moderator"
     )
+    .where({ id })
+    .first();
+}
+
+function findProfileById(id) {
+  return db("user_profile")
+    .select("*")
     .where({ id })
     .first();
 }
