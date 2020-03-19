@@ -73,15 +73,6 @@ function editImage(imageData, userId) {
     });
 }
 
-// function updatePlant(plantData, plantid) {
-//   return db("plants")
-//     .where({ id: plantid })
-//     .update(plantData)
-//     .then(success => {
-//       return getPlantById(plantid);
-//     });
-// }
-
 function findById(id) {
   return db("users")
     .select(
