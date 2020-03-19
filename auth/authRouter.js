@@ -138,7 +138,8 @@ router.post("/register", validateUserRegister, duplicateUser, (req, res) => {
         .then(user => {
           if (user && bcrypt.compareSync(originalPass, user.password)) {
             const token = generateToken(user);
-            Users.addProfile;
+            // const initImage="https://res.cloudinary.com/klawd/image/upload/v1584550569/wq3oxtstbdkg8s9jxuhb.png"
+            Users.addInitProfile(user);
 
             res.status(201).json({ token, user });
           } else {
