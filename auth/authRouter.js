@@ -138,6 +138,7 @@ router.post("/register", validateUserRegister, duplicateUser, (req, res) => {
         .then(user => {
           if (user && bcrypt.compareSync(originalPass, user.password)) {
             const token = generateToken(user);
+            Users.addInitProfile(user);
             res.status(201).json({ token, user });
           } else {
             res.status(401).json({ message: "Invalid Credentials" });
@@ -298,14 +299,39 @@ router.get("/profile/:id", (req, res) => {
 });
 
 //ADD a user profile
+// router.post("/profile", restricted, (req, res) => {
+//   const profile = req.body;
+//   Users.addProfile(profile)
+//     .then(userprofile => {
+//       res.status(201).json(userprofile);
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     });
+// });
+
 router.post("/profile", restricted, (req, res) => {
   const profile = req.body;
-  Users.addProfile(profile)
-    .then(userprofile => {
-      res.status(201).json(userprofile);
+  let email = req.user.email;
+  Users.findBy({ email })
+    .then(user => {
+      if (user) {
+        Users.addProfile(user.id, profile)
+          .then(response => {
+            res.status(201).json({ id: response[0] });
+          })
+          .catch(error => {
+            res.status(500).json({ message: "Could not add course" });
+          });
+      } else
+        res
+          .status(500)
+          .json({ message: "Could not find user to add course for" });
     })
     .catch(err => {
-      console.log(err);
+      res
+        .status(500)
+        .json({ message: "Could not find user to add course for" });
     });
 });
 

@@ -7,6 +7,7 @@ module.exports = {
   updateProfile,
   add,
   addProfile,
+  addInitProfile,
   remove,
   editImage,
   findBy,
@@ -54,14 +55,23 @@ async function add(user) {
   return userId;
 }
 
-function addProfile(profile) {
-  return db("user_profile")
-    .insert(profile, "id")
-    .then(ids => ({ id: ids[0] }));
+async function addProfile(userId, profile) {
+  profile.user_id = userId;
+  let ids = await db("user_profile").insert(profile, "id");
+  let profileId = ids[0];
+  return ids;
+}
+
+async function addInitProfile(user) {
+  console.log("IT GOT HEREEEEEE", user);
+  const user_id = user.id;
+  const image =
+    "https://res.cloudinary.com/klawd/image/upload/v1584550569/wq3oxtstbdkg8s9jxuhb.png";
+  let ids = await db("user_profile").insert({ image: image, user_id: user_id });
+  return ids;
 }
 
 function editImage(imageData, userId) {
-  console.log("THIIIIIIIIIIIIISSSSSS", imageData, userId);
   return db("users")
     .where("users.id", "=", userId)
     .update({ image: imageData })
@@ -69,18 +79,9 @@ function editImage(imageData, userId) {
       return findBy(userId);
     })
     .catch(err => {
-      console.log("ERRRRORRRR", err);
+      console.log("Something went wrong", err);
     });
 }
-
-// function updatePlant(plantData, plantid) {
-//   return db("plants")
-//     .where({ id: plantid })
-//     .update(plantData)
-//     .then(success => {
-//       return getPlantById(plantid);
-//     });
-// }
 
 function findById(id) {
   return db("users")
@@ -100,7 +101,7 @@ function findById(id) {
 function findProfileById(id) {
   return db("user_profile")
     .select("*")
-    .where({ id })
+    .where("user_id", id)
     .first();
 }
 
