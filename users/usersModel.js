@@ -12,6 +12,7 @@ module.exports = {
   editImage,
   findBy,
   findProfileById,
+  findAllProfile,
   findById,
   findAll,
   FBfindOrCreate,
@@ -30,10 +31,16 @@ function update(id, changes) {
     .where({ id })
     .update(changes);
 }
+function update(id, changes) {
+  return db("users")
+    .where({ id })
+    .update(changes);
+}
 
 function updateProfile(id, changes) {
+  console.log("CCCCCCCCCCCCCCCCCCCCCCC", changes);
   return db("user_profile")
-    .where({ id })
+    .where("user_id", id)
     .update(changes);
 }
 
@@ -63,7 +70,6 @@ async function addProfile(userId, profile) {
 }
 
 async function addInitProfile(user) {
-  console.log("IT GOT HEREEEEEE", user);
   const user_id = user.id;
   const image =
     "https://res.cloudinary.com/klawd/image/upload/v1584550569/wq3oxtstbdkg8s9jxuhb.png";
@@ -72,11 +78,11 @@ async function addInitProfile(user) {
 }
 
 function editImage(imageData, userId) {
-  return db("users")
-    .where("users.id", "=", userId)
+  return db("user_profile")
+    .where("user_id", "=", userId)
     .update({ image: imageData })
     .then(success => {
-      return findBy(userId);
+      return findProfileById(userId);
     })
     .catch(err => {
       console.log("Something went wrong", err);
@@ -103,6 +109,10 @@ function findProfileById(id) {
     .select("*")
     .where("user_id", id)
     .first();
+}
+
+function findAllProfile() {
+  return db("user_profile").select();
 }
 
 function findAll() {
