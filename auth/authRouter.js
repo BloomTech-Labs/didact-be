@@ -298,6 +298,19 @@ router.get("/profile/:id", (req, res) => {
     });
 });
 
+//GET profiles from all users
+router.get("/profile/all", (req, res) => {
+  Users.findAllProfile()
+    .then(result => {
+      console.log("IT GOT HEEEEERRRRRE", result);
+      res.status(200).json(result);
+    })
+    .catch(err => {
+      console.log("XXXXXXXXXXXXXXXERROR", err);
+      res.status(500).json(err);
+    });
+});
+
 //ADD a user profile
 // router.post("/profile", restricted, (req, res) => {
 //   const profile = req.body;
@@ -342,7 +355,7 @@ router.put("/profile/:id", restricted, (req, res) => {
   let email = req.user.email;
   Users.findBy({ email })
     .then(person => {
-      if (person.owner === true || person.admin === true) {
+      if (person) {
         Users.updateProfile(id, changes)
           .then(user => {
             if (user) {
@@ -354,6 +367,7 @@ router.put("/profile/:id", restricted, (req, res) => {
             }
           })
           .catch(err => {
+            console.log("ERRRRRRRRRRRR in put profile", err);
             res.status(500).json({ message: "Failed to update user profile" });
           });
       }
