@@ -15,6 +15,7 @@ client.once("ready", () => {
   console.log("Discord connected");
 });
 
+//discord client watches for message event on server
 client.on("message", async message => {
   if (
     message.author.username === "Manager Bot" ||
