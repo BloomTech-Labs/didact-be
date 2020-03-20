@@ -12,6 +12,7 @@ module.exports = {
   editImage,
   findBy,
   findProfileById,
+  findAllProfile,
   findById,
   findAll,
   FBfindOrCreate,
@@ -107,6 +108,10 @@ function findProfileById(id) {
     .select("*")
     .where("user_id", id)
     .first();
+}
+
+function findAllProfile() {
+  return db("user_profile").select();
 }
 
 function findAll() {

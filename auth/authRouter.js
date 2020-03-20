@@ -298,6 +298,19 @@ router.get("/profile/:id", (req, res) => {
     });
 });
 
+//GET profiles from all users
+router.get("/profile/all", (req, res) => {
+  Users.findAllProfile()
+    .then(result => {
+      console.log("IT GOT HEEEEERRRRRE", result);
+      res.status(200).json(result);
+    })
+    .catch(err => {
+      console.log("XXXXXXXXXXXXXXXERROR", err);
+      res.status(500).json(err);
+    });
+});
+
 //ADD a user profile
 // router.post("/profile", restricted, (req, res) => {
 //   const profile = req.body;
