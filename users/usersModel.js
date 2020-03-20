@@ -63,7 +63,6 @@ async function addProfile(userId, profile) {
 }
 
 async function addInitProfile(user) {
-  console.log("IT GOT HEREEEEEE", user);
   const user_id = user.id;
   const image =
     "https://res.cloudinary.com/klawd/image/upload/v1584550569/wq3oxtstbdkg8s9jxuhb.png";
@@ -72,11 +71,11 @@ async function addInitProfile(user) {
 }
 
 function editImage(imageData, userId) {
-  return db("users")
-    .where("users.id", "=", userId)
+  return db("user_profile")
+    .where("user_id", "=", userId)
     .update({ image: imageData })
     .then(success => {
-      return findBy(userId);
+      return findProfileById(userId);
     })
     .catch(err => {
       console.log("Something went wrong", err);
