@@ -38,6 +38,7 @@ function update(id, changes) {
 }
 
 function updateProfile(id, changes) {
+  console.log("CCCCCCCCCCCCCCCCCCCCCCC", changes);
   return db("user_profile")
     .where("user_id", id)
     .update(changes);
