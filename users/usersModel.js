@@ -30,10 +30,15 @@ function update(id, changes) {
     .where({ id })
     .update(changes);
 }
+function update(id, changes) {
+  return db("users")
+    .where({ id })
+    .update(changes);
+}
 
 function updateProfile(id, changes) {
   return db("user_profile")
-    .where({ id })
+    .where("user_id", id)
     .update(changes);
 }
 
