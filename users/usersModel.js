@@ -28,14 +28,14 @@ function find() {
 
 function update(id, changes) {
   return db("users")
-    .where({ id })
+    .where("id", id)
     .update(changes);
 }
-function update(id, changes) {
-  return db("users")
-    .where({ id })
-    .update(changes);
-}
+// function update(id, changes) {
+//   return db("users")
+//     .where({ id })
+//     .update(changes);
+// }
 
 function updateProfile(id, changes) {
   console.log("CCCCCCCCCCCCCCCCCCCCCCC", changes);

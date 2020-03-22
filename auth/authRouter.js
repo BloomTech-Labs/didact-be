@@ -60,17 +60,46 @@ router.put("/:id/upload", multerUploads, validateImage, async (req, res) => {
   }
 });
 
-//UPDATE user by specific id
-router.put("/:id", restricted, (req, res) => {
+//UPDATE user by specific id original code below
+// router.put("/:id", restricted, (req, res) => {
+//   const { id } = req.params;
+//   const changes = req.body;
+//   let email = req.user.email;
+//   Users.findBy({ email })
+//     .then(person => {
+//       if (person.owner === true || person.admin === true) {
+//         Users.update(id, changes)
+//           .then(user => {
+//             if (user) {
+//               res.json({ update: user });
+//             } else {
+//               res
+//                 .status(404)
+//                 .json({ message: `Could not find user with id:${id}` });
+//             }
+//           })
+//           .catch(err => {
+//             res.status(500).json({ message: "Failed to update user" });
+//           });
+//       }
+//     })
+//     .catch(err =>
+//       res.status(500).json({ message: "Could not find user in database" })
+//     );
+// });
+
+router.put("/:id", validateImage, async (req, res) => {
   const { id } = req.params;
   const changes = req.body;
-  let email = req.user.email;
-  Users.findBy({ email })
+  console.log("CHANGES BEFORE FIND ID ORIG DATA PASS", changes);
+  // let email = req.user.email;
+  Users.findBy({ id })
     .then(person => {
       if (person.owner === true || person.admin === true) {
         Users.update(id, changes)
           .then(user => {
             if (user) {
+              console.log("CHANGES INSIDE OF UPDATEXXXXX", changes);
               res.json({ update: user });
             } else {
               res
