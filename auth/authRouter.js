@@ -60,7 +60,7 @@ router.put("/:id/upload", multerUploads, validateImage, async (req, res) => {
   }
 });
 
-router.put("/:id", multerUploads, validateImage, async (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const changes = req.body;
   console.log("ID AND CHANGES BEFORE FIND ID ORIG DATA PASS", id, changes);

@@ -23,7 +23,9 @@ module.exports = {
 };
 
 function find() {
-  return db("users");
+  return db("users")
+    .join("user_profile as up", "up.user_id", "=", "users.id")
+    .select("users.*", "up.image");
 }
 
 function updateUser(id, changes) {
