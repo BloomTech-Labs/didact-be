@@ -9,12 +9,10 @@ exports.up = function(knex) {
           .unique();
         tbl.string("first_name", 255).notNullable();
         tbl.string("last_name", 255).notNullable();
-        tbl.string("image", 500);
         tbl.string("password", 255);
         tbl.string("facebookID");
         tbl.string("googleID");
         tbl.string("slackID");
-        tbl.string("photo");
         tbl.boolean("owner").defaultTo(false);
         tbl.boolean("admin").defaultTo(false);
         tbl.boolean("moderator").defaultTo(false);

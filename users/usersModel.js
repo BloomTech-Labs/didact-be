@@ -3,7 +3,7 @@ const learningPath = require("../learning-paths/learningPathsModel");
 
 module.exports = {
   find,
-  update,
+  updateUser,
   updateProfile,
   add,
   addProfile,
@@ -23,22 +23,18 @@ module.exports = {
 };
 
 function find() {
-  return db("users");
+  return db("users")
+    .join("user_profile as up", "up.user_id", "=", "users.id")
+    .select("users.*", "up.image");
 }
 
-function update(id, changes) {
-  return db("users")
-    .where({ id })
-    .update(changes);
-}
-function update(id, changes) {
+function updateUser(id, changes) {
   return db("users")
     .where({ id })
     .update(changes);
 }
 
 function updateProfile(id, changes) {
-  console.log("CCCCCCCCCCCCCCCCCCCCCCC", changes);
   return db("user_profile")
     .where("user_id", id)
     .update(changes);
@@ -51,6 +47,7 @@ function remove(id) {
 }
 
 function findBy(filter) {
+  console.log("IT GOT HEREEEEEEEEEEE IN FINDBY");
   return db("users")
     .where(filter)
     .first();
