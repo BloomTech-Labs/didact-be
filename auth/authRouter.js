@@ -59,7 +59,6 @@ router.put("/:id/upload", multerUploads, validateImage, async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const changes = req.body;
-  // let email = req.user.email;
   Users.findBy({ id })
     .then(person => {
       if (person) {
