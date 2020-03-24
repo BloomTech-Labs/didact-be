@@ -47,7 +47,6 @@ function remove(id) {
 }
 
 function findBy(filter) {
-  console.log("IT GOT HEREEEEEEEEEEE IN FINDBY");
   return db("users")
     .where(filter)
     .first();

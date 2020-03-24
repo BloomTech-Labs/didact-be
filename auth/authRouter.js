@@ -5,12 +5,9 @@ const hashCount = require("../utils/hashCount");
 const duplicateUser = require("../utils/duplicateUser");
 const restricted = require("../utils/restricted");
 const sgMail = require("@sendgrid/mail");
-
 const secrets = require("../config/secret");
-
 const Users = require("../users/usersModel");
-
-const { cloudConfig, uploader } = require("../api/cloudinaryConfig.js");
+const { uploader } = require("../api/cloudinaryConfig.js");
 const { multerUploads, dataUri } = require("../uploads/multer");
 const { validateImage } = require("../utils/middleware");
 
@@ -36,7 +33,6 @@ router.get("/users", restricted, (req, res) => {
     );
 });
 
-//GET user by id
 router.get("/users/:id", (req, res) => {
   Users.findById(req.params.id)
     .then(result => {
@@ -63,16 +59,13 @@ router.put("/:id/upload", multerUploads, validateImage, async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const changes = req.body;
-  console.log("ID AND CHANGES BEFORE FIND ID ORIG DATA PASS", id, changes);
   // let email = req.user.email;
   Users.findBy({ id })
     .then(person => {
       if (person) {
-        console.log("CHANGES IN PERSON", changes);
         Users.updateUser(id, changes)
           .then(user => {
             if (user) {
-              console.log("CHANGES INSIDE OF UPDATEXXXXX", changes);
               res.json({ update: user });
             } else {
               res
@@ -81,7 +74,6 @@ router.put("/:id", async (req, res) => {
             }
           })
           .catch(err => {
-            console.log("IT GOT HERE TO CATCH ERROR LINE 111");
             res.status(500).json({ message: "Failed to update user" });
           });
       }
@@ -130,6 +122,7 @@ router.get("/emaillist", (req, res) => {
     );
 });
 
+//registers a new user and generates an initial post to user_profile table
 router.post("/register", validateUserRegister, duplicateUser, (req, res) => {
   let user = req.body;
   const hash = bcrypt.hashSync(user.password, hashCount);

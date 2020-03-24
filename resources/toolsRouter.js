@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const Tools = require("./toolsModel");
 const Users = require("../users/usersModel");
-
+const { uploader } = require("../api/cloudinaryConfig.js");
+const { multerUploads, dataUri } = require("../uploads/multer");
+const { validateImage } = require("../utils/middleware");
 router.get("/", (req, res) => {
   if (req.headers.filter) {
     let filter = req.headers.filter;
@@ -88,6 +90,19 @@ router.put("/:id", (req, res) => {
     .catch(err => {
       res.status(500).json({ error: "Could not update tool." });
     });
+});
+
+//updates tool image
+router.put("/:id/image", multerUploads, validateImage, async (req, res) => {
+  const toolId = req.params.id;
+  const imageData = req.image;
+
+  try {
+    const edited = await Tools.editToolImage(imageData, toolId);
+    res.status(200).json(edited);
+  } catch (err) {
+    res.status(500).json({ error: "Image cannot be updated at this moment" });
+  }
 });
 
 router.delete("/:id", (req, res) => {
