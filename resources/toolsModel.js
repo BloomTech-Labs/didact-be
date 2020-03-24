@@ -8,7 +8,8 @@ module.exports = {
   findByTag,
   add,
   update,
-  del
+  del,
+  editToolImage
 };
 
 function get() {
@@ -95,5 +96,17 @@ async function findForUsers(users) {
       //flattening nested array return
       let flattenedArray = result.flatMap(arr => arr);
       return flattenedArray;
+    });
+}
+
+function editToolImage(imageData, toolId) {
+  return db("tools")
+    .where("id", "=", toolId)
+    .update({ image: imageData })
+    .then(success => {
+      return getById(toolId);
+    })
+    .catch(err => {
+      console.log("Something went wrong", err);
     });
 }

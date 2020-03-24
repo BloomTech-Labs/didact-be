@@ -5,12 +5,9 @@ const hashCount = require("../utils/hashCount");
 const duplicateUser = require("../utils/duplicateUser");
 const restricted = require("../utils/restricted");
 const sgMail = require("@sendgrid/mail");
-
 const secrets = require("../config/secret");
-
 const Users = require("../users/usersModel");
-
-const { cloudConfig, uploader } = require("../api/cloudinaryConfig.js");
+const { uploader } = require("../api/cloudinaryConfig.js");
 const { multerUploads, dataUri } = require("../uploads/multer");
 const { validateImage } = require("../utils/middleware");
 
@@ -36,7 +33,6 @@ router.get("/users", restricted, (req, res) => {
     );
 });
 
-//GET user by id
 router.get("/users/:id", (req, res) => {
   Users.findById(req.params.id)
     .then(result => {
@@ -60,15 +56,14 @@ router.put("/:id/upload", multerUploads, validateImage, async (req, res) => {
   }
 });
 
-//UPDATE user by specific id
-router.put("/:id", restricted, (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const changes = req.body;
-  let email = req.user.email;
-  Users.findBy({ email })
+  // let email = req.user.email;
+  Users.findBy({ id })
     .then(person => {
-      if (person.owner === true || person.admin === true) {
-        Users.update(id, changes)
+      if (person) {
+        Users.updateUser(id, changes)
           .then(user => {
             if (user) {
               res.json({ update: user });
@@ -83,9 +78,10 @@ router.put("/:id", restricted, (req, res) => {
           });
       }
     })
-    .catch(err =>
-      res.status(500).json({ message: "Could not find user in database" })
-    );
+    .catch(err => {
+      console.log("IT GOT HERE TO CATCH ERROR LINE 117");
+      res.status(500).json({ message: "Could not find user in database" });
+    });
 });
 
 router.post("/emaillist", (req, res) => {
@@ -118,13 +114,15 @@ router.post("/emaillist", (req, res) => {
 
 //TODO make admin account, admin middleware, put it on this endpoint
 // Avoid email get for any random person. Only admin.
-// router.get('/emaillist', (req, res) =>
-// {
-//     Users.getEmailList()
-//     .then(response => res.status(200).json(response))
-//     .catch(err => res.status(500).json({ message: 'Internal Error: Could not get emails' }))
-// })
+router.get("/emaillist", (req, res) => {
+  Users.getEmailList()
+    .then(response => res.status(200).json(response))
+    .catch(err =>
+      res.status(500).json({ message: "Internal Error: Could not get emails" })
+    );
+});
 
+//registers a new user and generates an initial post to user_profile table
 router.post("/register", validateUserRegister, duplicateUser, (req, res) => {
   let user = req.body;
   const hash = bcrypt.hashSync(user.password, hashCount);
@@ -175,14 +173,6 @@ router.post("/login", validateUserLogin, (req, res) => {
 router.post("/", (req, res) => {
   let token = req.body.token;
 
-  //     facebookID: null
-  // googleID: null
-  // slackID: null
-  // photo: null
-  // owner: false
-  // admin: true
-  // moderator: false
-
   if (token) {
     jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
       if (err) res.status(401).json({ message: "Token does not exist" });
@@ -193,10 +183,10 @@ router.post("/", (req, res) => {
               res.status(200).json({
                 email: decodedToken.email,
                 id: user.id,
-                photo: user.photo,
+                image: user.image,
                 owner: user.owner,
                 admin: user.admin,
-                moderator: user.moderator || null,
+                moderator: user.moderator,
                 first_name: user.first_name,
                 last_name: user.last_name
               });
@@ -249,6 +239,7 @@ function generateToken(user) {
   const payload = {
     email: user.email,
     id: user.id,
+    image: user.image,
     owner: user.owner,
     admin: user.admin,
     moderator: user.moderator
@@ -302,26 +293,12 @@ router.get("/profile/:id", (req, res) => {
 router.get("/profile/all", (req, res) => {
   Users.findAllProfile()
     .then(result => {
-      console.log("IT GOT HEEEEERRRRRE", result);
       res.status(200).json(result);
     })
     .catch(err => {
-      console.log("XXXXXXXXXXXXXXXERROR", err);
       res.status(500).json(err);
     });
 });
-
-//ADD a user profile
-// router.post("/profile", restricted, (req, res) => {
-//   const profile = req.body;
-//   Users.addProfile(profile)
-//     .then(userprofile => {
-//       res.status(201).json(userprofile);
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// });
 
 router.post("/profile", restricted, (req, res) => {
   const profile = req.body;
@@ -367,7 +344,6 @@ router.put("/profile/:id", restricted, (req, res) => {
             }
           })
           .catch(err => {
-            console.log("ERRRRRRRRRRRR in put profile", err);
             res.status(500).json({ message: "Failed to update user profile" });
           });
       }
