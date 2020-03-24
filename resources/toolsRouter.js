@@ -56,7 +56,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", multerUploads, validateImage, async (req, res) => {
   let email = req.user.email;
   let tool = req.body;
   Users.findBy({ email })
