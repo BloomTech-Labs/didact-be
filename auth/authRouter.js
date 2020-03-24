@@ -79,7 +79,6 @@ router.put("/:id", async (req, res) => {
       }
     })
     .catch(err => {
-      console.log("IT GOT HERE TO CATCH ERROR LINE 117");
       res.status(500).json({ message: "Could not find user in database" });
     });
 });
@@ -114,7 +113,7 @@ router.post("/emaillist", (req, res) => {
 
 //TODO make admin account, admin middleware, put it on this endpoint
 // Avoid email get for any random person. Only admin.
-router.get("/emaillist", (req, res) => {
+router.get("/emaillist", restricted, (req, res) => {
   Users.getEmailList()
     .then(response => res.status(200).json(response))
     .catch(err =>
@@ -131,7 +130,7 @@ router.post("/register", validateUserRegister, duplicateUser, (req, res) => {
   Users.add(user)
     .then(response => {
       user.id = response[0];
-      // Maybe can be removed, just use user.email
+      // May be removed, just use user.email
       Users.findBy({ email: user.email })
         .then(user => {
           if (user && bcrypt.compareSync(originalPass, user.password)) {
@@ -155,7 +154,6 @@ router.post("/register", validateUserRegister, duplicateUser, (req, res) => {
 
 router.post("/login", validateUserLogin, (req, res) => {
   let { email, password } = req.body;
-
   Users.findBy({ email })
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
@@ -172,7 +170,6 @@ router.post("/login", validateUserLogin, (req, res) => {
 
 router.post("/", (req, res) => {
   let token = req.body.token;
-
   if (token) {
     jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
       if (err) res.status(401).json({ message: "Token does not exist" });
@@ -239,7 +236,6 @@ function generateToken(user) {
   const payload = {
     email: user.email,
     id: user.id,
-    image: user.image,
     owner: user.owner,
     admin: user.admin,
     moderator: user.moderator
@@ -252,7 +248,7 @@ function generateToken(user) {
   return jwt.sign(payload, secrets.jwtSecret, options);
 }
 
-// post pic in cloudinary then save to backend table
+// post pic in cloudinary then saves it to backend table
 router.post("/picture", multerUploads, (req, res) => {
   if (req.file) {
     const file = dataUri(req).content;
