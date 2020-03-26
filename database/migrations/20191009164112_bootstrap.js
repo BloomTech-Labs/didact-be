@@ -329,6 +329,7 @@ exports.up = function(knex) {
           .inTable("users")
           .onDelete("CASCADE")
           .onUpdate("CASCADE");
+        tbl.string("image", 1000);
         tbl.string("name", 1000).notNullable();
         tbl.string("description", 10000).notNullable();
         tbl.string("link", 1000).notNullable();

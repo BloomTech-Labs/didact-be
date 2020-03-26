@@ -436,7 +436,7 @@ router.post("/:id/sections", (req, res) => {
           res.status(400).json({ message: "Could not find section in body" });
         else {
           let section = req.body.section;
-          section.course_id = courseId;
+          section.course_id = req.params.id;
           Courses.addCourseSection(user, courseId, section)
             .then(response => {
               if (response.code === 201) {
@@ -457,11 +457,11 @@ router.post("/:id/sections", (req, res) => {
           .status(500)
           .json({ message: "Could not find user to add section for" });
     })
-    .catch(err =>
+    .catch(err => {
       res
         .status(500)
-        .json({ message: "Could not find user to add section for" })
-    );
+        .json({ message: "Could not find user to add section for" });
+    });
 });
 
 router.put("/:id/sections/:section_id", (req, res) => {

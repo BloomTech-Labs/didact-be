@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const Sources = require("./sourcesModel");
 const Users = require("../users/usersModel");
+const { uploader } = require("../api/cloudinaryConfig.js");
+const { multerUploads, dataUri } = require("../uploads/multer");
+const { validateImage } = require("../utils/middleware");
 
 router.get("/", (req, res) => {
   if (req.headers.filter) {
@@ -54,7 +57,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", multerUploads, validateImage, async (req, res) => {
   let email = req.user.email;
   let source = req.body;
   Users.findBy({ email })
@@ -88,6 +91,19 @@ router.put("/:id", (req, res) => {
     .catch(err => {
       res.status(500).json({ error: "Could not update source." });
     });
+});
+
+//updates sources image
+router.put("/:id/image", multerUploads, validateImage, async (req, res) => {
+  const sourceId = req.params.id;
+  const imageData = req.image;
+
+  try {
+    const edited = await Sources.editSourceImage(imageData, sourceId);
+    res.status(200).json(edited);
+  } catch (err) {
+    res.status(500).json({ error: "Image cannot be updated at this moment" });
+  }
 });
 
 router.delete("/:id", (req, res) => {
