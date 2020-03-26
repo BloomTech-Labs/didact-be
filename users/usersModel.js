@@ -108,7 +108,7 @@ function findProfileById(id) {
 }
 
 function findAllProfile() {
-  return db("user_profile").select();
+  return db("user_profile").select("*");
 }
 
 function findAll() {
