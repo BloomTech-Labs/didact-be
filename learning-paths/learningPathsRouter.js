@@ -4,49 +4,39 @@ const Users = require("../users/usersModel");
 
 router.get("/", (req, res) => {
   let email = req.user.email;
+
   //checking if user making request exists in database using the token (email value) on their request header
   Users.findBy({ email })
     .then(user => {
-      if (user) {
-        //Here is the query and filter check. Should be receiving this info
-        //from the search bar on the front-end.
-        if (req.headers.filter) {
-          let filter = req.headers.filter;
-          let query = req.headers.query;
-          if (!query || query === undefined || query === null) {
-            res.status(200).send([]);
-          } else if (
-            filter === "topic" ||
-            filter === "title" ||
-            filter === "description"
-          ) {
-            Paths.findByFilter(filter, query)
-              .then(response => {
-                res.status(200).json(response);
-              })
-              .catch(err => {
-                res.status(500).json(err);
-              });
-          } else if (filter === "tag") {
-            Paths.findByTag(query)
-              .then(response => {
-                res.status(200).json(response);
-              })
-              .catch(err => {
-                res.status(500).json(err);
-              });
-          } else if (filter === "creator") {
-            Paths.findByOwner(query)
-              .then(response => {
-                res.status(200).json(response);
-              })
-              .catch(err => {
-                res.status(500).json(err);
-              });
-          }
-        } else {
-          //passing user id to get paths that user is not on
-          Paths.findForNotUserId(user.id)
+      //Here is the query and filter check. Should be receiving this info
+      //from the query bar on the front-end.
+      if (req.headers.filter) {
+        let filter = req.headers.filter;
+        let query = req.headers.query;
+        if (!query || query === undefined || query === null) {
+          res.status(200).send([]);
+        } else if (
+          filter === "topic" ||
+          filter === "title" ||
+          filter === "description"
+        ) {
+          Paths.findByFilter(filter, query)
+            .then(response => {
+              res.status(200).json(response);
+            })
+            .catch(err => {
+              res.status(500).json(err);
+            });
+        } else if (filter === "tag") {
+          Paths.findByTag(query)
+            .then(response => {
+              res.status(200).json(response);
+            })
+            .catch(err => {
+              res.status(500).json(err);
+            });
+        } else if (filter === "creator") {
+          Paths.findByOwner(query)
             .then(response => {
               res.status(200).json(response);
             })
@@ -54,15 +44,19 @@ router.get("/", (req, res) => {
               res.status(500).json(err);
             });
         }
-      } else
-        res.status(500).json({
-          message: "Error, could not find user to check learning paths for"
-        });
+      } else {
+        //passing user id to get paths that user is not on
+        Paths.findForNotUserId(user.id)
+          .then(response => {
+            res.status(200).json(response);
+          })
+          .catch(err => {
+            res.status(500).json(err);
+          });
+      }
     })
     .catch(err => {
-      res.status(500).json({
-        message: "Error, could not find user to check learning paths for"
-      });
+      res.status(500).json(err);
     });
 });
 

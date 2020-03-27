@@ -113,6 +113,7 @@ async function findForNotUserId(userId) {
 
 function findByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
+  //checking fully lowered case value for "filter" field on courses
   return db("paths").whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak]);
 }
 
@@ -121,7 +122,7 @@ async function findByOwner(name) {
   //looks for users using search input value, checks many possible case sensitivities
   let users = db(
     "users"
-  ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]);
+  ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]); //LOWER and the || || concatenate both fields into one lower case string
   //inserts users into function and awaits result
   return await findForUsers(users);
 }

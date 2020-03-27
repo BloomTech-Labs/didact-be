@@ -424,12 +424,33 @@ Function names are such that for most, you know what they do.
 <br>
 <br>
 
+# How To Deploy
+
+## Running migrations + seeds on your heroku postgreSQL database:
+
+### In your VSC Terminal, enter these commands:
+
+#### (Replace appname with didactlms or didactlms-staging or other app name)
+
+npx heroku run knex migrate:rollback -a appname
+
+npx heroku run knex migrate:latest -a appname
+
+npx heroku run knex seed:run -a appname
+
+## Update all your environment variables as needed
+
+Contact previous team if keys are unclear, otherwise your TL should provide
+a lot if not all of them to you.
+
 ## 3️⃣ Environment Variables
 
 In order for the app to function correctly, the user must set up their own environment variables.
 
 create a .env file that includes the following:
 
+- DATABASE_URL - the url to connect to your postgres database
+- DB_ENV - environment to run database
 - ADMIN_SECRET - a secret for the seeded users
 - DB_ENV - production, development, testing, staging
 - JWT_SECRET - a secret for signing json web tokens
@@ -445,6 +466,12 @@ create a .env file that includes the following:
 - EMAIL_PASSWORD - our app password
 - SENDGRID_API_KEY - our app sendgrid api key
 - SENDGRID_BASE64_CONVERSION - our app sendgrid api key converted to base64
+- BOT_TOKEN - token to login to discord bot
+- WEBHOOK_ID - id of the discord webhook
+- WEBHOOK_TOKEN - token of the discord webhook
+- CLOUDINARY_CLOUD_NAME - name of your cloudinary account
+- CLOUDINARY_API_KEY - your cloudinary api key
+- CLOUDINARY_API_SECRET - your cloudinary api secret
 
 ## Contributing
 
