@@ -113,6 +113,7 @@ async function findForNotUserId(userId) {
 
 function findByFilter(filter, query) {
   let queryTweak = query.toLowerCase();
+  //checking fully lowered case value for "filter" field on courses
   return db("paths").whereRaw(`LOWER(paths.${filter}) ~ ?`, [queryTweak]);
 }
 
@@ -121,7 +122,7 @@ async function findByOwner(name) {
   //looks for users using search input value, checks many possible case sensitivities
   let users = db(
     "users"
-  ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]);
+  ).orWhereRaw("LOWER(first_name || ' ' || last_name) ~ ?", [nameTweak]); //LOWER and the || || concatenate both fields into one lower case string
   //inserts users into function and awaits result
   return await findForUsers(users);
 }
@@ -455,7 +456,7 @@ async function joinLearningPath(userId, pathId, order) {
       const pathName = followerArray[0].title;
       const pathTopic = followerArray[0].topic;
       const followCount = followerArray.length;
-//       if (followCount >= 10) {
+      if (followCount === 10) {
         //this is using the client object from our discordBot.js file
         //and fetching a webhook (similar to a bot) created on the discord app. this webhook
         //allows us to send a message without using discord
@@ -465,7 +466,7 @@ async function joinLearningPath(userId, pathId, order) {
             webhook.send(`!birth ${pathName} ### ${pathTopic}`);
           })
           .catch(err => console.log(err));
-//       }
+      }
     })
     .catch(err => console.log(err));
 
