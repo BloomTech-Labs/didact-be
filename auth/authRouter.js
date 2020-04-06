@@ -11,6 +11,36 @@ const { uploader } = require("../api/cloudinaryConfig.js");
 const { multerUploads, dataUri } = require("../uploads/multer");
 const { validateImage } = require("../utils/middleware");
 
+//not yet working
+router.put("/reset", restricted, (req, res) => {
+  let email = req.user.email;
+  let password = req.body.password;
+  let newPassword = req.body.newPassword;
+  const hashA = bcrypt.hashSync(password, hashCount);
+  const hashB = bcrypt.hashSync(newPassword, hashCount);
+  let originalPass = password;
+  const id = req.user.id;
+  password = hashA;
+  const refPass = password;
+
+  const changes = password;
+  Users.findBy({ email })
+    .then(user => {
+      console.log("xxxxxxxxxxxxxxxxxxxxxxx", user);
+      if (user && bcrypt.compareSync(originalPass, refPass)) {
+        newPassword = hashB;
+        password = newPassword;
+        Users.updateUser(id, changes);
+        res.status(201).json({ user });
+      } else {
+        res.status(401).json({ message: "Invalid Credentials" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: `Couldn't connect to login service` });
+    });
+});
+
 //GET list of all users conditions added to check role as owner or admin
 router.get("/users", restricted, (req, res) => {
   let email = req.user.email;

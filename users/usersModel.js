@@ -29,6 +29,7 @@ function find() {
 }
 
 function updateUser(id, changes) {
+  console.log("IT GOT HERERRRRRRRREEEEEEEE", changes);
   return db("users")
     .where({ id })
     .update(changes);
