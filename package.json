@@ -21,7 +21,7 @@
     "@sendgrid/mail": "^6.5.4",
     "@types/jest": "^25.1.4",
     "@types/jquery": "^3.3.33",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.20.0",
     "cors": "^2.8.5",
